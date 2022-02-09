@@ -1,6 +1,9 @@
 # LittleGameEngine
 Un pequeño motor de juegos para incursionar en Python
 
+![](images/world.png)
+![](images/collisions.png)
+
 
 ---
 ## Clases
