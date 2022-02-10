@@ -9,14 +9,14 @@ class MiJuego():
         self.engine.SetFPS( 60 )
 
         # agregamos el fondo
-        fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0), 0 )
+        fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
         fondo.Scale( (800,440) )
-        self.engine.AddGObject( fondo )
+        self.engine.AddGObject( fondo, 0 )
 
         # agregamos un Sprite
-        heroe = Sprite( "../images/Swordsman/Idle/Idle_000.png", (220,140), 1, "Heroe" )
+        heroe = Sprite( "../images/Swordsman/Idle/Idle_000.png", (220,140), "Heroe" )
         heroe.ScalePercent( 0.10 )
-        self.engine.AddGObject( heroe )
+        self.engine.AddGObject( heroe, 1 )
 
         # posicionamos la camara
         self.engine.SetCamPosition( (0,0) )

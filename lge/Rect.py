@@ -1,11 +1,11 @@
 class Rect():
-    def __init__( self, origin=(0,0), size=(0,0) ):
+    def __init__( self, origin, size ):
         x, y = origin
         self.origin = int(x), int(y)
 
         w, h = size
         if( w < 0 or w < 0 ):
-            raise( "'size' no puede ser negativo" )
+            raise ValueError( "'size' no puede ser negativo" )
         self.size = int(w), int(h)
 
     def GetOrigin( self ):

@@ -6,7 +6,7 @@ def CamControl( dt ):
     global engine
 
     # abortamos con la tecla Escape
-    if( engine.IsKeyDown( LGE.CONSTANTS.K_ESCAPE ) ):
+    if( engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
         engine.Quit()
 
     # moveremos la camara "ppm" pixeles por minuto
@@ -17,13 +17,13 @@ def CamControl( dt ):
     x, y = engine.GetCamPosition()
 
     # cambiamos sus coordenadas segun la tecla presionada
-    if( engine.IsKeyDown( LGE.CONSTANTS.K_RIGHT ) ):
+    if( engine.IsKeyPressed( LGE.CONSTANTS.K_RIGHT ) ):
         x = x + pixels
-    elif( engine.IsKeyDown( LGE.CONSTANTS.K_LEFT ) ):
+    elif( engine.IsKeyPressed( LGE.CONSTANTS.K_LEFT ) ):
         x = x - pixels
-    if( engine.IsKeyDown( LGE.CONSTANTS.K_DOWN ) ):
+    if( engine.IsKeyPressed( LGE.CONSTANTS.K_DOWN ) ):
         y = y - pixels
-    elif( engine.IsKeyDown( LGE.CONSTANTS.K_UP ) ):
+    elif( engine.IsKeyPressed( LGE.CONSTANTS.K_UP ) ):
         y = y + pixels
 
     # la reposicionamos
@@ -34,20 +34,23 @@ def main():
     global engine
 
     # creamos el juego
-    engine = LGE( (1920,1056), (640,480), "Move Camera", (0xFF,0xFF,0xFF), CamControl )
+    engine = LGE( (1920,1056), (640,480), "Move Camera", (0xFF,0xFF,0xFF) )
     engine.SetFPS( 60 )
+    engine.SetMainTask( CamControl )
 
     # agregamos el fondo
-    fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0), 0 )
-    engine.AddGObject( fondo )
+    fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
+    engine.AddGObject( fondo, 0 )
 
     # agregamos un Sprite
-    heroe = Sprite( "../images/Swordsman/Idle/Idle_000.png", (550,346), 1, "Heroe" )
+    heroe = Sprite( "../images/Swordsman/Idle/Idle_000.png", (550,346), "Heroe" )
     heroe.ScalePercent( 0.16 )
-    engine.AddGObject( heroe )
+    engine.AddGObject( heroe, 1 )
 
     # posicionamos la camara
-    engine.SetCamPosition( (280,200) )
+    x, y = heroe.GetPosition()
+    w, h = heroe.GetSize()
+    engine.SetCamPosition( (x+w/2,y+h/2) )
 
     # main loop
     engine.Run()

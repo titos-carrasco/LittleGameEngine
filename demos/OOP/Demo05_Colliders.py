@@ -6,25 +6,25 @@ from lge.LGE import LGE
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        self.engine = LGE( (1920,1056), (640,480), "Colliders", (0,0,0), self.CamControl )
+        self.engine = LGE( (1920,1056), (640,480), "Colliders", (0,0,0) )
         self.engine.SetFPS( 60 )
+        self.engine.SetMainTask( self.CamControl )
 
         # agregamos el fondo
-        fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0), 0 )
-        self.engine.AddGObject( fondo )
+        fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
+        self.engine.AddGObject( fondo, 0 )
 
         # agregamos al heroe
-        self.heroe = MiHeroe( self.engine )
+        heroe = MiHeroe( self.engine )
+        self.engine.AddGObject( heroe, 1 )
 
-        h = Sprite( "../images/Swordsman/Idle/Idle_000.png", (350,250), 1 )
-        h.ScalePercent( 0.16 )
-        self.engine.AddGObject( h )
+        # agregamos otro objeto
+        gobj = Sprite( "../images/Swordsman/Idle/Idle_000.png", (350,250) )
+        gobj.ScalePercent( 0.16 )
+        self.engine.AddGObject( gobj, 1 )
 
-        # establecemos que la camara siga al heroe
-        x, y = self.heroe.GetPosition()
-        self.point = GameObject( (x,y), (0,0), 0, "point" )
-        self.engine.AddGObject( self.point )
-        self.engine.SetCamTarget( self.point )
+        # establecemos que la camara siga al heroe en su origen
+        self.engine.SetCamTarget( heroe, False )
 
         # para controlar el despliegue de los contornos de los objetos
         self.engine.ShowColliders( (0xFF,0x00,0x00) )
@@ -32,7 +32,7 @@ class MiJuego():
 
     def CamControl( self, dt ):
         # abortamos con la tecla Escape
-        if( self.engine.IsKeyDown( LGE.CONSTANTS.K_ESCAPE ) ):
+        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
             return self.engine.Quit()
 
         # mostramos los bordes
@@ -42,10 +42,6 @@ class MiJuego():
                 self.engine.ShowColliders( (0xFF, 0x00, 0x00) )
             else:
                 self.engine.ShowColliders()
-
-        # ajustamos la posicion de la camara
-        x, y = self.heroe.GetPosition()
-        self.point.SetPosition( (x,y) )
 
     # main loop
     def Run( self ):
@@ -59,22 +55,20 @@ class MiHeroe( Sprite ):
             "idle": "../images/Swordsman/Idle/Idle_0*.png",
             "run" : "../images/Swordsman/Run/Run_0*.png"
         }
-        super().__init__( fnames, (550,346), 1, "Heroe" )
+        super().__init__( fnames, (550,346), "Heroe" )
         self.engine = lge
         self.ScalePercent( 0.16 )
         self.SetShape( 0, "idle" )
         self.heading = 1
         self.elapsed = 0
-        self.engine.AddGObject( self )
 
     def TestCollisions( self, dt ):
-        crops = self.engine.GetCollisions( self )
+        #return
+        crops = self.engine.GetCollisions( self.name )
         if( len(crops) == 0 ): return
 
         obj, r = crops[0]
-        print(dt, r)
         xr, yr, wr,hr = r
-
         x, y = self.GetPosition()
         w, h = self.GetSize()
 
@@ -106,7 +100,7 @@ class MiHeroe( Sprite ):
         # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
         moving = False
         idx, name = self.GetCurrentShape()
-        if( self.engine.IsKeyDown( LGE.CONSTANTS.K_RIGHT ) ):
+        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_RIGHT ) ):
             x = x + pixels
             if( self.heading != 1 ):
                 self.Flip( True, False )
@@ -114,7 +108,7 @@ class MiHeroe( Sprite ):
             if( name != "run" ):
                 self.SetShape( 0, "run" )
             moving = True
-        elif( self.engine.IsKeyDown( LGE.CONSTANTS.K_LEFT ) ):
+        elif( self.engine.IsKeyPressed( LGE.CONSTANTS.K_LEFT ) ):
             x = x - pixels
             if( self.heading != -1 ):
                 self.Flip( True, False )
@@ -123,10 +117,10 @@ class MiHeroe( Sprite ):
                 self.SetShape( 0, "run" )
             moving = True
 
-        if( self.engine.IsKeyDown( LGE.CONSTANTS.K_DOWN ) ):
+        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_DOWN ) ):
             y = y - pixels
             moving = True
-        elif( self.engine.IsKeyDown( LGE.CONSTANTS.K_UP ) ):
+        elif( self.engine.IsKeyPressed( LGE.CONSTANTS.K_UP ) ):
             y = y + pixels
             moving = True
 

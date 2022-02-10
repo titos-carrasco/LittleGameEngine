@@ -1,5 +1,4 @@
 from glob import glob
-
 from pygame import image as pyImage
 from pygame import transform as pyTransform
 
@@ -7,20 +6,20 @@ from lge.GameObject import GameObject
 
 
 class Sprite( GameObject ):
-    def __init__( self, specification, position, layer, name=None ):
-        super().__init__( position, (0,0), layer, name )
+    def __init__( self, fspecs, position, name=None ):
+        super().__init__( position, (0,0), name )
 
         self.surfaces = {}
-        if( isinstance( specification, str ) ):
-            self.surfaces["__no_id__"] = self._LoadShapes( glob( specification ) )
-        elif( isinstance( specification, list ) ):
-            self.surfaces["__no_id__"] = self._LoadShapes( specification )
-        elif( isinstance( specification, dict ) ):
-            for entry in specification:
-                spec = specification[entry]
-                if( isinstance( spec, str ) ):
-                    spec = glob( spec )
-                self.surfaces[entry] = self._LoadShapes( spec )
+        if( isinstance( fspecs, str ) ):
+            self.surfaces["__no_id__"] = self._LoadShapes( glob( fspecs ) )
+        elif( isinstance( fspecs, list ) ):
+            self.surfaces["__no_id__"] = self._LoadShapes( fspecs )
+        elif( isinstance( fspecs, dict ) ):
+            for entry in fspecs:
+                fspec = fspecs[entry]
+                if( isinstance( fspec, str ) ):
+                    fspec = glob( fspec )
+                self.surfaces[entry] = self._LoadShapes( fspec )
 
         entry = list( self.surfaces.keys() )[0]
         self.shape = [ 0, entry ]
