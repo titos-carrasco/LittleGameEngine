@@ -28,10 +28,13 @@ class LGE():
         self.events = []
         self.keysPressed = []
         self.textos = []
+        self.fonts = {}
 
         pygame.init()
+        pygame.font.init()
         pygame.display.set_caption( self.title )
         self.screen = pygame.display.set_mode( self.viewport.GetSize() )
+        self.clock = pygame.time.Clock()
 
     # world
     def GetWorldSize( self ):
@@ -68,8 +71,25 @@ class LGE():
     def UnSetCamTarget( self ):
         self.camTarget = None
 
-    def AddText( self, text, position, color=(0,0,0) ):
-        self.textos.append( [ text, position, color ] )
+    def LoadMyFont( self, fontName, size, path ):
+        k = "%s---%s" % ( fontName, size )
+        if( k in self.fonts ): return
+        font = pygame.font.Font( path, size )
+        self.fonts[k] = font
+
+    def LoadSysFont( self, fontName, size ):
+        k = "%s---%s" % ( fontName, size )
+        if( k in self.fonts ): return
+        font = pygame.font.SysFont( fontName, size )
+        self.fonts[k] = font
+
+    def GetSysFonts( self ):
+        return pygame.font.get_fonts()
+
+    def AddText( self, text, position, fontName, size, color=(0,0,0), bgColor=None ):
+        k = "%s---%s" % ( fontName, size )
+        font = self.fonts[k]
+        self.textos.append( [ text, position, font, color, bgColor ] )
 
     def _CamFollowTarget( self ):
         if( self.camTarget is None ): return
@@ -89,6 +109,9 @@ class LGE():
 
     def SetFPS( self, fps ):
         self.fps = int( fps )
+
+    def GetFPS( self ):
+        return self.clock.get_fps()
 
     def Quit( self ):
         pygame.quit()
@@ -157,13 +180,11 @@ class LGE():
 
     # main loop
     def Run( self ):
-        pygame.key.set_repeat( 10 )
-        pygame.font.init()
-        font = pygame.font.Font( pygame.font.match_font( "consolas" ), 24 )
-        clock = pygame.time.Clock()
+        pygame.key.set_repeat( 0 )
+
         while( True ):
             # tiempo en ms desde el ciclo anterior
-            dt = clock.tick( self.fps )
+            dt = self.clock.tick( self.fps )
 
             # los gobjects nuevos
             for t in self.gObjectsToAdd:
@@ -213,37 +234,37 @@ class LGE():
             self.screen.fill( self.bgColor )
             for layer in sorted( self.layers.keys() ):
                 for gobj in self.layers[layer]:
-                    if( hasattr( gobj, "surface" ) ):
-                        if( gobj.IsVisible() and gobj.CollideRect( self.viewport ) ):
-                            w, h = gobj.GetSize()
-                            x, y = self._Fix_XY( gobj.GetPosition(), (w,h) )
+                    if( gobj.IsVisible() and gobj.CollideRect( self.viewport ) ):
+                        w, h = gobj.GetSize()
+                        x, y = self._Fix_XY( gobj.GetPosition(), (w,h) )
+                        if( hasattr( gobj, "surface" ) ):
                             self.screen.blit( gobj.surface, (x,y) )
-                            if( self.collidersColor ):
-                                pos = gobj.GetPosition()
-                                size = gobj.GetSize()
-                                pos = self._Fix_XY( pos, size )
-                                points = [ (x,y), (x,y+h-1), (x+w-1,y+h-1), (x+w-1,y) ]
-                                pygame.draw.lines( self.screen, self.collidersColor, True, points, 1 )
+                        if( self.collidersColor ):
+                            pos = gobj.GetPosition()
+                            size = gobj.GetSize()
+                            pos = self._Fix_XY( pos, size )
+                            points = [ (x,y), (x,y+h-1), (x+w-1,y+h-1), (x+w-1,y) ]
+                            pygame.draw.lines( self.screen, self.collidersColor, True, points, 1 )
 
-            # agregamos textos
-            info =  "FPS: " + str( int( clock.get_fps() ) )
-            self.AddText( info, (0,0) )
+            # mostramos los textos solicitados
+            vw, vh = self.viewport.size
             for entry in self.textos:
-                text, pos, color = entry
-                text_surface = font.render( text, True, color )
-                self.screen.blit( text_surface, (pos) )
+                text, pos, font, color, bgColor = entry
+                text_surface = font.render( text, True, color, bgColor )
+                x, y = pos
+                y = vh - y - text_surface.get_height()
+                self.screen.blit( text_surface, (x,y) )
             self.textos = []
 
             # mostramos la pantalla
             pygame.display.flip()
 
-
     def _Fix_XY( self, pos, size ):
         xo, yo = pos
         wo, ho = size
-        ww, wh = self.world.GetSize()
-        vx, vy  = self.viewport.GetOrigin()
-        vw, vh = self.viewport.GetSize()
+        ww, wh = self.world.size
+        vx, vy  = self.viewport.origin
+        vw, vh = self.viewport.size
         dy = wh - (vy + vh)
         x = xo - vx
         y = wh - (yo + ho) - dy

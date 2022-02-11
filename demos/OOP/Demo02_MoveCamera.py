@@ -7,7 +7,10 @@ class MiJuego():
         # creamos el juego
         self.engine = LGE( (1920,1056), (640,480), "Move Camera", (0xFF,0xFF,0xFF) )
         self.engine.SetFPS( 60 )
-        self.engine.SetMainTask( self.CamControl )
+        self.engine.SetMainTask( self.MainControl )
+
+        # cargamos un font
+        self.engine.LoadSysFont( "consolas", 20 )
 
         # agregamos el fondo
         fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
@@ -23,10 +26,15 @@ class MiJuego():
         w, h = heroe.GetSize()
         self.engine.SetCamPosition( (x+w/2,y+h/2) )
 
-    def CamControl( self, dt ):
+    def MainControl( self, dt ):
         # abortamos con la tecla Escape
         if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
-            return self.engine.Quit()
+            self.engine.Quit()
+
+        # mostramos los FPS actuales
+        fps = self.engine.GetFPS()
+        fps = "FPS: %07.2f" % fps
+        self.engine.AddText( fps, (0,460), "consolas", 20 )
 
         # moveremos la camara "ppm" pixeles por minuto
         ppm = 240

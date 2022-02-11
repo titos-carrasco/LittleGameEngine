@@ -8,6 +8,10 @@ class MiJuego():
         # creamos el juego
         self.engine = LGE( (1920,1056), (640,480), "Animated Player", (0xFF,0xFF,0xFF) )
         self.engine.SetFPS( 60 )
+        self.engine.SetMainTask( self.MainControl )
+
+        # cargamos un font
+        self.engine.LoadSysFont( "consolas", 20 )
 
         # agregamos el fondo
         fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
@@ -20,30 +24,36 @@ class MiJuego():
         # establecemos que la camara siga al heroe en su origen
         self.engine.SetCamTarget( heroe, False )
 
+    def MainControl( self, dt ):
+        # abortamos con la tecla Escape
+        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
+            self.engine.Quit()
+
+        # mostramos los FPS actuales
+        fps = self.engine.GetFPS()
+        fps = "FPS: %07.2f" % fps
+        self.engine.AddText( fps, (0,460), "consolas", 20 )
+
     # main loop
     def Run( self ):
         self.engine.Run()
 
 
 class MiHeroe( Sprite ):
-    def __init__( self, lge ):
+    def __init__( self, engine ):
         # agregamos el heroe con diferentes imagenes
         fnames = {
             "idle": "../images/Swordsman/Idle/Idle_0*.png",
             "run" : "../images/Swordsman/Run/Run_0*.png"
         }
         super().__init__( fnames, (550,346), "Heroe" )
-        self.engine = lge
+        self.engine = engine
         self.ScalePercent( 0.16 )
         self.SetShape( 0, "idle" )
         self.heading = 1
         self.elapsed = 0
 
     def OnUpdate( self, dt ):
-        # abortamos con la tecla Escape
-        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
-            return self.engine.Quit()
-
         # moveremos al heroe "ppm" pixeles por minuto
         ppm = 240
         pixels = (ppm*dt)/1000

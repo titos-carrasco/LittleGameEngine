@@ -9,10 +9,6 @@ def HeroeControl( dt ):
     # el heroe
     heroe = engine.GetGObject( "Heroe" )
 
-    # abortamos con la tecla Escape
-    if( engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
-        return engine.Quit()
-
    # moveremos al heroe "ppm" pixeles por minuto
     ppm = 240
     pixels = (ppm*dt)/1000
@@ -61,12 +57,30 @@ def HeroeControl( dt ):
     pos = engine.KeepInsideWorld( heroe, (x,y) )
     heroe.SetPosition( pos )
 
+
+def MainControl( dt ):
+    global engine
+
+    # abortamos con la tecla Escape
+    if( engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
+        engine.Quit()
+
+    # mostramos los FPS actuales
+    fps = engine.GetFPS()
+    fps = "FPS: %07.2f" % fps
+    engine.AddText( fps, (0,460), "consolas", 20 )
+
+
 def main():
     global engine
 
     # creamos el juego
     engine = LGE( (1920,1056), (640,480), "Animated Player", (0xFF,0xFF,0xFF) )
     engine.SetFPS( 60 )
+    engine.SetMainTask( MainControl )
+
+    # cargamos un font
+    engine.LoadSysFont( "consolas", 20 )
 
     # agregamos el fondo
     fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
