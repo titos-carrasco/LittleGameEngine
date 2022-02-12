@@ -3,7 +3,7 @@ from lge.LGE import LGE
 
 
 class Betty( Sprite ):
-    def __init__( self, engine ):
+    def __init__( self, engine, name ):
         anim = {
             "idle" : "../images/Betty/idle-0*.png",
             "down" : "../images/Betty/down-0*.png",
@@ -11,15 +11,17 @@ class Betty( Sprite ):
             "left" : "../images/Betty/left-0*.png",
             "right": "../images/Betty/right-0*.png",
         }
-        super().__init__( anim, (32,32), "Betty" )
+        super().__init__( anim, (32,32), name )
         self.engine = engine
         self.elapsed = 0
         self.SetShape( 0, "idle" )
+        self.tag = "Betty"
 
     def OnUpdate( self, dt ):
         # nos movemnos a "ppm" pixeles por minuto
         ppm = 240
         pixels = (ppm*dt)/1000
+        pixels = 4
 
         # nuestra posicion actual y tamano
         x, y = self.GetPosition()
@@ -66,8 +68,8 @@ class Betty( Sprite ):
 
         # lo posicionamos
         self.SetPosition( (x,y) )
-        crops = self.engine.GetCollisions( self.name )
-        if( len( crops) > 0 ):
+        collisions = self.engine.GetCollisions( self.name )
+        if( len( collisions ) > 0 ):
             self.SetPosition( (xori, yori) )
 
         # tunel?

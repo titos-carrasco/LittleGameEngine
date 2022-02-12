@@ -50,6 +50,20 @@ class LGE():
         elif( y + h > wh ): y = wh - h
         return x, y
 
+    # fonts
+    def GetSysFonts( self ):
+        return pygame.font.get_fonts()
+
+    def LoadSysFont( self, name, size ):
+        if( name in self.fonts ): return
+        font = pygame.font.SysFont( name, size )
+        self.fonts[name] = font
+
+    def LoadTTFFont( self, name, size, path ):
+        if( name in self.fonts ): return
+        font = pygame.font.Font( path, size )
+        self.fonts[name] = font
+
     # camera
     def SetCamPosition( self, position ):
         x, y = position
@@ -71,24 +85,8 @@ class LGE():
     def UnSetCamTarget( self ):
         self.camTarget = None
 
-    def LoadMyFont( self, fontName, size, path ):
-        k = "%s---%s" % ( fontName, size )
-        if( k in self.fonts ): return
-        font = pygame.font.Font( path, size )
-        self.fonts[k] = font
-
-    def LoadSysFont( self, fontName, size ):
-        k = "%s---%s" % ( fontName, size )
-        if( k in self.fonts ): return
-        font = pygame.font.SysFont( fontName, size )
-        self.fonts[k] = font
-
-    def GetSysFonts( self ):
-        return pygame.font.get_fonts()
-
-    def AddText( self, text, position, fontName, size, color=(0,0,0), bgColor=None ):
-        k = "%s---%s" % ( fontName, size )
-        font = self.fonts[k]
+    def AddText( self, text, position, fontName, color=(0,0,0), bgColor=None ):
+        font = self.fonts[fontName]
         self.textos.append( [ text, position, font, color, bgColor ] )
 
     def _CamFollowTarget( self ):
@@ -119,24 +117,17 @@ class LGE():
 
     # gobjects
     def AddGObject( self, gobj, layer ):
-        name = gobj.name
-        if( name in self.gObjects ):
-            raise ValueError( "'Ya existe un 'gobject' con ese nombre" )
-        for t in self.gObjectsToAdd:
-            o, _ = t
-            if( o.name == name ):
-                raise ValueError( "Ya existe un 'gobject' con ese nombre ")
         self.gObjectsToAdd.append( (gobj,layer) )
 
     def DelGObject( self, gobj ):
         self.DelGObjectByname( gobj.name )
 
     def DelGObjectByName( self, name ):
-        if( not name in self.gObjects ):
-            raise ValueError( "'gobject' no existe" )
-        if( name in self.gObjectsToDelete ):
-            raise ValueError( "'gobject' ya esta marcado para eliminacion" )
         self.gObjectsToDelete.append( name )
+
+    def DelAllGObjects( self ):
+        for name in self.gObjects:
+            self.gObjectsToDelete.append( name )
 
     def GetGObject( self, name ):
         if( not name in self.gObjects ):
@@ -186,19 +177,11 @@ class LGE():
             # tiempo en ms desde el ciclo anterior
             dt = self.clock.tick( self.fps )
 
-            # los gobjects nuevos
-            for t in self.gObjectsToAdd:
-                gobj, layer = t
-                self.gObjects[gobj.name] = t
-
-                if( not layer in self.layers ):
-                    self.layers[layer] = []
-                self.layers[layer].append( gobj )
-            self.gObjectsToAdd = []
-
             # los gobjects a eliminar
             for name in self.gObjectsToDelete:
                 gobj, layer = self.gObjects[name]
+
+                if( not name in self.gObjects ): continue
                 del self.gObjects[name]
 
                 gobjs = self.layers[layer]
@@ -210,6 +193,18 @@ class LGE():
                 if( not self.camTarget is None and self.camTarget[0] == gobj ):
                     self.camTarget = None
             self.gObjectsToDelete = []
+
+            # los gobjects nuevos
+            for t in self.gObjectsToAdd:
+                gobj, layer = t
+
+                if( gobj.name in self.gObjects ): continue
+                self.gObjects[gobj.name] = t
+
+                if( not layer in self.layers ):
+                    self.layers[layer] = []
+                self.layers[layer].append( gobj )
+            self.gObjectsToAdd = []
 
             # los eventos
             self.events = pygame.event.get()

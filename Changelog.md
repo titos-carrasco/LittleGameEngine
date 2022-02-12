@@ -1,5 +1,18 @@
 # ChangeLog
 
+### 2022-02-12
+
+### Changed
+- lge/LGE.py
+    - Corrige métodos para agregar y eliminar objetos
+### Added
+- lge/LGE.py
+    - Uso de fonts TTF
+- lge/GameObject.py
+    - Atributo TAG (tipo str) en GameObject para usarlo como un tipo de objeto ("suelo", "zombie", "veneno", etc)
+- demos/Betty
+    - Demo básico al estilo PacMan
+
 ## 2022-02-10
 
 ### Changed

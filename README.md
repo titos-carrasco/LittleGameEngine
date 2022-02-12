@@ -29,6 +29,7 @@ engine.Run()
 ```
 
 ![](images/collisions.png)
+![](images/Betty.png)
 
 
 ---
@@ -40,17 +41,23 @@ game = LGE( worldDim, winDim, title, bgColor )
 width, height = game.GetWorldSize()
 game.KeepInsideWorld( gobj, newpos )
 
+# fonts
+l = game.GetSysFonts()
+game.LoadSysFont( name, size )
+game.LoadTTFFont( name, size, path )
+
 # camera
-game.SetCamPosition( position )
+game.SetCamPosition( (x,y)) )
 x, y = game.GetCamPosition()
 width, height = game.GetCamSize()
-game.SetCamTarget( target=None )
+game.SetCamTarget( gobj, center=True )
 game.UnSetCamTarget()
-game.AddText( text, position, color=(0,0,0) )
+game.AddText( text, position, font, color=(0,0,0), bgColor=None )
 
 # game
 game.SetMainTask( task=None )
 game.SetFPS( fps )
+fps = game.GetFPS()
 game.Quit()
 game.Run()
 
@@ -58,13 +65,14 @@ game.Run()
 game.AddGObject( gobj, layer )
 game.DelGobject( gobj )
 game.DelGobjectByName( name )
+game.DelAllGObjects()
 gobj = game.GetGObject( name )
-game.ShowColliders( bc=None )
+game.ShowColliders( color=None )
 arr = game.GetCollisions( name )        # [ (gobj,crop), (gobj,crop), ...]
 
 # events
-b = game.IsKeyUp( key )
 b = game.IsKeyDown( key )
+b = game.IsKeyUp( key )
 b = game.IsKeyPressed( key )
 
 # sprites
@@ -82,6 +90,7 @@ gobj = GameObject( (left,bottom), (width,height), name=None )
 left, bottom = gobj.GetPosition()
 width, height = gobj.GetSize()
 name = gobj.GetName()
+tag = gobj.GetTag()
 visibility = gobj.IsVisible()
 gobj.SetPosition( (left,bottom) )
 gobj.SetSize( (width,height) )
@@ -101,11 +110,15 @@ if( crop is not None): x, y, width, height = crop
 ```
 
 ---
-## Imágenes
+### Pendientes
+- Sonidos
+- Luces
 
-Las imágenes de los demos fueron obtenidas desde
+---
+## Imágenes
 - https//opengameart.org/content/one-more-lpc-alternate-character
 - https//opengameart.org/content/free-platformer-game-tileset
 - https//opengameart.org/content/2d-game-character-pack-slim-version
 - https//opengameart.org/content/game-character-blue-flappy-bird-sprite-sheets
 - https//opengameart.org/content/dungeon-crawl-32x32-tiles
+- https://www.kenney.nl

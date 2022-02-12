@@ -6,6 +6,7 @@ class GameObject():
     def __init__( self, origin, size, name=None ):
         self.rect = Rect( origin, size )
         self.name = "noname-" + uuid.uuid4().hex if name is None else name
+        self.tag = ""
         self.visible = True
 
     def GetPosition( self ):
@@ -16,6 +17,9 @@ class GameObject():
 
     def GetName( self ):
         return self.name
+
+    def GetTag( self ):
+        return self.tag
 
     def IsVisible( self ):
         return self.visible
