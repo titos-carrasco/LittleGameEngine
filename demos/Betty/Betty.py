@@ -16,12 +16,19 @@ class Betty( Sprite ):
         self.elapsed = 0
         self.SetShape( 0, "idle" )
         self.tag = "Betty"
+        self.alive = True
+
+    def IsAlive( self ):
+        return self.alive
 
     def OnUpdate( self, dt ):
+        # solo si estoy viva
+        if( not self.alive ): return
+
         # nos movemnos a "ppm" pixeles por minuto
-        ppm = 240
-        pixels = (ppm*dt)/1000
-        pixels = 4
+        #ppm = 120
+        #pixels = (ppm*dt)/1000
+        pixels = 2
 
         # nuestra posicion actual y tamano
         x, y = self.GetPosition()
@@ -78,3 +85,8 @@ class Betty( Sprite ):
         if( x < -16 ): x = w - 16
         elif( x > w - 16 ): x = -16
         self.SetPosition( (x,y) )
+
+        # dead?
+        zombies = [ gobj for gobj, layer in collisions if gobj.tag == "zombie" ]
+        if( len( zombies) > 0 ):
+            self.alive = False

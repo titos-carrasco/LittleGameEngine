@@ -70,17 +70,20 @@ class MiJuego():
             zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
             self.engine.AddGObject( zombie, 1 )
 
-        # agregamos gobjects como colliders
+        # agregamos los muros para las colisiones
+        # 1. fue creado con Tiled
+        # 2  exportado desde Tiled como .png y editado para dejar sus contornos
+        # 2. exportaddo desde Tiled como .csv para conocer las coordenadas de los muros
+        f = open( "../images/Betty/Fondo.csv", "r" )
+        data = list( f )
+        f.close()
+        mapa = [ e.strip("\n").strip("\n").split(",") for e in data ]
         w, h = self.engine.GetWorldSize()
         y = h - 32
-        f = open( "../images/Betty/Fondo.csv", "r" )
-        while( True ):
+        for r in mapa:
             x = 0
-            line = f.readline()
-            if( line == "" ): break
-            line = [ int( c ) for c in line.replace( "\r", "" ).replace( "\n", "" ).split( "," ) ]
-            for c in line:
-                if( c != -1 ):
+            for tid in r:
+                if( tid == "muro" ):
                     gobj = GameObject( (x,y), (32,32) )
                     gobj.tag = "muro"
                     self.engine.AddGObject( gobj, 1 )
@@ -93,9 +96,8 @@ class MiJuego():
     def EscenaJuegoControl( self, dt ):
         self.CheckEscape()
 
-        collisions = self.engine.GetCollisions( "Betty" )
-        zombies = [ True for gobj, layer in collisions if gobj.tag == "zombie" ]
-        if( len( zombies ) > 0 ):
+        betty = self.engine.GetGObjectByName( "Betty" )
+        if( not betty.IsAlive() ):
             self.engine.AddText( "Presiona la Barra Espaciadora", (106,286), "Cool 30", (255,255,255) )
             if( not self.engine.IsKeyDown( LGE.CONSTANTS.K_SPACE ) ): return
             self.engine.DelAllGObjects()

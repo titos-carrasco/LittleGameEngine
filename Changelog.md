@@ -1,10 +1,29 @@
 # ChangeLog
 
-### 2022-02-12
+## 2022-02-13
+### Added
+- lge/LGE.py
+    - Agrega manejo de sonidos
+- demos/
+    - Agrega sonido en algunos demos
+
+### Changed
+- lge/LGE.py
+    - Agrega manejo de sonidos
+    - Cambia de nombre método GetGObject() a GetGObjectByName()
+    - Finaliza demo Betty (queda como desafio agregar sonidos, puntos, etc)
+
+### Deleted
+- lge/LGE.py
+    - Elimina método UnSetCamTarge()
+    - Elimina método DelGObject()
+
+## @v0.0.6 2022-02-12
 
 ### Changed
 - lge/LGE.py
     - Corrige métodos para agregar y eliminar objetos
+
 ### Added
 - lge/LGE.py
     - Uso de fonts TTF

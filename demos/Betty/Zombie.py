@@ -13,8 +13,8 @@ class Zombie( Sprite ):
 
     def OnUpdate( self, dt ):
         # nos movemnos a "ppm" pixeles por minuto
-        ppm = 240
-        pixels = (ppm*dt)/1000
+        #ppm = 120
+        #pixels = (ppm*dt)/1000
         pixels = 2
 
         # las coordenadas de Betty

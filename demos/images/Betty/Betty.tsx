@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.5" tiledversion="1.7.2" name="Betty" tilewidth="32" tileheight="32" tilecount="16" columns="0">
+<tileset version="1.5" tiledversion="1.7.2" name="Betty" tilewidth="32" tileheight="32" tilecount="17" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="32" height="32" source="down-001.png"/>
@@ -48,5 +48,11 @@
  </tile>
  <tile id="15">
   <image width="32" height="32" source="up-004.png"/>
+ </tile>
+ <tile id="16">
+  <properties>
+   <property name="name" value="muro"/>
+  </properties>
+  <image width="32" height="32" source="Bloque.png"/>
  </tile>
 </tileset>
