@@ -12,7 +12,7 @@ def MainControl( dt ):
     # mostramos los FPS actuales
     fps = engine.GetFPS()
     fps = "FPS: %07.2f" % fps
-    engine.AddText( fps, (0,460), "consolas", 20 )
+    engine.AddText( fps, (0,460), "consolas" )
 
     # moveremos la camara "ppm" pixeles por minuto
     ppm = 240
@@ -59,6 +59,10 @@ def main():
     x, y = heroe.GetPosition()
     w, h = heroe.GetSize()
     engine.SetCamPosition( (x+w/2,y+h/2) )
+
+    # agregamos una música de fondo
+    engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+    engine.PlaySound( "fondo", loop=-1 )
 
     # main loop
     engine.Run()

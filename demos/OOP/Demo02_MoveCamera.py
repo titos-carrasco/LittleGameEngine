@@ -26,6 +26,10 @@ class MiJuego():
         w, h = heroe.GetSize()
         self.engine.SetCamPosition( (x+w/2,y+h/2) )
 
+        # agregamos una música de fondo
+        self.engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        self.engine.PlaySound( "fondo", loop=-1 )
+
     def MainControl( self, dt ):
         # abortamos con la tecla Escape
         if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
@@ -34,7 +38,7 @@ class MiJuego():
         # mostramos los FPS actuales
         fps = self.engine.GetFPS()
         fps = "FPS: %07.2f" % fps
-        self.engine.AddText( fps, (0,460), "consolas", 20 )
+        self.engine.AddText( fps, (0,460), "consolas" )
 
         # moveremos la camara "ppm" pixeles por minuto
         ppm = 240
@@ -55,6 +59,7 @@ class MiJuego():
 
         # posicionamos la camara
         self.engine.SetCamPosition( (x,y) )
+
 
     # main loop
     def Run( self ):

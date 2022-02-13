@@ -21,6 +21,10 @@ class MiJuego():
         # posicionamos la camara
         self.engine.SetCamPosition( (0,0) )
 
+        # agregamos una música de fondo
+        self.engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        self.engine.PlaySound( "fondo", loop=-1 )
+
     # main loop
     def Run( self ):
         self.engine.Run()

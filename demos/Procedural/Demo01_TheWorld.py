@@ -15,6 +15,10 @@ heroe = Sprite( "../images/Swordsman/Idle/Idle_000.png", (220,140), "Heroe" )
 heroe.ScalePercent( 0.10 )
 engine.AddGObject( heroe, 1 )
 
+# agregamos una música de fondo
+engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+engine.PlaySound( "fondo", loop=-1 )
+
 # posicionamos la camara
 engine.SetCamPosition( (0,0) )
 

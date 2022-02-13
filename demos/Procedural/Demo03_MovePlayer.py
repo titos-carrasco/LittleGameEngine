@@ -6,7 +6,7 @@ def HeroeControl( dt ):
     global engine
 
     # el heroe
-    heroe = engine.GetGObject( "Heroe" )
+    heroe = engine.GetGObjectByName( "Heroe" )
 
    # moveremos al heroe "ppm" pixeles por minuto
     ppm = 240
@@ -46,7 +46,7 @@ def MainControl( dt ):
     # mostramos los FPS actuales
     fps = engine.GetFPS()
     fps = "FPS: %07.2f" % fps
-    engine.AddText( fps, (0,460), "consolas", 20 )
+    engine.AddText( fps, (0,460), "consolas" )
 
 
 def main():
@@ -73,6 +73,10 @@ def main():
 
     # establecemos que la camara siga al centro del heroe
     engine.SetCamTarget( heroe, True )
+
+    # agregamos una música de fondo
+    engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+    engine.PlaySound( "fondo", loop=-1 )
 
     # main loop
     engine.Run()

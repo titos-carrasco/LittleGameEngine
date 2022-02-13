@@ -18,7 +18,7 @@ class Zombie( Sprite ):
         pixels = 2
 
         # las coordenadas de Betty
-        betty = self.engine.GetGObject( "Betty" )
+        betty = self.engine.GetGObjectByName( "Betty" )
         bx, by = betty.GetPosition()
 
         # nuestra posicion actual

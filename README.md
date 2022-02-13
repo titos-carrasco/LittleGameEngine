@@ -46,6 +46,13 @@ l = game.GetSysFonts()
 game.LoadSysFont( name, size )
 game.LoadTTFFont( name, size, path )
 
+# sonidos
+game.LoadSound( name, fname ):
+game.PlaySound( name, loop=0 ):
+game.StopSound( name ):
+game.SetSoundVolume( name, volume ):
+volume = game.GetSoundVolume( name ):
+
 # camera
 game.SetCamPosition( (x,y)) )
 x, y = game.GetCamPosition()
@@ -63,10 +70,9 @@ game.Run()
 
 # gobjects
 game.AddGObject( gobj, layer )
-game.DelGobject( gobj )
-game.DelGobjectByName( name )
+game.DelGObjectByName( name )
 game.DelAllGObjects()
-gobj = game.GetGObject( name )
+gobj = game.GetGObjectByName( name )
 game.ShowColliders( color=None )
 arr = game.GetCollisions( name )        # [ (gobj,crop), (gobj,crop), ...]
 
@@ -110,15 +116,19 @@ if( crop is not None): x, y, width, height = crop
 ```
 
 ---
-### Pendientes
-- Sonidos
+## Pendientes
 - Luces
+- widgets para controlar algunso aspectos del juegp (volumen, etc)
 
 ---
 ## Imágenes
-- https//opengameart.org/content/one-more-lpc-alternate-character
-- https//opengameart.org/content/free-platformer-game-tileset
-- https//opengameart.org/content/2d-game-character-pack-slim-version
-- https//opengameart.org/content/game-character-blue-flappy-bird-sprite-sheets
-- https//opengameart.org/content/dungeon-crawl-32x32-tiles
+- https://opengameart.org/content/one-more-lpc-alternate-character
+- https://opengameart.org/content/free-platformer-game-tileset
+- https://opengameart.org/content/2d-game-character-pack-slim-version
+- https://opengameart.org/content/game-character-blue-flappy-bird-sprite-sheets
+- https://opengameart.org/content/dungeon-crawl-32x32-tiles
 - https://www.kenney.nl
+
+## Sonidos
+- https://freesound.org/people/TiagoThanos/sounds/571229/
+- https://freesound.org/people/MATRIXXX_/sounds/365668/

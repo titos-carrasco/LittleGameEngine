@@ -1,3 +1,5 @@
+from random import random
+
 from lge.GameObject import GameObject
 from lge.Sprite import Sprite
 from lge.LGE import LGE
@@ -29,7 +31,17 @@ class MiJuego():
         # establecemos que la camara siga al heroe en su origen
         self.engine.SetCamTarget( heroe, False )
 
-        # para vosualizar el despliegue de los contornos de los objetos
+        # cargamos algunos sonidos
+        self.engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        self.engine.LoadSound( "aves", "../sounds/bird-thrush-nightingale.wav" )
+        self.engine.LoadSound( "poing", "../sounds/cartoon-poing.wav" )
+        self.engine.SetSoundVolume( "poing", 0.2 )
+
+        # damos play a la musica de fondo
+        self.engine.PlaySound( "fondo", loop=-1 )
+
+
+        # para visualizar el despliegue de los contornos de los objetos
         self.engine.ShowColliders( (0xFF,0x00,0x00) )
         self.showColliders = True
 
@@ -41,7 +53,7 @@ class MiJuego():
         # mostramos los FPS actuales
         fps = self.engine.GetFPS()
         fps = "FPS: %07.2f" % fps
-        self.engine.AddText( fps, (0,460), "consolas", 20 )
+        self.engine.AddText( fps, (0,460), "consolas" )
 
         # mostramos los bordes
         if( self.engine.IsKeyUp( LGE.CONSTANTS.K_c) ):
@@ -50,6 +62,11 @@ class MiJuego():
                 self.engine.ShowColliders( (0xFF, 0x00, 0x00) )
             else:
                 self.engine.ShowColliders()
+
+        # de manera aleatorio activamos sonido de aves
+        n = int( random()*1000 )
+        if( n < 3 ):
+            self.engine.PlaySound( "aves", 0 )
 
     # main loop
     def Run( self ):
@@ -73,6 +90,8 @@ class MiHeroe( Sprite ):
     def TestCollisions( self, dt ):
         crops = self.engine.GetCollisions( self.name )
         if( len(crops) == 0 ): return
+
+        self.engine.PlaySound( "poing", 0 )
 
         obj, r = crops[0]
         xr, yr, wr,hr = r

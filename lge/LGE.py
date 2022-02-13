@@ -29,9 +29,11 @@ class LGE():
         self.keysPressed = []
         self.textos = []
         self.fonts = {}
+        self.sounds = {}
 
         pygame.init()
         pygame.font.init()
+        pygame.mixer.init()
         pygame.display.set_caption( self.title )
         self.screen = pygame.display.set_mode( self.viewport.GetSize() )
         self.clock = pygame.time.Clock()
@@ -64,6 +66,22 @@ class LGE():
         font = pygame.font.Font( path, size )
         self.fonts[name] = font
 
+    # sonidos
+    def LoadSound( self, name, fname ):
+        self.sounds[name] = pygame.mixer.Sound( fname )
+
+    def PlaySound( self, name, loop=0 ):
+        self.sounds[name].play( loop )
+
+    def StopSound( self, name ):
+        self.sounds[name].stop()
+
+    def SetSoundVolume( self, name, volume ):
+        self.sounds[name].set_volume( volume )
+
+    def GetSoundVolume( self, name ):
+        return self.sounds[name].get_volume()
+
     # camera
     def SetCamPosition( self, position ):
         x, y = position
@@ -79,15 +97,18 @@ class LGE():
     def GetCamSize( self ):
         return self.viewport.GetSize()
 
-    def SetCamTarget( self, target, center=True ):
-        self.camTarget = (target,center)
+    def SetCamTarget( self, target=None, center=True ):
+        if( target is None ): self.camTarget = None
+        else: self.camTarget = (target,center)
 
-    def UnSetCamTarget( self ):
-        self.camTarget = None
-
-    def AddText( self, text, position, fontName, color=(0,0,0), bgColor=None ):
+    def AddText( self, text, position, fontName, fgColor=(0,0,0), bgColor=None ):
         font = self.fonts[fontName]
-        self.textos.append( [ text, position, font, color, bgColor ] )
+        r, g, b = fgColor
+        fgColor = pygame.Color( r, g, b )
+        if( not bgColor is None ):
+            r, g, b = bgColor
+            bgColor = pygame.Color( r, g, b )
+        self.textos.append( [ text, position, font, fgColor, bgColor ] )
 
     def _CamFollowTarget( self ):
         if( self.camTarget is None ): return
@@ -119,9 +140,6 @@ class LGE():
     def AddGObject( self, gobj, layer ):
         self.gObjectsToAdd.append( (gobj,layer) )
 
-    def DelGObject( self, gobj ):
-        self.DelGObjectByname( gobj.name )
-
     def DelGObjectByName( self, name ):
         self.gObjectsToDelete.append( name )
 
@@ -129,14 +147,14 @@ class LGE():
         for name in self.gObjects:
             self.gObjectsToDelete.append( name )
 
-    def GetGObject( self, name ):
+    def GetGObjectByName( self, name ):
         if( not name in self.gObjects ):
             raise ValueError( "'gobject' no existe" )
         gobj, layer = self.gObjects[name]
         return gobj
 
-    def ShowColliders( self, bc=None ):
-        self.collidersColor = bc
+    def ShowColliders( self, color=None ):
+        self.collidersColor = color
 
     def GetCollisions( self, name ):
         if( not name in self.gObjects ):
