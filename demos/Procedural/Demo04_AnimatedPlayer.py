@@ -47,11 +47,7 @@ def HeroeControl( dt ):
             heroe.SetShape( 0, "idle" )
 
     # siguiente imagen de la secuencia
-    t = heroe.elapsed + dt
-    if( t >= 50 ):
-        heroe.NextShape()
-        t = 0
-    heroe.elapsed = t
+    heroe.NextShape( dt, 50 )
 
     # lo posicionamos asegurando que se encuentre dentro del mundo definido
     pos = engine.KeepInsideWorld( heroe, (x,y) )
@@ -96,7 +92,6 @@ def main():
     heroe.SetShape( 0, "idle" )
     heroe.OnUpdate = HeroeControl
     heroe.heading = 1
-    heroe.elapsed = 0
     engine.AddGObject( heroe, 1 )
 
     # establecemos que la camara siga al heroe en su origen

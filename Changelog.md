@@ -12,6 +12,8 @@
     - Agrega manejo de sonidos
     - Cambia de nombre método GetGObject() a GetGObjectByName()
     - Finaliza demo Betty (queda como desafio agregar sonidos, puntos, etc)
+- lge/Sprite.py
+    - Modifica NextShape() para especificar tiempo en el cambio de shape
 
 ### Deleted
 - lge/LGE.py

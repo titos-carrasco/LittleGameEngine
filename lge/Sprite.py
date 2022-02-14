@@ -9,6 +9,7 @@ class Sprite( GameObject ):
     def __init__( self, fspecs, position, name=None ):
         super().__init__( position, (0,0), name )
 
+        self.elapsed = 0
         self.surfaces = {}
         if( isinstance( fspecs, str ) ):
             self.surfaces["__no_id__"] = self._LoadShapes( glob( fspecs ) )
@@ -37,7 +38,10 @@ class Sprite( GameObject ):
     def GetCurrentShape( self ):
         return self.shape[0], self.shape[1]
 
-    def NextShape( self ):
+    def NextShape( self, dt, millis=0 ):
+        self.elapsed = self.elapsed + dt
+        if( self.elapsed < millis ): return
+        self.elapsed = 0
         idx, entry = self.shape
         idx = idx + 1
         if( idx >= len( self.surfaces[entry] ) ):
@@ -52,6 +56,7 @@ class Sprite( GameObject ):
         self.surface = self.surfaces[entry][idx]
         size = self.surface.get_rect().size
         self.rect.SetSize( size )
+        self.elapsed = 0
 
     def SetSize( self, size ):
         self.Scale( size )

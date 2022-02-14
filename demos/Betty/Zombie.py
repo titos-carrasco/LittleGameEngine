@@ -6,7 +6,6 @@ class Zombie( Sprite ):
     def __init__( self, engine ):
         super().__init__( "../images/Kenny/Zombie/zombie_walk*.png", (32,32)  )
         self.engine = engine
-        self.elapsed = 0
         self.SetShape( 0 )
         self.tag = "zombie"
         self.dir = "R"
@@ -94,8 +93,4 @@ class Zombie( Sprite ):
         self.SetPosition( (x,y) )
 
         # siguiente imagen de la secuencia
-        t = self.elapsed + dt
-        if( t >= 100 ):
-            self.NextShape()
-            t = 0
-        self.elapsed = t
+        self.NextShape( dt, 100 )

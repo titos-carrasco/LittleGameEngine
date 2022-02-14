@@ -13,7 +13,6 @@ class Betty( Sprite ):
         }
         super().__init__( anim, (32,32), name )
         self.engine = engine
-        self.elapsed = 0
         self.SetShape( 0, "idle" )
         self.tag = "Betty"
         self.alive = True
@@ -67,11 +66,7 @@ class Betty( Sprite ):
                 if( y%32 < 8 or y%32 > 23 ): y = round( y/32 )*32
 
         # siguiente imagen de la secuencia
-        t = self.elapsed + dt
-        if( t >= 100 ):
-            self.NextShape()
-            t = 0
-        self.elapsed = t
+        self.NextShape( dt, 100 )
 
         # lo posicionamos
         self.SetPosition( (x,y) )

@@ -55,7 +55,6 @@ class MiHeroe( Sprite ):
         self.ScalePercent( 0.16 )
         self.SetShape( 0, "idle" )
         self.heading = 1
-        self.elapsed = 0
 
     def OnUpdate( self, dt ):
         # moveremos al heroe "ppm" pixeles por minuto
@@ -96,11 +95,7 @@ class MiHeroe( Sprite ):
                 self.SetShape( 0, "idle" )
 
         # siguiente imagen de la secuencia
-        t = self.elapsed + dt
-        if( t >= 50 ):
-            self.NextShape()
-            t = 0
-        self.elapsed = t
+        self.NextShape( dt, 50 )
 
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
         x, y = self.engine.KeepInsideWorld( self, (x,y) )

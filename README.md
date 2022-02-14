@@ -84,7 +84,7 @@ b = game.IsKeyPressed( key )
 # sprites
 gobj = Sprite( fspecs, (left,bottom), name=None )
 idx, key = gobj.GetCurrentShape()
-gobj.NextShape()
+gobj.NextShape( dt, millis=0 )
 gobj.SetShape( idx, entry="__no_id__" )
 gobj.SetSize( (width,height) )
 gobj.Scale( (width,height) )
@@ -128,6 +128,7 @@ if( crop is not None): x, y, width, height = crop
 - https://opengameart.org/content/game-character-blue-flappy-bird-sprite-sheets
 - https://opengameart.org/content/dungeon-crawl-32x32-tiles
 - https://www.kenney.nl
+- https://opengameart.org/content/2d-platformer-volcano-pack-11
 
 ## Sonidos
 - https://freesound.org/people/TiagoThanos/sounds/571229/
