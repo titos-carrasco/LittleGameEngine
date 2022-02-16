@@ -1,13 +1,17 @@
 import time
 import sys
+import glob
 import pygame
 
 from lge.Rect import Rect
-from lge.Sprite import Sprite
 
 
 class LGE():
     CONSTANTS = pygame.constants
+
+    fonts = {}
+    sounds = {}
+    images = {}
 
     def __init__( self, worldDim, winDim, title, bgColor ):
         self.world = Rect( (0,0), worldDim )
@@ -15,7 +19,6 @@ class LGE():
         self.title = title
         self.bgColor = bgColor
         self.collidersColor = None
-        self.fps = 0
 
         self.gObjects = {}
         self.gObjectsToAdd = []
@@ -28,8 +31,6 @@ class LGE():
         self.events = []
         self.keysPressed = []
         self.textos = []
-        self.fonts = {}
-        self.sounds = {}
 
         pygame.init()
         pygame.font.init()
@@ -37,6 +38,7 @@ class LGE():
         pygame.display.set_caption( self.title )
         self.screen = pygame.display.set_mode( self.viewport.GetSize() )
         self.clock = pygame.time.Clock()
+
 
     # world
     def GetWorldSize( self ):
@@ -52,35 +54,6 @@ class LGE():
         elif( y + h > wh ): y = wh - h
         return x, y
 
-    # fonts
-    def GetSysFonts( self ):
-        return pygame.font.get_fonts()
-
-    def LoadSysFont( self, name, size ):
-        if( name in self.fonts ): return
-        font = pygame.font.SysFont( name, size )
-        self.fonts[name] = font
-
-    def LoadTTFFont( self, name, size, path ):
-        if( name in self.fonts ): return
-        font = pygame.font.Font( path, size )
-        self.fonts[name] = font
-
-    # sonidos
-    def LoadSound( self, name, fname ):
-        self.sounds[name] = pygame.mixer.Sound( fname )
-
-    def PlaySound( self, name, loop=0 ):
-        self.sounds[name].play( loop )
-
-    def StopSound( self, name ):
-        self.sounds[name].stop()
-
-    def SetSoundVolume( self, name, volume ):
-        self.sounds[name].set_volume( volume )
-
-    def GetSoundVolume( self, name ):
-        return self.sounds[name].get_volume()
 
     # camera
     def SetCamPosition( self, position ):
@@ -122,19 +95,6 @@ class LGE():
             y = y + h/2
         self.SetCamPosition( (x, y) )
 
-    # game
-    def SetMainTask( self, task=None ):
-        self.mainTask = task
-
-    def SetFPS( self, fps ):
-        self.fps = int( fps )
-
-    def GetFPS( self ):
-        return self.clock.get_fps()
-
-    def Quit( self ):
-        pygame.quit()
-        sys.exit()
 
     # gobjects
     def AddGObject( self, gobj, layer ):
@@ -169,6 +129,7 @@ class LGE():
                      gobjs.append( (o,crop) )
         return gobjs
 
+
     # events
     def IsKeyDown( self, key ):
         for event in self.events:
@@ -187,13 +148,32 @@ class LGE():
     def IsKeyPressed( self, key ):
         return True if self.keysPressed[ key ] else False
 
+
+    # game
+    def SetMainTask( self, task=None ):
+        self.mainTask = task
+
+    def GetFPS( self ):
+        return self.clock.get_fps()
+
+    def Quit( self ):
+        pygame.quit()
+        sys.exit()
+
+
     # main loop
-    def Run( self ):
+    def Run( self, fps ):
         pygame.key.set_repeat( 0 )
 
         while( True ):
             # tiempo en ms desde el ciclo anterior
-            dt = self.clock.tick( self.fps )
+            dt = self.clock.tick( fps )
+
+            # los eventos
+            self.events = pygame.event.get()
+            if( pygame.QUIT in [e.type for e in self.events] ):
+                self.Quit()
+            self.keysPressed = pygame.key.get_pressed()
 
             # los gobjects a eliminar
             for name in self.gObjectsToDelete:
@@ -224,11 +204,6 @@ class LGE():
                 self.layers[layer].append( gobj )
             self.gObjectsToAdd = []
 
-            # los eventos
-            self.events = pygame.event.get()
-            if( pygame.QUIT in [e.type for e in self.events] ):
-                self.Quit()
-            self.keysPressed = pygame.key.get_pressed()
 
             # la logica de cada GameObject
             for layer in sorted( self.layers.keys() ):
@@ -270,7 +245,7 @@ class LGE():
             self.textos = []
 
             # mostramos la pantalla
-            pygame.display.flip()
+            pygame.display.update()
 
     def _Fix_XY( self, pos, size ):
         xo, yo = pos
@@ -282,3 +257,55 @@ class LGE():
         x = xo - vx
         y = wh - (yo + ho) - dy
         return x, y
+
+    #------------------------------------------------
+    # metodos de la clase
+
+    # fonts
+    def GetSysFonts():
+        return pygame.font.get_fonts()
+
+    def LoadSysFont( name, size ):
+        if( name in LGE.fonts ): return
+        font = pygame.font.SysFont( name, size )
+        LGE.fonts[name] = font
+
+    def LoadTTFFont( name, size, path ):
+        if( name in LGE.fonts ): return
+        font = pygame.font.Font( path, size )
+        LGE.fonts[name] = font
+
+
+    # sonidos
+    def LoadSound( name, fname ):
+        LGE.sounds[name] = pygame.mixer.Sound( fname )
+
+    def PlaySound( name, loop=0 ):
+        LGE.sounds[name].play( loop )
+
+    def StopSound( name ):
+        LGE.sounds[name].stop()
+
+    def SetSoundVolume( name, volume ):
+        LGE.sounds[name].set_volume( volume )
+
+    def GetSoundVolume( name ):
+        return LGE.sounds[name].get_volume()
+
+
+    # imagenes
+    def LoadImage( iname, pattern ):
+        if( "*" in pattern ): fnames = glob.glob( pattern )
+        else: fnames = [pattern]
+
+        fnames.sort()
+        surfaces = []
+        for fname in fnames:
+            surfaces.append( pygame.image.load( fname ).convert_alpha() )
+        LGE.images[iname] = surfaces
+
+    def GetImages( iname ):
+        images = []
+        for image in LGE.images[iname]:
+            images.append( image.copy() )
+        return images

@@ -6,29 +6,30 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         self.engine = LGE( (1920,1056), (640,480), "Move Camera", (0xFF,0xFF,0xFF) )
-        self.engine.SetFPS( 60 )
         self.engine.SetMainTask( self.MainControl )
 
-        # cargamos un font
-        self.engine.LoadSysFont( "consolas", 20 )
+        # activamos la musica de fondo
+        LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        LGE.PlaySound( "fondo", loop=-1 )
+
+        # cargamos los recursos que usaremos
+        LGE.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
+        LGE.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png" )
+        LGE.LoadSysFont( "consolas", 20 )
 
         # agregamos el fondo
-        fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
+        fondo = Sprite( "fondo", (0,0) )
         self.engine.AddGObject( fondo, 0 )
 
         # agregamos un Sprite
-        heroe = Sprite( "../images/Swordsman/Idle/Idle_000.png", (550,346), "Heroe" )
-        heroe.ScalePercent( 0.16 )
+        heroe = Sprite( "heroe", (550,346), "Heroe" )
+        heroe.Scale( 0.16 )
         self.engine.AddGObject( heroe, 1 )
 
         # posicionamos la camara
         x, y = heroe.GetPosition()
         w, h = heroe.GetSize()
         self.engine.SetCamPosition( (x+w/2,y+h/2) )
-
-        # agregamos una música de fondo
-        self.engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-        self.engine.PlaySound( "fondo", loop=-1 )
 
     def MainControl( self, dt ):
         # abortamos con la tecla Escape
@@ -63,7 +64,7 @@ class MiJuego():
 
     # main loop
     def Run( self ):
-        self.engine.Run()
+        self.engine.Run( 60 )
 
 
 #--- show time

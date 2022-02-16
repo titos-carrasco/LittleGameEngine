@@ -54,19 +54,24 @@ def main():
 
     # creamos el juego
     engine = LGE( (1920,1056), (640,480), "Move Player", (0xFF,0xFF,0xFF) )
-    engine.SetFPS( 60 )
     engine.SetMainTask( MainControl )
 
-    # cargamos un font
-    engine.LoadSysFont( "consolas", 20 )
+    # activamos la musica de fondo
+    LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+    LGE.PlaySound( "fondo", loop=-1 )
 
-    # agregamos el fondo
-    fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
+    # cargamos los recursos que usaremos
+    LGE.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
+    LGE.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png" )
+    LGE.LoadSysFont( "consolas", 20 )
+
+     # agregamos el fondo
+    fondo = Sprite( "fondo", (0,0) )
     engine.AddGObject( fondo, 0 )
 
     # agregamos un Sprite
-    heroe = Sprite( "../images/Swordsman/Idle/Idle_000.png", (550,346), "Heroe" )
-    heroe.ScalePercent( 0.16 )
+    heroe = Sprite( "heroe", (550,346), "Heroe" )
+    heroe.Scale( 0.16 )
     heroe.OnUpdate = HeroeControl
     heroe.heading = 1
     engine.AddGObject( heroe, 1 )
@@ -74,12 +79,8 @@ def main():
     # establecemos que la camara siga al centro del heroe
     engine.SetCamTarget( heroe, True )
 
-    # agregamos una música de fondo
-    engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-    engine.PlaySound( "fondo", loop=-1 )
-
     # main loop
-    engine.Run()
+    engine.Run( 60 )
 
 
 #--- show time

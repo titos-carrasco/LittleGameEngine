@@ -4,10 +4,10 @@ from lge.LGE import LGE
 
 class BlockHorizontal( Sprite ):
     def __init__( self, engine, pos, layer ):
-        super().__init__( "../images/Volcano_Pack_1.1/volcano_pack_alt_39.png", (128,128)  )
+        super().__init__( "roca", (128,128)  )
         self.engine = engine
         self.x, self.y = pos
-        self.SetShape( 0 )
+        self.SetShape( 0, "roca" )
         self.tag = "ground"
         self.dir = "up"
         self.SetPosition( pos )

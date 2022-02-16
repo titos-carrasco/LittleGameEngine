@@ -12,7 +12,7 @@ import sys
 
 SETUP = {
     "name"             : "lge",
-    "version"          : "0.0.6",
+    "version"          : "0.0.7",
     "description"      : "Little Game engine",
     "license"          : "MIT",
     "author"           : "Roberto Carrasco",
@@ -20,7 +20,7 @@ SETUP = {
     "maintainer"       : "Roberto Carrasco",
     "maintainer_email" : "titos.carrasco@gmail.com",
     "packages"         : [ "lge" ],
-    "package_dir"      : { "lge": "lge/" },
+    "package_dir"      : { "lge": "lge"},
 }
 
 setup( **SETUP )

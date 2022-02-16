@@ -1,6 +1,20 @@
 # ChangeLog
 
+## @v0.0.7 2022-02-15
+
+### Changed
+- lge/LGE.py
+    - Fonts, sonidos e imágenes se manejan a nivel de la clase
+    - Se agregan los métodos para cargar imagenes
+
+- lge/Sprite.py
+    - Se actualiza acorde a los cambios relizados
+- lge/demos
+    - Se actualizan acorde a los cambios relizados
+    - FPS ahora es parámetro de Run()
+
 ## 2022-02-13
+
 ### Added
 - lge/LGE.py
     - Agrega manejo de sonidos

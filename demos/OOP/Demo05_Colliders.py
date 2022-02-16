@@ -9,37 +9,38 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         self.engine = LGE( (1920,1056), (640,480), "Colliders", (0,0,0) )
-        self.engine.SetFPS( 60 )
         self.engine.SetMainTask( self.MainControl )
 
-        # cargamos un font
-        self.engine.LoadSysFont( "consolas", 20 )
+        # activamos la musica de fondo
+        LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        LGE.PlaySound( "fondo", loop=-1 )
+
+        # cargamos los recursos que usaremos
+        LGE.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
+        LGE.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
+        LGE.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
+        LGE.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_000.png" )
+        LGE.LoadSysFont( "consolas", 20 )
+        LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        LGE.LoadSound( "aves", "../sounds/bird-thrush-nightingale.wav" )
+        LGE.LoadSound( "poing", "../sounds/cartoon-poing.wav" )
+        LGE.SetSoundVolume( "poing", 0.1 )
 
         # agregamos el fondo
-        fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
+        fondo = Sprite( "fondo", (0,0) )
         self.engine.AddGObject( fondo, 0 )
 
         # agregamos al heroe
         heroe = MiHeroe( self.engine )
         self.engine.AddGObject( heroe, 1 )
 
-        # agregamos otro objeto
-        gobj = Sprite( "../images/Swordsman/Idle/Idle_000.png", (350,250) )
-        gobj.ScalePercent( 0.16 )
+        # agregamos otro ninja
+        gobj = Sprite( "ninja", (350,250) )
+        gobj.Scale( 0.16 )
         self.engine.AddGObject( gobj, 1 )
 
         # establecemos que la camara siga al heroe en su origen
         self.engine.SetCamTarget( heroe, False )
-
-        # cargamos algunos sonidos
-        self.engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-        self.engine.LoadSound( "aves", "../sounds/bird-thrush-nightingale.wav" )
-        self.engine.LoadSound( "poing", "../sounds/cartoon-poing.wav" )
-        self.engine.SetSoundVolume( "poing", 0.2 )
-
-        # damos play a la musica de fondo
-        self.engine.PlaySound( "fondo", loop=-1 )
-
 
         # para visualizar el despliegue de los contornos de los objetos
         self.engine.ShowColliders( (0xFF,0x00,0x00) )
@@ -66,23 +67,19 @@ class MiJuego():
         # de manera aleatorio activamos sonido de aves
         n = int( random()*1000 )
         if( n < 3 ):
-            self.engine.PlaySound( "aves", 0 )
+            LGE.PlaySound( "aves", 0 )
 
     # main loop
     def Run( self ):
-        self.engine.Run()
+        self.engine.Run( 60 )
 
 
 class MiHeroe( Sprite ):
     def __init__( self, engine ):
         # agregamos el heroe con diferentes imagenes
-        fnames = {
-            "idle": "../images/Swordsman/Idle/Idle_0*.png",
-            "run" : "../images/Swordsman/Run/Run_0*.png"
-        }
-        super().__init__( fnames, (550,346), "Heroe" )
+        super().__init__( ["idle","run"], (550,346), "Heroe" )
         self.engine = engine
-        self.ScalePercent( 0.16 )
+        self.Scale( 0.16 )
         self.SetShape( 0, "idle" )
         self.heading = 1
 
@@ -90,7 +87,7 @@ class MiHeroe( Sprite ):
         crops = self.engine.GetCollisions( self.name )
         if( len(crops) == 0 ): return
 
-        self.engine.PlaySound( "poing", 0 )
+        LGE.PlaySound( "poing", 0 )
 
         obj, r = crops[0]
         xr, yr, wr,hr = r

@@ -4,9 +4,9 @@ from lge.LGE import LGE
 
 class Zombie( Sprite ):
     def __init__( self, engine ):
-        super().__init__( "../images/Kenny/Zombie/zombie_walk*.png", (32,32)  )
+        super().__init__( "zombie", (32,32)  )
         self.engine = engine
-        self.SetShape( 0 )
+        self.SetShape( 0, "zombie" )
         self.tag = "zombie"
         self.dir = "R"
 

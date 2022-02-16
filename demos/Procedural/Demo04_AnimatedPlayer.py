@@ -72,23 +72,24 @@ def main():
 
     # creamos el juego
     engine = LGE( (1920,1056), (640,480), "Animated Player", (0xFF,0xFF,0xFF) )
-    engine.SetFPS( 60 )
     engine.SetMainTask( MainControl )
 
-    # cargamos un font
-    engine.LoadSysFont( "consolas", 20 )
+    # activamos la musica de fondo
+    LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+    LGE.PlaySound( "fondo", loop=-1 )
+
+    # cargamos los recursos que usaremos
+    LGE.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
+    LGE.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
+    LGE.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
+    LGE.LoadSysFont( "consolas", 20 )
 
     # agregamos el fondo
-    fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
+    fondo = Sprite( "fondo", (0,0) )
     engine.AddGObject( fondo, 0 )
 
-    # agregamos el heroe con diferentes imagenes
-    fnames = {
-        "idle": "../images/Swordsman/Idle/Idle_0*.png",
-        "run" : "../images/Swordsman/Run/Run_0*.png"
-    }
-    heroe = Sprite( fnames, (550,346), "Heroe" )
-    heroe.ScalePercent( 0.16 )
+    heroe = Sprite( ["idle","run"], (550,346), "Heroe" )
+    heroe.Scale( 0.16 )
     heroe.SetShape( 0, "idle" )
     heroe.OnUpdate = HeroeControl
     heroe.heading = 1
@@ -97,12 +98,8 @@ def main():
     # establecemos que la camara siga al heroe en su origen
     engine.SetCamTarget( heroe, False )
 
-    # agregamos una música de fondo
-    engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-    engine.PlaySound( "fondo", loop=-1 )
-
     # main loop
-    engine.Run()
+    engine.Run( 60 )
 
 
 #--- show time

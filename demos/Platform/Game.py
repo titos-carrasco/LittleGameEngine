@@ -8,25 +8,22 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         self.engine = LGE( (2560,704), (800,704), "Vulcano", (0xFF, 0xFF, 0xFF) )
-        self.engine.SetFPS( 60 )
 
-        # cargamos algunos fonts
-        # self.engine.LoadSysFont( "consolas", 20 )
-        self.engine.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
-        self.engine.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
+        # cargamos algunos recursos
+        LGE.LoadImage( "fondo", "../images/Platform/Platform.png" )
+        LGE.LoadImage( "roca", "../images/Volcano_Pack_1.1/volcano_pack_alt_39.png" )
+        LGE.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
+        LGE.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
 
         # posicionamos la camara
         self.engine.SetCamPosition( (0,0) )
-
-        # mostramos los colliders
-        #self.engine.ShowColliders( (0xF0,0x00,0x00) )
 
         # la escena introductoria
         self.Intro()
 
     # main loop
     def Run( self ):
-        self.engine.Run()
+        self.engine.Run( 60 )
 
     # control principal
     def CheckEscape( self ):
@@ -43,7 +40,7 @@ class MiJuego():
     # escena de inicio
     def Intro( self ):
         # agregamos el fondo
-        fondo = Sprite( "../images/Platform/Platform.png", (0,0) )
+        fondo = Sprite( "fondo", (0,0) )
         self.engine.AddGObject( fondo, 0 )
 
         # el bloque que se mueve horizontal

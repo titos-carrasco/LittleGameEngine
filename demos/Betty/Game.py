@@ -9,18 +9,20 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         self.engine = LGE( (608,736), (608,736), "Betty", (0xFF, 0xFF, 0xFF) )
-        self.engine.SetFPS( 60 )
 
-        # cargamos algunos fonts
-        # self.engine.LoadSysFont( "consolas", 20 )
-        self.engine.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
-        self.engine.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
+        # cargamos algunos recursos
+        LGE.LoadImage( "fondo", "../images/Betty/Fondo.png" )
+        LGE.LoadImage( "betty_idle" , "../images/Betty/idle-0*.png" )
+        LGE.LoadImage( "betty_down" , "../images/Betty/down-0*.png" )
+        LGE.LoadImage( "betty_up"   , "../images/Betty/up-0*.png" )
+        LGE.LoadImage( "betty_left" , "../images/Betty/left-0*.png" )
+        LGE.LoadImage( "betty_right", "../images/Betty/right-0*.png" )
+        LGE.LoadImage( "zombie", "../images/Kenny/Zombie/zombie_walk*.png" )
+        LGE.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
+        LGE.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
 
         # posicionamos la camara
         self.engine.SetCamPosition( (0,0) )
-
-        # mostramos los colliders
-        #self.engine.ShowColliders( (0xF0,0x00,0x00) )
 
         # la escena introductoria
         self.EscenaInicio()
@@ -39,7 +41,7 @@ class MiJuego():
     # escena de inicio
     def EscenaInicio( self ):
         # agregamos el fondo
-        fondo = Sprite( "../images/Betty/FondoInicio.png", (0,0) )
+        fondo = Sprite( "fondo", (0,0) )
         self.engine.AddGObject( fondo, 0 )
 
         # agregamos el control de esta escena
@@ -56,7 +58,7 @@ class MiJuego():
 
     def EscenaJuego( self ):
         # agregamos el fondo
-        fondo = Sprite( "../images/Betty/Fondo.png", (0,0) )
+        fondo = Sprite( "fondo", (0,0) )
         self.engine.AddGObject( fondo, 0 )
 
         # agregamos a Betty
@@ -107,7 +109,7 @@ class MiJuego():
 
     # main loop
     def Run( self ):
-        self.engine.Run()
+        self.engine.Run( 60 )
 
 
 

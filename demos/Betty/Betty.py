@@ -4,16 +4,9 @@ from lge.LGE import LGE
 
 class Betty( Sprite ):
     def __init__( self, engine, name ):
-        anim = {
-            "idle" : "../images/Betty/idle-0*.png",
-            "down" : "../images/Betty/down-0*.png",
-            "up"   : "../images/Betty/up-0*.png",
-            "left" : "../images/Betty/left-0*.png",
-            "right": "../images/Betty/right-0*.png",
-        }
-        super().__init__( anim, (32,32), name )
+        super().__init__( ["betty_idle","betty_down", "betty_up", "betty_left", "betty_right"], (32,32), name )
         self.engine = engine
-        self.SetShape( 0, "idle" )
+        self.SetShape( 0, "betty_idle" )
         self.tag = "Betty"
         self.alive = True
 
@@ -34,34 +27,34 @@ class Betty( Sprite ):
         w, h = self.GetSize()
         xori, yori = x, y
 
-        # cambiamos sus coordenadas, imagen segun la tecla presionada
+        # cambiamos sus coordenadas e imagen segun la tecla presionada
         idx, action = self.GetCurrentShape()
         new_action = action
-        if( action == "idle"):
+        if( action == "betty_idle"):
             if( self.engine.IsKeyDown( LGE.CONSTANTS.K_RIGHT ) ):
-                new_action = "right"
+                new_action = "betty_right"
             elif( self.engine.IsKeyDown( LGE.CONSTANTS.K_LEFT) ):
-                new_action = "left"
+                new_action = "betty_left"
             elif( self.engine.IsKeyDown( LGE.CONSTANTS.K_UP ) ):
-                new_action = "up"
+                new_action = "betty_up"
             elif( self.engine.IsKeyDown( LGE.CONSTANTS.K_DOWN ) ):
-                new_action = "down"
-        elif( action == "right" ):
-            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_RIGHT ) ): new_action = "idle"
+                new_action = "betty_down"
+        elif( action == "betty_right" ):
+            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_RIGHT ) ): new_action = "betty_idle"
             else: x = x + pixels
-        elif( action == "left" ):
-            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_LEFT ) ): new_action = "idle"
+        elif( action == "betty_left" ):
+            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_LEFT ) ): new_action = "betty_idle"
             else: x = x - pixels
-        elif( action == "up" ):
-            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_UP ) ): new_action = "idle"
+        elif( action == "betty_up" ):
+            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_UP ) ): new_action = "betty_idle"
             else: y = y + pixels
-        elif( action == "down" ):
-            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_DOWN ) ): new_action = "idle"
+        elif( action == "betty_down" ):
+            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_DOWN ) ): new_action = "betty_idle"
             else: y = y - pixels
 
         if( action != new_action ):
             self.SetShape( 0, new_action )
-            if( new_action == "idle" ):
+            if( new_action == "betty_idle" ):
                 if( x%32 < 8 or x%32 > 23 ): x = round( x/32 )*32
                 if( y%32 < 8 or y%32 > 23 ): y = round( y/32 )*32
 

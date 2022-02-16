@@ -7,14 +7,20 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         self.engine = LGE( (1920,1056), (640,480), "Animated Player", (0xFF,0xFF,0xFF) )
-        self.engine.SetFPS( 60 )
         self.engine.SetMainTask( self.MainControl )
 
-        # cargamos un font
-        self.engine.LoadSysFont( "consolas", 20 )
+        # activamos la musica de fondo
+        LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        LGE.PlaySound( "fondo", loop=-1 )
+
+        # cargamos los recursos que usaremos
+        LGE.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
+        LGE.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
+        LGE.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
+        LGE.LoadSysFont( "consolas", 20 )
 
         # agregamos el fondo
-        fondo = Sprite( "../images/Backgrounds/FreeTileset/Fondo.png", (0,0) )
+        fondo = Sprite( "fondo", (0,0) )
         self.engine.AddGObject( fondo, 0 )
 
         # agregamos al heroe con sus animaciones
@@ -23,10 +29,6 @@ class MiJuego():
 
         # establecemos que la camara siga al heroe en su origen
         self.engine.SetCamTarget( heroe, False )
-
-        # agregamos una música de fondo
-        self.engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-        self.engine.PlaySound( "fondo", loop=-1 )
 
     def MainControl( self, dt ):
         # abortamos con la tecla Escape
@@ -40,19 +42,15 @@ class MiJuego():
 
     # main loop
     def Run( self ):
-        self.engine.Run()
+        self.engine.Run( 60 )
 
 
 class MiHeroe( Sprite ):
     def __init__( self, engine ):
         # agregamos el heroe con diferentes imagenes
-        fnames = {
-            "idle": "../images/Swordsman/Idle/Idle_0*.png",
-            "run" : "../images/Swordsman/Run/Run_0*.png"
-        }
-        super().__init__( fnames, (550,346), "Heroe" )
+        super().__init__( ["idle","run"], (550,346), "Heroe" )
         self.engine = engine
-        self.ScalePercent( 0.16 )
+        self.Scale( 0.16 )
         self.SetShape( 0, "idle" )
         self.heading = 1
 
