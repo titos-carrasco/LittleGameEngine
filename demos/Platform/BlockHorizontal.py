@@ -4,7 +4,7 @@ from lge.Engine import Engine
 
 class BlockHorizontal( Sprite ):
     def __init__( self, pos ):
-        super().__init__( "roca", (128,128)  )
+        super().__init__( "roca", (128,128), "roca"  )
         self.x, self.y = pos
         self.SetShape( 0, "roca" )
         self.tag = "ground"

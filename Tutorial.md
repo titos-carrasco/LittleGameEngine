@@ -1,3 +1,6 @@
+# Tutorial
+
+```python
 from lge.Sprite import Sprite
 from lge.Engine import Engine
 
@@ -10,23 +13,21 @@ Engine.PlaySound( "fondo", loop=-1 )
 
 # cargamos los recursos que usaremos
 Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_00*.png" )
+Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png" )
 
 # agregamos el fondo
 fondo = Sprite( "fondo", (0,0) )
-fondo.ReSize( (800,440) )
+fondo.Scale( (800,440) )
 Engine.AddGObject( fondo, 0 )
 
 # agregamos un Sprite
-heroe = Sprite( "heroe", (226,142), "Heroe" )
-heroe.Scale( 0.08 )
+heroe = Sprite( "heroe", (220,140), "Heroe" )
+heroe.Scale( 0.1 )
 Engine.AddGObject( heroe, 1 )
 
 # posicionamos la camara
 Engine.SetCamPosition( (0,0) )
 
-# python un poco mas avanzado
-heroe.OnUpdate = lambda dt: heroe.NextShape(dt,60)
-
 # main loop
 Engine.Run( 60 )
+```

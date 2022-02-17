@@ -26,6 +26,12 @@ class Rect():
         if( h < 0 ): h = 0
         self.size = int(w), int(h)
 
+    def CollidePoint( self, point ):
+        x, y = self.origin
+        w, h = self.size
+        px, py = point
+        return px >= x and px < x+w and py >= y and py < y+h
+
     def CollideRect( self, rect ):
         x1, y1 = self.origin
         w1, h1 = self.size
@@ -45,10 +51,4 @@ class Rect():
         else:
             y = y2
             h = y1 + h1 - 1 - y2
-        return (x, y, w, h ) if w >= 0 and h >= 0 else None
-
-    def CollidePoint( self, point ):
-        x, y = self.origin
-        w, h = self.size
-        px, py = point
-        return px >= x and px < x+w and py >= y and py < y+h
+        return Rect( (x,y), (w,h) ) if w >= 0 and h >= 0 else None

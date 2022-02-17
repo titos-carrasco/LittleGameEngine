@@ -13,17 +13,20 @@ class MiJuego():
 
         # cargamos los recursos que usaremos
         Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-        Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_001.png" )
+        Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_00*.png" )
 
         # agregamos el fondo
-        fondo = Sprite( "fondo", (0,0) )
-        fondo.Scale( (800,440) )
+        fondo = Sprite( "fondo", (0,0), "fondo" )
+        fondo.ReSize( (800,440) )
         Engine.AddGObject( fondo, 0 )
 
         # agregamos un Sprite
-        heroe = Sprite( "heroe", (220,140), "Heroe" )
-        heroe.Scale( 0.1 )
+        heroe = Sprite( "heroe", (226,142), "Heroe" )
+        heroe.Scale( 0.08 )
         Engine.AddGObject( heroe, 1 )
+
+        # python un poco mas avanzado
+        heroe.OnUpdate = lambda dt: heroe.NextShape(dt,60)
 
         # posicionamos la camara
         Engine.SetCamPosition( (0,0) )

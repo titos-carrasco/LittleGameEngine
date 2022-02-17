@@ -14,6 +14,7 @@ class Betty( Sprite ):
 
     def SetAlive( self ):
         self.alive = True
+        self.SetShape( 0, "betty_idle" )
 
     def OnUpdate( self, dt ):
         # solo si estoy viva

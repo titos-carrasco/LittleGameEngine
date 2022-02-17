@@ -44,18 +44,30 @@ class Sprite( GameObject ):
         self.elapsed = 0
 
     def SetSize( self, size ):
-        self.Scale( size )
+        pass
 
-    def Scale( self, size ):
+    def ReSize( self, size ):
+        for entry in self.surfaces:
+            surfaces = self.surfaces[entry]
+            n = len( surfaces )
+            for i in range( n ):
+                s = surfaces[i]
+                surfaces[i] = pygame.transform.smoothscale( s, size )
+
+        idx, entry = self.shape
+        self.surface = self.surfaces[entry][idx]
+        size = self.surface.get_rect().size
+        self.rect.SetSize( size )
+
+    def Scale( self, factor ):
         for entry in self.surfaces:
             surfaces = self.surfaces[entry]
             n = len( surfaces )
             for i in range( n ):
                 s = surfaces[i]
                 w, h = s.get_size()
-                if( isinstance( size, tuple ) ): scale = size
-                else: scale = ( int(w*size),int(h*size) )
-                surfaces[i] = pygame.transform.smoothscale( s, scale )
+                size = ( int(w*factor),int(h*factor) )
+                surfaces[i] = pygame.transform.smoothscale( s, size )
 
         idx, entry = self.shape
         self.surface = self.surfaces[entry][idx]

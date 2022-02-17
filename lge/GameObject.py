@@ -3,9 +3,9 @@ import uuid
 from lge.Rect import Rect
 
 class GameObject():
-    def __init__( self, origin, size, name=None ):
-        self.rect = Rect( origin, size )
-        self.name = "noname-" + uuid.uuid4().hex if name is None else name
+    def __init__( self, position, size, name=None ):
+        self.rect = Rect( position, size )
+        self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
         self.tag = ""
         self.visible = True
 
@@ -36,8 +36,8 @@ class GameObject():
     def CollideGObject( self, gobj ):
         return self.rect.CollideRect( gobj.rect )
 
-    def CollideRect( self, rect ):
-        return self.rect.CollideRect( rect )
-
     def CollidePoint( self, point ):
         return self.rect.CollidePoint( point )
+
+    def CollideRect( self, rect ):
+        return self.rect.CollideRect( rect )

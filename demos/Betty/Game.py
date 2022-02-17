@@ -1,3 +1,5 @@
+import uuid
+
 from lge.GameObject import GameObject
 from lge.Sprite import Sprite
 from lge.Text import Text
@@ -97,7 +99,7 @@ class MiJuego():
 
         # agregamos 3 zombies
         for i in range(3):
-            zombie = Zombie( "Zombie-%03d" % i )
+            zombie = Zombie( "Zombie-" + uuid.uuid4().hex )
             zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
             Engine.AddGObject( zombie, 1 )
 
@@ -115,7 +117,7 @@ class MiJuego():
             x = 0
             for tid in r:
                 if( tid == "muro" ):
-                    gobj = GameObject( (x,y), (32,32), "Bloque-%03d-%03d" % (x,y) )
+                    gobj = GameObject( (x,y), (32,32), "Bloque-" + uuid.uuid4().hex )
                     gobj.tag = "muro"
                     Engine.AddGObject( gobj, 1 )
                 x = x + 32

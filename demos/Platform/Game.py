@@ -69,7 +69,7 @@ class MiJuego():
         Engine.AddGObject( bloque, 1 )
 
         # agregamos mensaje
-        pressbar = Text( "Presiona la Barra Espaciadora", (200,340), "Cool 30", (255,255,255) )
+        pressbar = Text( "Presiona la Barra Espaciadora", (200,340), "Cool 30", (255,255,255), None, "pressbar" )
         Engine.AddGObject( pressbar, Engine.CAM_LAYER )
 
         # agregamos el control de esta escena

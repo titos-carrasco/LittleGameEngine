@@ -99,7 +99,8 @@ class MiHeroe( Sprite ):
         Engine.PlaySound( "poing", 0 )
 
         obj, r = crops[0]
-        xr, yr, wr,hr = r
+        xr, yr = r.GetOrigin()
+        wr,hr = r.GetSize()
         x, y = self.GetPosition()
         w, h = self.GetSize()
 

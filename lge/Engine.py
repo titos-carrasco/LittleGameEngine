@@ -7,12 +7,12 @@ from lge.Rect import Rect
 
 
 class Engine():
-    CONSTANTS = pygame.constants
-    CAM_LAYER = 0xFFFF
+    CONSTANTS    = pygame.constants
+    CAM_LAYER    = 0xFFFF
 
-    def Init( worldDim, winDim, title, bgColor ):
-        Engine.world = Rect( (0,0), worldDim )
-        Engine.viewport = Rect( (0,0), winDim )
+    def Init( worldSize, camSize, title, bgColor=(0,0,0) ):
+        Engine.world = Rect( (0,0), worldSize )
+        Engine.camera = Rect( (0,0), camSize )
         Engine.title = title
         Engine.bgColor = bgColor
         Engine.collidersColor = None
@@ -36,7 +36,7 @@ class Engine():
         pygame.font.init()
         pygame.mixer.init()
         pygame.display.set_caption( Engine.title )
-        Engine.screen = pygame.display.set_mode( Engine.viewport.GetSize() )
+        Engine.screen = pygame.display.set_mode( Engine.camera.GetSize() )
         Engine.clock = pygame.time.Clock()
 
 
@@ -58,17 +58,17 @@ class Engine():
     # camera
     def SetCamPosition( position ):
         x, y = position
-        w, h = Engine.viewport.GetSize()
-        x, y = Engine.KeepInsideWorld( Engine.viewport, (int(x-w/2),int(y-h/2)) )
-        Engine.viewport.SetOrigin( (x,y) )
+        w, h = Engine.camera.GetSize()
+        x, y = Engine.KeepInsideWorld( Engine.camera, (int(x-w/2),int(y-h/2)) )
+        Engine.camera.SetOrigin( (x,y) )
 
     def GetCamPosition():
-        x, y = Engine.viewport.GetOrigin()
-        w, h = Engine.viewport.GetSize()
+        x, y = Engine.camera.GetOrigin()
+        w, h = Engine.camera.GetSize()
         return int(x + w/2), int(y + h/2)
 
     def GetCamSize():
-        return Engine.viewport.GetSize()
+        return Engine.camera.GetSize()
 
     def SetCamTarget( gobj=None, center=True ):
         Engine.camTarget = (gobj,center)
@@ -162,7 +162,7 @@ class Engine():
 
     def GetMousePos():
         x, y = pygame.mouse.get_pos()
-        ww, wh = Engine.viewport.GetSize()
+        ww, wh = Engine.camera.GetSize()
         return x, wh - y
 
     def GetMousePressed():
@@ -244,10 +244,10 @@ class Engine():
                     if( layer == Engine.CAM_LAYER and hasattr( gobj, "surface" ) ):
                         x, y = gobj.GetPosition()
                         w, h = gobj.GetSize()
-                        vw, vh = Engine.viewport.size
+                        vw, vh = Engine.camera.size
                         Engine.screen.blit( gobj.surface, (x,vh-y-h) )
                     else:
-                        if( gobj.CollideRect( Engine.viewport ) ):
+                        if( gobj.CollideRect( Engine.camera ) ):
                             w, h = gobj.GetSize()
                             x, y = Engine._Fix_XY( gobj.GetPosition(), (w,h) )
                             if( hasattr( gobj, "surface" ) ):
@@ -266,8 +266,8 @@ class Engine():
         xo, yo = pos
         wo, ho = size
         ww, wh = Engine.world.size
-        vx, vy  = Engine.viewport.origin
-        vw, vh = Engine.viewport.size
+        vx, vy  = Engine.camera.origin
+        vw, vh = Engine.camera.size
         dy = wh - (vy + vh)
         x = xo - vx
         y = wh - (yo + ho) - dy
