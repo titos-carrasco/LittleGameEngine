@@ -86,7 +86,7 @@ class Zombie( Sprite ):
 
         # tunel?
         x, y = self.GetPosition()
-        w, h = Engine.GetWorldSize()
+        w, h = Engine.GetWorldBounds().GetSize()
         if( x < -16 ): x = w - 16
         elif( x > w - 16 ): x = -16
         self.SetPosition( (x,y) )

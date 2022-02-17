@@ -1,5 +1,17 @@
 # ChangeLog
 
+## ?????
+- lge/Rect.py
+    - Agrega métodos Copy() y KeepInsideRect()
+-lge/GameObject.py
+    - Modifica método SetPosition() agregando parámetro del tipo Rect() a
+      utilizar como límites para las coordenadas dadas
+- lge/Engine.py
+    - Elimina parámetro worldSize del método Initi()
+    - Agrega métodos SetWorldBounds(), GetWorldBounds() y ResetWorldBounds()
+    - elimina método KeepInsideWorld()
+- demos/
+    Ajusta todos los demos acorde a los cambios
 ## @v0.1.0-pre.1 2022-02-17
 - Agrega Tutorial (Tutorial.md)
 - Agrega descripción de Clases (Clases.md)

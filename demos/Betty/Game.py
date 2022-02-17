@@ -1,9 +1,10 @@
 import uuid
 
+from lge.Engine import Engine
 from lge.GameObject import GameObject
 from lge.Sprite import Sprite
 from lge.Text import Text
-from lge.Engine import Engine
+from lge.Rect import Rect
 
 from Betty import Betty
 from Zombie import Zombie
@@ -11,7 +12,8 @@ from Zombie import Zombie
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        Engine.Init( (608,736), (608,736), "Betty", (0xFF, 0xFF, 0xFF) )
+        Engine.Init( (608,736), "Betty" )
+        Engine.SetWorldBounds( Rect( (0,0), (608,736) ) )
 
         # cargamos algunos recursos
         Engine.LoadImage( "fondo", "../images/Betty/Fondo.png" )
@@ -111,7 +113,7 @@ class MiJuego():
         data = list( f )
         f.close()
         mapa = [ e.strip("\n").strip("\n").split(",") for e in data ]
-        w, h = Engine.GetWorldSize()
+        w, h = Engine.GetWorldBounds().GetSize()
         y = h - 32
         for r in mapa:
             x = 0

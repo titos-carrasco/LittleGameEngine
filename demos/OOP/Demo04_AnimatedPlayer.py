@@ -1,12 +1,13 @@
+from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Text import Text
-from lge.Engine import Engine
-
+from lge.Rect import Rect
 
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        Engine.Init( (1920,1056), (640,480), "Animated Player", (0xFF,0xFF,0xFF) )
+        Engine.Init( (640,480), "Animated Player" )
+        Engine.SetWorldBounds( Rect( (0,0), (1920,1056) ) )
         Engine.SetMainTask( self.MainControl )
 
         # activamos la musica de fondo
@@ -105,8 +106,7 @@ class MiHeroe( Sprite ):
         self.NextShape( dt, 50 )
 
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
-        x, y = Engine.KeepInsideWorld( self, (x,y) )
-        self.SetPosition( (x,y) )
+        self.SetPosition( (x,y), Engine.GetWorldBounds() )
 
 
 #--- show time

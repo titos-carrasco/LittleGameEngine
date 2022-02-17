@@ -5,11 +5,14 @@ import time
 from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Text import Text
+from lge.Rect import Rect
+
 
 class Test():
     def __init__( self ):
         # creamos el juego
-        Engine.Init( (800,440), (800,440), "The World", (0xFF,0xFF,0xFF) )
+        Engine.Init( (800,440), "The World" )
+        Engine.SetWorldBounds( Rect( (0,0), (800,440) ) )
         Engine.SetMainTask( self.MainControl )
 
         # activamos la musica de fondo
@@ -38,7 +41,7 @@ class Test():
         Engine.AddGObject( heroe, 2 )
 
         # agregamos pájaros
-        ww, wh = Engine.GetWorldSize()
+        ww, wh = Engine.GetWorldBounds().GetSize()
         start = time.time()
         for i in range( 500 ):
             x = int( random.random()*ww )

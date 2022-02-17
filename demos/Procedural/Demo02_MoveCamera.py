@@ -1,6 +1,7 @@
+from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Text import Text
-from lge.Engine import Engine
+from lge.Rect import Rect
 
 
 def MainControl( dt ):
@@ -42,7 +43,8 @@ def MainControl( dt ):
 
 def main():
     # creamos el juego
-    Engine.Init( (1920,1056), (640,480), "Move Camera", (0xFF,0xFF,0xFF) )
+    Engine.Init( (640,480), "Move Camera" )
+    Engine.SetWorldBounds( Rect( (0,0), (1920,1056) ) )
     Engine.SetMainTask( MainControl )
 
     # activamos la musica de fondo
@@ -70,7 +72,8 @@ def main():
     # posicionamos la camara
     x, y = heroe.GetPosition()
     w, h = heroe.GetSize()
-    Engine.SetCamPosition( (x+w/2,y+h/2) )
+    cw, ch = Engine.GetCamSize()
+    Engine.SetCamPosition( (x+w/2-cw/2,y+h/2-ch/2) )
 
     # main loop
     Engine.Run( 60 )

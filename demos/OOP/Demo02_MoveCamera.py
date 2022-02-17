@@ -1,12 +1,14 @@
+from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Text import Text
-from lge.Engine import Engine
+from lge.Rect import Rect
 
 
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        Engine.Init( (1920,1056), (640,480), "Move Camera", (0xFF,0xFF,0xFF) )
+        Engine.Init( (640,480), "Move Camera" )
+        Engine.SetWorldBounds( Rect( (0,0), (1920,1056) ) )
         Engine.SetMainTask( self.MainControl )
 
         # activamos la musica de fondo
@@ -34,7 +36,8 @@ class MiJuego():
         # posicionamos la camara
         x, y = heroe.GetPosition()
         w, h = heroe.GetSize()
-        Engine.SetCamPosition( (x+w/2,y+h/2) )
+        cw, ch = Engine.GetCamSize()
+        Engine.SetCamPosition( (x+w/2-cw/2,y+h/2-ch/2) )
 
     def MainControl( self, dt ):
         # abortamos con la tecla Escape

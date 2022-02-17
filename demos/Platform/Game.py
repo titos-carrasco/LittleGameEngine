@@ -1,13 +1,16 @@
+from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Text import Text
-from lge.Engine import Engine
+from lge.Rect import Rect
 
 from BlockHorizontal import BlockHorizontal
+
 
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        Engine.Init( (2560,704), (800,704), "Vulcano", (0xFF, 0xFF, 0xFF) )
+        Engine.Init( (800,704), "Vulcano" )
+        Engine.SetWorldBounds( Rect( (0,0), (2560,704) ) )
 
         # cargamos algunos recursos
         Engine.LoadImage( "fondo", "../images/Platform/Platform.png" )

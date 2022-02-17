@@ -24,8 +24,16 @@ class GameObject():
     def IsVisible( self ):
         return self.visible
 
-    def SetPosition( self, origin ):
-        self.rect.SetOrigin( origin )
+    def SetPosition( self, origin, rect=None ):
+        x, y = origin
+        x, y = int(x), int(y)
+
+        if( not rect is None ):
+            r = self.rect.Copy()
+            r.SetOrigin( (x,y) )
+            x,y = r.KeepInsideRect( rect )
+
+        self.rect.SetOrigin( (x,y) )
 
     def SetSize( self, size ):
         self.rect.SetSize( size )

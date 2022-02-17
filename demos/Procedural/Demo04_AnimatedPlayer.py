@@ -1,6 +1,7 @@
+from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Text import Text
-from lge.Engine import Engine
+from lge.Rect import Rect
 
 
 def HeroeControl( dt ):
@@ -48,8 +49,7 @@ def HeroeControl( dt ):
     heroe.NextShape( dt, 50 )
 
     # lo posicionamos asegurando que se encuentre dentro del mundo definido
-    pos = Engine.KeepInsideWorld( heroe, (x,y) )
-    heroe.SetPosition( pos )
+    heroe.SetPosition( (x,y), Engine.GetWorldBounds() )
 
 
 def MainControl( dt ):
@@ -71,7 +71,8 @@ def MainControl( dt ):
 
 def main():
     # creamos el juego
-    Engine.Init( (1920,1056), (640,480), "Animated Player", (0xFF,0xFF,0xFF) )
+    Engine.Init( (640,480), "Animated Player" )
+    Engine.SetWorldBounds( Rect( (0,0), (1920,1056) ) )
     Engine.SetMainTask( MainControl )
 
     # activamos la musica de fondo

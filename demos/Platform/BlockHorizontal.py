@@ -16,7 +16,7 @@ class BlockHorizontal( Sprite ):
         ppm = 120
         pixels = round( (ppm*dt)/1000 )
 
-        ww, wh = Engine.GetWorldSize()
+        ww, wh = Engine.GetWorldBounds().GetSize()
         if( self.dir == "up" ):
             self.y = self.y + pixels
         else:

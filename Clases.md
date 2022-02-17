@@ -18,7 +18,7 @@ Engine.CAM_LAYER
 
 ---
 ```
-Init( worldSize, camSize, title, bgColor=(0,0,0) )
+Init( camSize, title, bgColor=(0,0,0) )
 ```
 
 ---
@@ -43,12 +43,17 @@ GetFPS()
 
 ---
 ```
-GetWorldSize()
+SetWorlBounds()
 ```
 
 ---
 ```
-KeepInsideWorld( gobj, newpos )
+GetWorldBounds()
+```
+
+---
+```
+ResetWorlBounds()
 ```
 
 #### Camara
@@ -364,13 +369,14 @@ Retorna la visibilidad del GameObject
 
 ---
 ```
-gobj.SetPosition( position )
+gobj.SetPosition( position, rect=None )
 ```
 Establece la posición del GameObject
 
 | Parámetros | Descripción
 |---|---
 |`position`| La nueva posición (x,y) del GameObject
+|`rect`| Si se específica, la posición del GameObject queda confiada al rectpangulo dado
 
 ---
 ```
@@ -455,6 +461,16 @@ Crea un rectángulo en el origen y dimensiones especificadas
 
 ---
 ```
+rect2 = rect.Copy()
+```
+Crea una copia del rectángulo
+
+| Retorno | Descripción
+|---|---
+|`rect`| La copia del rectángulo
+
+---
+```
 origen = rect.GetOrigin()
 ```
 Retorna el origen del rectángulo
@@ -520,3 +536,17 @@ Determina si un rectángulo intersecta a este rectángulo
 | Retorno | Descripción
 |---|---
 |`rect3`| Un rectángulo dado por la intersección de ambos rectángulos. `None` en caso de que no intersecten
+
+---
+```
+point = rect.KeepInsideRect( rect2 )
+```
+Retorna un origen ah¿justado tal que el rectángulo queda dentro del rectángulo dado
+
+| Parámetros | Descripción
+|---|---
+|`rect2`| El rectángulo a utilizar como límites
+
+| Retorno | Descripción
+|---|---
+|`point`| Origen (x,y) ajustados
