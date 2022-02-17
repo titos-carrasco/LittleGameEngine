@@ -1,11 +1,10 @@
 from lge.Sprite import Sprite
-from lge.LGE import LGE
+from lge.Engine import Engine
 
 
 class Zombie( Sprite ):
-    def __init__( self, engine ):
-        super().__init__( "zombie", (32,32)  )
-        self.engine = engine
+    def __init__( self, name ):
+        super().__init__( "zombie", (0,0), name  )
         self.SetShape( 0, "zombie" )
         self.tag = "zombie"
         self.dir = "R"
@@ -17,7 +16,7 @@ class Zombie( Sprite ):
         pixels = 2
 
         # las coordenadas de Betty
-        betty = self.engine.GetGObjectByName( "Betty" )
+        betty = Engine.GetGObject( "Betty" )
         bx, by = betty.GetPosition()
 
         # nuestra posicion actual
@@ -77,7 +76,7 @@ class Zombie( Sprite ):
             elif( c == "U" ): y = y + pixels
             elif( c == "D" ): y = y - pixels
             self.SetPosition( (x,y) )
-            collisions = self.engine.GetCollisions( self.name )
+            collisions = Engine.GetCollisions( self.name )
             bloqueos = [ gobj for gobj, layer in collisions if gobj.tag == "muro" or gobj.tag == "zombie" ]
             if( len( bloqueos ) == 0 ):
                 self.dir = c
@@ -87,7 +86,7 @@ class Zombie( Sprite ):
 
         # tunel?
         x, y = self.GetPosition()
-        w, h = self.engine.GetWorldSize()
+        w, h = Engine.GetWorldSize()
         if( x < -16 ): x = w - 16
         elif( x > w - 16 ): x = -16
         self.SetPosition( (x,y) )

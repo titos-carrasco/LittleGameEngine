@@ -4,8 +4,8 @@ class Rect():
         self.origin = int(x), int(y)
 
         w, h = size
-        if( w < 0 or w < 0 ):
-            raise ValueError( "'size' no puede ser negativo" )
+        if( w < 0 ): w = 0
+        if( h < 0 ): h = 0
         self.size = int(w), int(h)
 
     def GetOrigin( self ):
@@ -22,8 +22,8 @@ class Rect():
 
     def SetSize( self, size ):
         w, h = size
-        if( w < 0 or w < 0 ):
-            raise( "'size' no puede ser negativo" )
+        if( w < 0 ): w = 0
+        if( h < 0 ): h = 0
         self.size = int(w), int(h)
 
     def CollideRect( self, rect ):
@@ -46,3 +46,9 @@ class Rect():
             y = y2
             h = y1 + h1 - 1 - y2
         return (x, y, w, h ) if w >= 0 and h >= 0 else None
+
+    def CollidePoint( self, point ):
+        x, y = self.origin
+        w, h = self.size
+        px, py = point
+        return px >= x and px < x+w and py >= y and py < y+h

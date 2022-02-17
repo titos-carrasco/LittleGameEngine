@@ -33,5 +33,11 @@ class GameObject():
     def SetVisible( self, visible ):
         self.visible = visible
 
+    def CollideGObject( self, gobj ):
+        return self.rect.CollideRect( gobj.rect )
+
     def CollideRect( self, rect ):
         return self.rect.CollideRect( rect )
+
+    def CollidePoint( self, point ):
+        return self.rect.CollidePoint( point )

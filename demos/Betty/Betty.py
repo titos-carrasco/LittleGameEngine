@@ -1,17 +1,19 @@
 from lge.Sprite import Sprite
-from lge.LGE import LGE
+from lge.Engine import Engine
 
 
 class Betty( Sprite ):
-    def __init__( self, engine, name ):
-        super().__init__( ["betty_idle","betty_down", "betty_up", "betty_left", "betty_right"], (32,32), name )
-        self.engine = engine
+    def __init__( self, name ):
+        super().__init__( ["betty_idle","betty_down", "betty_up", "betty_left", "betty_right"], (0,0), name )
         self.SetShape( 0, "betty_idle" )
         self.tag = "Betty"
         self.alive = True
 
     def IsAlive( self ):
         return self.alive
+
+    def SetAlive( self ):
+        self.alive = True
 
     def OnUpdate( self, dt ):
         # solo si estoy viva
@@ -31,25 +33,25 @@ class Betty( Sprite ):
         idx, action = self.GetCurrentShape()
         new_action = action
         if( action == "betty_idle"):
-            if( self.engine.IsKeyDown( LGE.CONSTANTS.K_RIGHT ) ):
+            if( Engine.IsKeyDown( Engine.CONSTANTS.K_RIGHT ) ):
                 new_action = "betty_right"
-            elif( self.engine.IsKeyDown( LGE.CONSTANTS.K_LEFT) ):
+            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_LEFT) ):
                 new_action = "betty_left"
-            elif( self.engine.IsKeyDown( LGE.CONSTANTS.K_UP ) ):
+            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_UP ) ):
                 new_action = "betty_up"
-            elif( self.engine.IsKeyDown( LGE.CONSTANTS.K_DOWN ) ):
+            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_DOWN ) ):
                 new_action = "betty_down"
         elif( action == "betty_right" ):
-            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_RIGHT ) ): new_action = "betty_idle"
+            if( Engine.IsKeyUp( Engine.CONSTANTS.K_RIGHT ) ): new_action = "betty_idle"
             else: x = x + pixels
         elif( action == "betty_left" ):
-            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_LEFT ) ): new_action = "betty_idle"
+            if( Engine.IsKeyUp( Engine.CONSTANTS.K_LEFT ) ): new_action = "betty_idle"
             else: x = x - pixels
         elif( action == "betty_up" ):
-            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_UP ) ): new_action = "betty_idle"
+            if( Engine.IsKeyUp( Engine.CONSTANTS.K_UP ) ): new_action = "betty_idle"
             else: y = y + pixels
         elif( action == "betty_down" ):
-            if( self.engine.IsKeyUp( LGE.CONSTANTS.K_DOWN ) ): new_action = "betty_idle"
+            if( Engine.IsKeyUp( Engine.CONSTANTS.K_DOWN ) ): new_action = "betty_idle"
             else: y = y - pixels
 
         if( action != new_action ):
@@ -63,13 +65,13 @@ class Betty( Sprite ):
 
         # lo posicionamos
         self.SetPosition( (x,y) )
-        collisions = self.engine.GetCollisions( self.name )
+        collisions = Engine.GetCollisions( self.name )
         if( len( collisions ) > 0 ):
             self.SetPosition( (xori, yori) )
 
         # tunel?
         x, y = self.GetPosition()
-        w, h = self.engine.GetWorldSize()
+        w, h = Engine.GetWorldSize()
         if( x < -16 ): x = w - 16
         elif( x > w - 16 ): x = -16
         self.SetPosition( (x,y) )

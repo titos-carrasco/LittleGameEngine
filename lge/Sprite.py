@@ -1,7 +1,7 @@
 import pygame
 
 from lge.GameObject import GameObject
-from lge.LGE import LGE
+from lge.Engine import Engine
 
 
 class Sprite( GameObject ):
@@ -12,7 +12,7 @@ class Sprite( GameObject ):
         if( not isinstance( inames, list ) ): inames = [ inames ]
         self.surfaces = {}
         for iname in inames:
-            self.surfaces[iname] = LGE.GetImages( iname )
+            self.surfaces[iname] = Engine.GetImages( iname )
 
         entry = list( self.surfaces.keys() )[0]
         self.shape = [ 0, entry ]

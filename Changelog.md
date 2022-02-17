@@ -1,6 +1,30 @@
 # ChangeLog
 
-## @v0.0.7 2022-02-15
+## 2022-02-16
+
+### Changed
+- lge/LGE.py
+    - **Cambia de nombre a Engine.py**
+    - Todos los métodos son estáticos
+    - DelGObject puede recibir un patrón de eliminación
+    - GetGObject puede recibir un patrón de búsqueda
+    - Se agregan métodos para el mouse
+- lge/Rect.py
+    - Se agrega método CollidePoint
+- lge/GameObject.py
+    - Se agrega método CollidePoint()
+    - Se agrega método CollideGObject()
+- lge/demos
+    - se ajustan todos los demos acorde a los cambios realizados
+
+### Added
+- lge/Text.py
+    - GameObject del tipo Texto
+- demos/fonts
+    - Se agrega FreeMono.ttf
+
+
+## 2022-02-15
 
 ### Changed
 - lge/LGE.py
@@ -12,6 +36,13 @@
 - lge/demos
     - Se actualizan acorde a los cambios relizados
     - FPS ahora es parámetro de Run()
+
+### Added
+- lge/Rect.py:
+    - Agrega método CollidePoint()
+- lge/GameObject.py:
+    - Agrega método CollidePoint()
+
 
 ## 2022-02-13
 

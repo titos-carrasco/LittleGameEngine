@@ -1,93 +1,102 @@
 from random import random
 
-from lge.GameObject import GameObject
 from lge.Sprite import Sprite
-from lge.LGE import LGE
+from lge.Text import Text
+from lge.Engine import Engine
 
 
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        self.engine = LGE( (1920,1056), (640,480), "Colliders", (0,0,0) )
-        self.engine.SetMainTask( self.MainControl )
+        Engine.Init( (1920,1056), (640,480), "Colliders", (0,0,0) )
+        Engine.SetMainTask( self.MainControl )
 
         # activamos la musica de fondo
-        LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-        LGE.PlaySound( "fondo", loop=-1 )
+        Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        Engine.PlaySound( "fondo", loop=-1 )
 
         # cargamos los recursos que usaremos
-        LGE.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-        LGE.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
-        LGE.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
-        LGE.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_000.png" )
-        LGE.LoadSysFont( "consolas", 20 )
-        LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-        LGE.LoadSound( "aves", "../sounds/bird-thrush-nightingale.wav" )
-        LGE.LoadSound( "poing", "../sounds/cartoon-poing.wav" )
-        LGE.SetSoundVolume( "poing", 0.1 )
+        Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
+        Engine.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
+        Engine.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
+        Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_000.png" )
+        Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
+        Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        Engine.LoadSound( "aves", "../sounds/bird-thrush-nightingale.wav" )
+        Engine.LoadSound( "poing", "../sounds/cartoon-poing.wav" )
+        Engine.SetSoundVolume( "poing", 0.1 )
 
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0) )
-        self.engine.AddGObject( fondo, 0 )
+        Engine.AddGObject( fondo, 0 )
 
         # agregamos al heroe
-        heroe = MiHeroe( self.engine )
-        self.engine.AddGObject( heroe, 1 )
+        heroe = MiHeroe()
+        Engine.AddGObject( heroe, 1 )
 
         # agregamos otro ninja
         gobj = Sprite( "ninja", (350,250) )
         gobj.Scale( 0.16 )
-        self.engine.AddGObject( gobj, 1 )
+        Engine.AddGObject( gobj, 1 )
+
+        # agregamos la barra de info
+        infobar = Text( None, (0,460), "monospace", (0,0,0), None, "infobar" )
+        Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
         # establecemos que la camara siga al heroe en su origen
-        self.engine.SetCamTarget( heroe, False )
+        Engine.SetCamTarget( heroe, False )
 
         # para visualizar el despliegue de los contornos de los objetos
-        self.engine.ShowColliders( (0xFF,0x00,0x00) )
+        Engine.ShowColliders( (0xFF,0x00,0x00) )
         self.showColliders = True
 
     def MainControl( self, dt ):
         # abortamos con la tecla Escape
-        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
-            self.engine.Quit()
+        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+            Engine.Quit()
 
-        # mostramos los FPS actuales
-        fps = self.engine.GetFPS()
+        # mostramos los FPS actuales y datos del mouse
+        fps = Engine.GetFPS()
         fps = "FPS: %07.2f" % fps
-        self.engine.AddText( fps, (0,460), "consolas" )
+
+        mx, my = Engine.GetMousePos()
+        mb1, mb2, mb3 = Engine.GetMousePressed()
+        minfo = "Mouse: (%4d,%4d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+
+        info = Engine.GetGObject( "infobar" )
+        info.SetText( fps + " "*15 + minfo )
 
         # mostramos los bordes
-        if( self.engine.IsKeyUp( LGE.CONSTANTS.K_c) ):
+        if( Engine.IsKeyUp( Engine.CONSTANTS.K_c) ):
             self.showColliders = not self.showColliders
             if( self.showColliders ):
-                self.engine.ShowColliders( (0xFF, 0x00, 0x00) )
+                Engine.ShowColliders( (0xFF, 0x00, 0x00) )
             else:
-                self.engine.ShowColliders()
+                Engine.ShowColliders()
 
         # de manera aleatorio activamos sonido de aves
         n = int( random()*1000 )
         if( n < 3 ):
-            LGE.PlaySound( "aves", 0 )
+            Engine.PlaySound( "aves", 0 )
 
     # main loop
     def Run( self ):
-        self.engine.Run( 60 )
+        Engine.Run( 60 )
 
 
 class MiHeroe( Sprite ):
-    def __init__( self, engine ):
+    def __init__( self ):
         # agregamos el heroe con diferentes imagenes
         super().__init__( ["idle","run"], (550,346), "Heroe" )
-        self.engine = engine
         self.Scale( 0.16 )
         self.SetShape( 0, "idle" )
         self.heading = 1
 
     def TestCollisions( self, dt ):
-        crops = self.engine.GetCollisions( self.name )
+        crops = Engine.GetCollisions( self.name )
         if( len(crops) == 0 ): return
 
-        LGE.PlaySound( "poing", 0 )
+        Engine.PlaySound( "poing", 0 )
 
         obj, r = crops[0]
         xr, yr, wr,hr = r
@@ -119,7 +128,7 @@ class MiHeroe( Sprite ):
         # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
         moving = False
         idx, name = self.GetCurrentShape()
-        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_RIGHT ) ):
+        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
             x = x + pixels
             if( self.heading != 1 ):
                 self.Flip( True, False )
@@ -127,7 +136,7 @@ class MiHeroe( Sprite ):
             if( name != "run" ):
                 self.SetShape( 0, "run" )
             moving = True
-        elif( self.engine.IsKeyPressed( LGE.CONSTANTS.K_LEFT ) ):
+        elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
             x = x - pixels
             if( self.heading != -1 ):
                 self.Flip( True, False )
@@ -136,10 +145,10 @@ class MiHeroe( Sprite ):
                 self.SetShape( 0, "run" )
             moving = True
 
-        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_DOWN ) ):
+        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
             y = y - pixels
             moving = True
-        elif( self.engine.IsKeyPressed( LGE.CONSTANTS.K_UP ) ):
+        elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_UP ) ):
             y = y + pixels
             moving = True
 
@@ -150,7 +159,7 @@ class MiHeroe( Sprite ):
         self.NextShape( dt, 50 )
 
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
-        x, y = self.engine.KeepInsideWorld( self, (x,y) )
+        x, y = Engine.KeepInsideWorld( self, (x,y) )
         self.SetPosition( (x,y) )
 
         # vemos las colisiones

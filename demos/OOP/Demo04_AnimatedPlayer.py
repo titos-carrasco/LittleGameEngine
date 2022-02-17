@@ -1,55 +1,64 @@
-from lge.GameObject import GameObject
 from lge.Sprite import Sprite
-from lge.LGE import LGE
+from lge.Text import Text
+from lge.Engine import Engine
 
 
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        self.engine = LGE( (1920,1056), (640,480), "Animated Player", (0xFF,0xFF,0xFF) )
-        self.engine.SetMainTask( self.MainControl )
+        Engine.Init( (1920,1056), (640,480), "Animated Player", (0xFF,0xFF,0xFF) )
+        Engine.SetMainTask( self.MainControl )
 
         # activamos la musica de fondo
-        LGE.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-        LGE.PlaySound( "fondo", loop=-1 )
+        Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        Engine.PlaySound( "fondo", loop=-1 )
 
         # cargamos los recursos que usaremos
-        LGE.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-        LGE.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
-        LGE.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
-        LGE.LoadSysFont( "consolas", 20 )
+        Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
+        Engine.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
+        Engine.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
+        Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
 
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0) )
-        self.engine.AddGObject( fondo, 0 )
+        Engine.AddGObject( fondo, 0 )
 
         # agregamos al heroe con sus animaciones
-        heroe = MiHeroe( self.engine )
-        self.engine.AddGObject( heroe, 1 )
+        heroe = MiHeroe()
+        Engine.AddGObject( heroe, 1 )
+
+        # agregamos la barra de info
+        infobar = Text( None, (0,460), "monospace", (0,0,0), None, "infobar" )
+        Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
         # establecemos que la camara siga al heroe en su origen
-        self.engine.SetCamTarget( heroe, False )
+        Engine.SetCamTarget( heroe, False )
 
     def MainControl( self, dt ):
         # abortamos con la tecla Escape
-        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
-            self.engine.Quit()
+        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+            Engine.Quit()
 
-        # mostramos los FPS actuales
-        fps = self.engine.GetFPS()
+        # mostramos los FPS actuales y datos del mouse
+        fps = Engine.GetFPS()
         fps = "FPS: %07.2f" % fps
-        self.engine.AddText( fps, (0,460), "consolas" )
+
+        mx, my = Engine.GetMousePos()
+        mb1, mb2, mb3 = Engine.GetMousePressed()
+        minfo = "Mouse: (%4d,%4d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+
+        info = Engine.GetGObject( "infobar" )
+        info.SetText( fps + " "*15 + minfo )
 
     # main loop
     def Run( self ):
-        self.engine.Run( 60 )
+        Engine.Run( 60 )
 
 
 class MiHeroe( Sprite ):
-    def __init__( self, engine ):
+    def __init__( self ):
         # agregamos el heroe con diferentes imagenes
         super().__init__( ["idle","run"], (550,346), "Heroe" )
-        self.engine = engine
         self.Scale( 0.16 )
         self.SetShape( 0, "idle" )
         self.heading = 1
@@ -65,7 +74,7 @@ class MiHeroe( Sprite ):
         # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
         moving = False
         idx, name = self.GetCurrentShape()
-        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_RIGHT ) ):
+        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
             x = x + pixels
             if( self.heading != 1 ):
                 self.Flip( True, False )
@@ -73,7 +82,7 @@ class MiHeroe( Sprite ):
             if( name != "run" ):
                 self.SetShape( 0, "run" )
             moving = True
-        elif( self.engine.IsKeyPressed( LGE.CONSTANTS.K_LEFT ) ):
+        elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
             x = x - pixels
             if( self.heading != -1 ):
                 self.Flip( True, False )
@@ -82,10 +91,10 @@ class MiHeroe( Sprite ):
                 self.SetShape( 0, "run" )
             moving = True
 
-        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_DOWN ) ):
+        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
             y = y - pixels
             moving = True
-        elif( self.engine.IsKeyPressed( LGE.CONSTANTS.K_UP ) ):
+        elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_UP ) ):
             y = y + pixels
             moving = True
 
@@ -96,7 +105,7 @@ class MiHeroe( Sprite ):
         self.NextShape( dt, 50 )
 
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
-        x, y = self.engine.KeepInsideWorld( self, (x,y) )
+        x, y = Engine.KeepInsideWorld( self, (x,y) )
         self.SetPosition( (x,y) )
 
 

@@ -1,83 +1,100 @@
-from lge.GameObject import GameObject
 from lge.Sprite import Sprite
-from lge.LGE import LGE
+from lge.Text import Text
+from lge.Engine import Engine
 
 from BlockHorizontal import BlockHorizontal
 
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        self.engine = LGE( (2560,704), (800,704), "Vulcano", (0xFF, 0xFF, 0xFF) )
+        Engine.Init( (2560,704), (800,704), "Vulcano", (0xFF, 0xFF, 0xFF) )
 
         # cargamos algunos recursos
-        LGE.LoadImage( "fondo", "../images/Platform/Platform.png" )
-        LGE.LoadImage( "roca", "../images/Volcano_Pack_1.1/volcano_pack_alt_39.png" )
-        LGE.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
-        LGE.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
+        Engine.LoadImage( "fondo", "../images/Platform/Platform.png" )
+        Engine.LoadImage( "roca", "../images/Volcano_Pack_1.1/volcano_pack_alt_39.png" )
+        Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_0*.png" )
+        Engine.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
+        Engine.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
 
-        # posicionamos la camara
-        self.engine.SetCamPosition( (0,0) )
 
-        # la escena introductoria
-        self.Intro()
+        # agregamos el fondo
+        fondo = Sprite( "fondo", (0,0) )
+        Engine.AddGObject( fondo, 0 )
+
+        # agregamos la barra de info
+        infobar = Text( None, (0,680), "Monospace 20", (255,255,255), None, "infobar" )
+        Engine.AddGObject( infobar, Engine.CAM_LAYER )
+
+        # agregamos el ninja en la camara
+        ninja = Sprite( "ninja", (320,370), "ninja" )
+        ninja.Scale( 0.16 )
+        ninja.OnUpdate = self._ninja
+        Engine.AddGObject( ninja, Engine.CAM_LAYER )
+
+        # Dejamos lista la escena
+        self.InitEscenaIntro()
+
+    def _ninja( self, dt ):
+        ninja = Engine.GetGObject( "ninja" )
+        ninja.NextShape( dt, 50 )
 
     # main loop
     def Run( self ):
-        self.engine.Run( 60 )
+        Engine.Run( 60 )
 
-    # control principal
+    # barra de info
     def CheckEscape( self ):
         # abortamos con la tecla Escape
-        if( self.engine.IsKeyPressed( LGE.CONSTANTS.K_ESCAPE ) ):
-            self.engine.Quit()
+        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+            Engine.Quit()
 
-        # mostramos los FPS
-        fps = self.engine.GetFPS()
+        # mostramos los FPS actuales y datos del mouse
+        fps = Engine.GetFPS()
         fps = "FPS: %07.2f" % fps
-        self.engine.AddText( fps, (0,682), "Monospace 20", (255,255,255) )
+
+        mx, my = Engine.GetMousePos()
+        mb1, mb2, mb3 = Engine.GetMousePressed()
+        minfo = "Mouse: (%4d,%4d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+
+        info = Engine.GetGObject( "infobar" )
+        info.SetText( fps + " "*28 + minfo )
 
     #-------------------------------------------------------------------------------------------
-    # escena de inicio
-    def Intro( self ):
-        # agregamos el fondo
-        fondo = Sprite( "fondo", (0,0) )
-        self.engine.AddGObject( fondo, 0 )
+    def InitEscenaIntro( self ):
+        # posicionamos la camara
+        Engine.SetCamPosition( (0,0) )
 
         # el bloque que se mueve horizontal
-        BlockHorizontal( self.engine, (13*64, 1*64), 1 )
+        bloque = BlockHorizontal( (13*64, 1*64) )
+        Engine.AddGObject( bloque, 1 )
+
+        # agregamos mensaje
+        pressbar = Text( "Presiona la Barra Espaciadora", (200,340), "Cool 30", (255,255,255) )
+        Engine.AddGObject( pressbar, Engine.CAM_LAYER )
 
         # agregamos el control de esta escena
         self.camRight = True
-        self.engine.SetMainTask( self.IntroControl )
+        Engine.SetMainTask( self.ControlEscenaIntro )
 
-    def IntroControl( self, dt ):
+    def ControlEscenaIntro( self, dt ):
         # movemos la camara "ppm" pixeles por minuto
         ppm = 120
         pixels = round( (ppm*dt)/1000 )
 
         self.CheckEscape()
-        self.engine.AddText( "Presiona la Barra Espaciadora", (180,286), "Cool 30", (255,255,255) )
 
-        x, y = self.engine.GetCamPosition()
+        x, y = Engine.GetCamPosition()
         if( self.camRight ): x = x + pixels
         else: x = x - pixels
-        self.engine.SetCamPosition( (x,y) )
-        xn, yn = self.engine.GetCamPosition()
+        Engine.SetCamPosition( (x,y) )
+        xn, yn = Engine.GetCamPosition()
         if( xn != x ): self.camRight = not self.camRight
 
-        if( not self.engine.IsKeyDown( LGE.CONSTANTS.K_SPACE ) ): return
-        self.engine.DelAllGObjects()
-        self.engine.SetMainTask()
-        self.Play01()
+        # verificamos si se ha presionada la barra espaciadora
+        if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
 
-    #-------------------------------------------------------------------------------------------
-    # primera escena
-    def Play01( self ):
-        self.engine.SetMainTask( self.Play01Control )
-        pass
-
-    def Play01Control( self, dt ):
-        pass
+        # reposicionamos la camara
+        Engine.SetCamPosition( (0,0) )
 
 
 # -- show time
