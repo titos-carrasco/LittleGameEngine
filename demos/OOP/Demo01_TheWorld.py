@@ -2,11 +2,11 @@ from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Rect import Rect
 
+
 class MiJuego():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (800, 440), "The World" )
-        Engine.SetWorldBounds( Rect( (0,0), (800, 440) ) )
 
         # activamos la musica de fondo
         Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
@@ -28,9 +28,6 @@ class MiJuego():
 
         # python un poco mas avanzado
         heroe.OnUpdate = lambda dt: heroe.NextShape(dt,60)
-
-        # posicionamos la camara
-        Engine.SetCamPosition( (0,0) )
 
     # main loop
     def Run( self ):

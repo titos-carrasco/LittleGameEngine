@@ -10,7 +10,7 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (800,704), "Vulcano" )
-        Engine.SetWorldBounds( Rect( (0,0), (2560,704) ) )
+        Engine.GetCamera().SetBounds( Rect( (0,0), (2560,704) ) )
 
         # cargamos algunos recursos
         Engine.LoadImage( "fondo", "../images/Platform/Platform.png" )
@@ -18,7 +18,6 @@ class MiJuego():
         Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_0*.png" )
         Engine.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
         Engine.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
-
 
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0) )
@@ -31,13 +30,13 @@ class MiJuego():
         # agregamos el ninja en la camara
         ninja = Sprite( "ninja", (320,370), "ninja" )
         ninja.Scale( 0.16 )
-        ninja.OnUpdate = self._ninja
+        ninja.OnUpdate = self.NinjaUpdate
         Engine.AddGObject( ninja, Engine.CAM_LAYER )
 
         # Dejamos lista la escena
-        self.InitEscenaIntro()
+        self.EscenaIntro()
 
-    def _ninja( self, dt ):
+    def NinjaUpdate( self, dt ):
         ninja = Engine.GetGObject( "ninja" )
         ninja.NextShape( dt, 50 )
 
@@ -63,9 +62,9 @@ class MiJuego():
         info.SetText( fps + " "*28 + minfo )
 
     #-------------------------------------------------------------------------------------------
-    def InitEscenaIntro( self ):
+    def EscenaIntro( self ):
         # posicionamos la camara
-        Engine.SetCamPosition( (0,0) )
+        Engine.GetCamera().SetPosition( (0,0) )
 
         # el bloque que se mueve horizontal
         bloque = BlockHorizontal( (13*64, 1*64) )
@@ -77,27 +76,32 @@ class MiJuego():
 
         # agregamos el control de esta escena
         self.camRight = True
-        Engine.SetMainTask( self.ControlEscenaIntro )
+        Engine.SetUpdate( self.IntroUpdate )
 
-    def ControlEscenaIntro( self, dt ):
+    def IntroUpdate( self, dt ):
         # moveremos la camara "pps" pixeles por segundo
         pps = 240
         pixels = round( (pps*dt)/1000 )
 
+        # verificamos ESCP
         self.CheckEscape()
 
-        x, y = Engine.GetCamPosition()
+        # novemos la camara
+        camera = Engine.GetCamera()
+        x, y = camera.GetPosition()
+
         if( self.camRight ): x = x + pixels
         else: x = x - pixels
-        Engine.SetCamPosition( (x,y) )
-        xn, yn = Engine.GetCamPosition()
+        camera.SetPosition( (x,y) )
+
+        xn, yn = camera.GetPosition()
         if( xn != x ): self.camRight = not self.camRight
 
         # verificamos si se ha presionada la barra espaciadora
         if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
 
         # reposicionamos la camara
-        Engine.SetCamPosition( (0,0) )
+        camera.SetPosition( (0,0) )
 
 
 # -- show time

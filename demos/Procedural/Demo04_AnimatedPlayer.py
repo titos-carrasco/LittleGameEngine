@@ -4,7 +4,7 @@ from lge.Text import Text
 from lge.Rect import Rect
 
 
-def HeroeControl( dt ):
+def HeroeUpdate( dt ):
     # el heroe
     heroe = Engine.GetGObject( "Heroe" )
 
@@ -17,14 +17,14 @@ def HeroeControl( dt ):
 
     # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
     moving = False
-    idx, name = heroe.GetCurrentShape()
+    name, idx = heroe.GetCurrentShape()
     if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
         x = x + pixels
         if( heroe.heading != 1 ):
             heroe.Flip( True, False )
             heroe.heading = 1
         if( name != "run" ):
-            heroe.SetShape( 0, "run" )
+            heroe.SetShape( "run", 0 )
         moving = True
     elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
         x = x - pixels
@@ -32,7 +32,7 @@ def HeroeControl( dt ):
             heroe.Flip( True, False )
             heroe.heading = -1
         if( name != "run" ):
-            heroe.SetShape( 0, "run" )
+            heroe.SetShape( "run", 0 )
         moving = True
 
     if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
@@ -43,16 +43,18 @@ def HeroeControl( dt ):
         moving = True
 
     if( not moving and name != "idle" ):
-            heroe.SetShape( 0, "idle" )
+        heroe.SetShape( "idle", 0 )
 
     # siguiente imagen de la secuencia
     heroe.NextShape( dt, 50 )
 
-    # lo posicionamos asegurando que se encuentre dentro del mundo definido
-    heroe.SetPosition( (x,y), Engine.GetWorldBounds() )
+    # lo posicionamos asegurando que se encuentre dentro de los limites
+    camera = Engine.GetCamera()
+    bounds = camera.GetBounds()
+    heroe.SetPosition( (x,y), bounds )
 
 
-def MainControl( dt ):
+def MainUpdate( dt ):
     # abortamos con la tecla Escape
     if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
         Engine.Quit()
@@ -72,8 +74,7 @@ def MainControl( dt ):
 def main():
     # creamos el juego
     Engine.Init( (640,480), "Animated Player" )
-    Engine.SetWorldBounds( Rect( (0,0), (1920,1056) ) )
-    Engine.SetMainTask( MainControl )
+    Engine.SetUpdate( MainUpdate )
 
     # activamos la musica de fondo
     Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
@@ -91,8 +92,8 @@ def main():
 
     heroe = Sprite( ["idle","run"], (550,346), "Heroe" )
     heroe.Scale( 0.16 )
-    heroe.SetShape( 0, "idle" )
-    heroe.OnUpdate = HeroeControl
+    heroe.SetShape( "idle", 0 )
+    heroe.OnUpdate = HeroeUpdate
     heroe.heading = 1
     Engine.AddGObject( heroe, 1 )
 
@@ -100,8 +101,12 @@ def main():
     infobar = Text( None, (0,460), "monospace", (0,0,0), None, "infobar" )
     Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
-    # establecemos que la camara siga al heroe en su origen
-    Engine.SetCamTarget( heroe, False )
+    # configuramos la camara
+    camera = Engine.GetCamera()
+    camera.SetBounds( Rect( (0,0), (1920,1056) ) )
+
+    # establecemos que la camara siga al heroe
+    Engine.SetCameraTarget( heroe, True )
 
     # main loop
     Engine.Run( 60 )

@@ -3,12 +3,12 @@ from lge.Sprite import Sprite
 from lge.Text import Text
 from lge.Rect import Rect
 
+
 class MiJuego():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (640,480), "Move Player" )
-        Engine.SetWorldBounds( Rect( (0,0), (1920,1056) ) )
-        Engine.SetMainTask( self.MainControl )
+        Engine.SetUpdate( self.MainUpdate )
 
         # activamos la musica de fondo
         Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
@@ -30,10 +30,14 @@ class MiJuego():
         infobar = Text( None, (0,460), "monospace", (0,0,0), None, "infobar" )
         Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
-        # establecemos que la camara siga al centro del heroe
-        Engine.SetCamTarget( heroe, True )
+        # configuramos la camara
+        camera = Engine.GetCamera()
+        camera.SetBounds( Rect( (0,0), (1920,1056) ) )
 
-    def MainControl( self, dt ):
+        # establecemos que la camara siga al centro del heroe
+        Engine.SetCameraTarget( heroe, True )
+
+    def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
@@ -85,8 +89,10 @@ class MiHeroe( Sprite ):
         elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_UP ) ):
             y = y + pixels
 
-        # lo posicionamos asegurando que se encuentre dentro del mundo definido
-        self.SetPosition( (x,y), Engine.GetWorldBounds() )
+        # lo posicionamos asegurando que se encuentre dentro de los limites
+        camera = Engine.GetCamera()
+        bounds = camera.GetBounds()
+        self.SetPosition( (x,y), bounds )
 
 
 #--- show time

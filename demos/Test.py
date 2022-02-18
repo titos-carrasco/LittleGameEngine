@@ -12,8 +12,7 @@ class Test():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (800,440), "The World" )
-        Engine.SetWorldBounds( Rect( (0,0), (800,440) ) )
-        Engine.SetMainTask( self.MainControl )
+        Engine.SetUpdate( self.MainUpdate )
 
         # activamos la musica de fondo
         Engine.LoadSound( "fondo", "./sounds/happy-and-sad.wav" )
@@ -41,7 +40,7 @@ class Test():
         Engine.AddGObject( heroe, 2 )
 
         # agregamos pajaros
-        ww, wh = Engine.GetWorldBounds().GetSize()
+        ww, wh = Engine.GetCamera().GetSize()
         start = time.time()
         for i in range( 500 ):
             x = int( random.random()*ww )
@@ -52,10 +51,7 @@ class Test():
         end = time.time()
         print( end - start )
 
-        # posicionamos la camara
-        Engine.SetCamPosition( (0,0) )
-
-    def MainControl( self, dt ):
+    def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()

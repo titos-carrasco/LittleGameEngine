@@ -13,7 +13,7 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (608,736), "Betty" )
-        Engine.SetWorldBounds( Rect( (0,0), (608,736) ) )
+        Engine.GetCamera().SetBounds( Rect( (0,0), (608,736) ) )
 
         # cargamos algunos recursos
         Engine.LoadImage( "fondo", "../images/Betty/Fondo.png" )
@@ -65,10 +65,10 @@ class MiJuego():
         Engine.AddGObject( pressbar, Engine.CAM_LAYER )
 
         # posicionamos la camara
-        Engine.SetCamPosition( (0,0) )
+        Engine.GetCamera().SetPosition( (0,0) )
 
         # agregamos el control
-        Engine.SetMainTask( self.IntroControl )
+        Engine.SetUpdate( self.IntroControl )
 
     def IntroControl( self, dt ):
         # infobar
@@ -113,7 +113,7 @@ class MiJuego():
         data = list( f )
         f.close()
         mapa = [ e.strip("\n").strip("\n").split(",") for e in data ]
-        w, h = Engine.GetWorldBounds().GetSize()
+        w, h = Engine.GetCamera().GetSize()
         y = h - 32
         for r in mapa:
             x = 0
@@ -128,7 +128,7 @@ class MiJuego():
         Engine.ShowColliders( (255,0,0) )
 
         # agregamos el control del juego
-        Engine.SetMainTask( self.GameControl )
+        Engine.SetUpdate( self.GameControl )
 
     def GameControl( self, dt ):
         # infobar

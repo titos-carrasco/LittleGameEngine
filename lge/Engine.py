@@ -3,20 +3,15 @@ import sys
 import glob
 import pygame
 
+from lge.Camera import Camera
 from lge.Rect import Rect
 
 
 class Engine():
     CONSTANTS    = pygame.constants
     CAM_LAYER    = 0xFFFF
-    WORLD_LIMIT  = 0xFFFFFFFF
 
     def Init( camSize, title, bgColor=(0,0,0) ):
-        w, h = camSize
-        if( w > Engine.WORLD_LIMIT ): w = Engine.WORLD_LIMIT
-        if( h > Engine.WORLD_LIMIT ): h = Engine.WORLD_LIMIT
-
-        Engine.camera = Rect( (0,0), (w,h) )
         Engine.title = title
         Engine.bgColor = bgColor
         Engine.collidersColor = None
@@ -30,9 +25,9 @@ class Engine():
         Engine.gObjectsToDelete = []
         Engine.layers = {}
 
-        Engine.worldBounds = Rect( (-Engine.WORLD_LIMIT,-Engine.WORLD_LIMIT), (Engine.WORLD_LIMIT*2,Engine.WORLD_LIMIT*2) )
-        Engine.mainTask = None
-        Engine.camTarget = [ None, 0 ]
+        Engine.camera = Camera( (0,0), camSize)
+        Engine.cameraTarget = [ None, 0 ]
+        Engine.onUpdate = None
 
         Engine.events = []
         Engine.keysPressed = []
@@ -46,30 +41,14 @@ class Engine():
 
 
     # camera
-    def SetCamPosition( position ):
-        # obtenemos el origen deseado para la camara
-        cx, cy = position
-        cx, cy = int(cx), int(cy)
-        cw, ch = Engine.camera.GetSize()
+    def GetCamera():
+        return Engine.camera
 
-        # debemos mantenerla dentro de los limites del mundo
-        me = Rect( (cx,cy), (cw,ch) )
-        cx, cy = me.KeepInsideRect( Engine.worldBounds )
+    def SetCameraTarget( gobj=None, center=True  ):
+        Engine.cameraTarget = gobj, center
 
-        # la reposicionamos
-        Engine.camera.SetOrigin( (cx,cy) )
-
-    def GetCamPosition():
-        return Engine.camera.GetOrigin()
-
-    def GetCamSize():
-        return Engine.camera.GetSize()
-
-    def SetCamTarget( gobj=None, center=True  ):
-        Engine.camTarget = (gobj,center)
-
-    def _CamFollowTarget():
-        gobj, center = Engine.camTarget
+    def _CameraFollowTarget():
+        gobj, center = Engine.cameraTarget
         if( gobj is None ): return
         _, layer = Engine.gObjects[gobj.name]
         if( layer == Engine.CAM_LAYER ):
@@ -78,11 +57,11 @@ class Engine():
 
         x, y = gobj.GetPosition()
         w, h = gobj.GetSize()
-        cw, ch = Engine.GetCamSize()
+        cw, ch = Engine.camera.GetSize()
         if( center ):
             x = x + w/2
             y = y + h/2
-        Engine.SetCamPosition( (x-cw/2, y-ch/2) )
+        Engine.camera.SetPosition( (x-cw/2, y-ch/2) )
 
 
     # gobjects
@@ -165,24 +144,8 @@ class Engine():
 
 
     # game
-    def SetWorldBounds( bounds ):
-        x, y = bounds.GetOrigin()
-        w, h = bounds.GetSize()
-
-        if( x >= -Engine.WORLD_LIMIT and
-            x + w <= Engine.WORLD_LIMIT and
-            y >= -Engine.WORLD_LIMIT and
-            y + h <= Engine.WORLD_LIMIT ):
-                Engine.worldBounds = bounds
-
-    def ResetWorldBounds():
-        Engine.worldBounds = Rect( (-Engine.WORLD_WIDTH,-Engine.WORLD_HEIGHT), (Engine.WORLD_WIDTH*2,Engine.WORLD_HEIGHT*2) )
-
-    def GetWorldBounds():
-        return Engine.worldBounds.Copy()
-
-    def SetMainTask( task=None ):
-        Engine.mainTask = task
+    def SetUpdate( func=None ):
+        Engine.onUpdate = func
 
     def GetFPS():
         return Engine.clock.get_fps()
@@ -190,7 +153,6 @@ class Engine():
     def Quit():
         pygame.quit()
         sys.exit()
-
 
     # main loop
     def Run( fps ):
@@ -218,8 +180,8 @@ class Engine():
                         break
                 del Engine.layers[layer][idx]
 
-                if( Engine.camTarget[0] == gobj ):
-                    Engine.camTarget = [ None, 0 ]
+                if( Engine.cameraTarget[0] == gobj ):
+                    Engine.cameraTarget = [ None, 0 ]
             Engine.gObjectsToDelete = []
 
             # los gobjects nuevos
@@ -241,11 +203,11 @@ class Engine():
                         gobj.OnUpdate( dt )
 
             # la logica de usuario para todo el juego
-            if( Engine.mainTask ):
-                Engine.mainTask( dt )
+            if(  not Engine.onUpdate is None ):
+                Engine.onUpdate( dt )
 
-            # necesario si es que tiene seguimiento automatico
-            Engine._CamFollowTarget()
+            # seguimiento automatico de la camara
+            Engine._CameraFollowTarget()
 
             # el rendering
             Engine.screen.fill( Engine.bgColor )
@@ -255,10 +217,10 @@ class Engine():
                     if( layer == Engine.CAM_LAYER and hasattr( gobj, "surface" ) ):
                         x, y = gobj.GetPosition()
                         w, h = gobj.GetSize()
-                        vw, vh = Engine.camera.size
+                        vw, vh = Engine.camera.rect.size
                         Engine.screen.blit( gobj.surface, (x,vh-y-h) )
                     else:
-                        if( gobj.CollideRect( Engine.camera ) ):
+                        if( gobj.CollideRect( Engine.camera.rect ) ):
                             w, h = gobj.GetSize()
                             x, y = Engine._Fix_XY( gobj.GetPosition(), (w,h) )
                             if( hasattr( gobj, "surface" ) ):
@@ -276,16 +238,15 @@ class Engine():
     def _Fix_XY( pos, size ):
         xo, yo = pos
         wo, ho = size
-        ww, wh = Engine.WORLD_LIMIT, Engine.WORLD_LIMIT
-        vx, vy  = Engine.camera.origin
-        vw, vh = Engine.camera.size
+        wh = 0xFFFFFFFF
+        vx, vy  = Engine.camera.rect.origin
+        vw, vh = Engine.camera.rect.size
         dy = wh - (vy + vh)
         x = xo - vx
         y = wh - (yo + ho) - dy
         return x, y
 
-    #------------------------------------------------
-    # metodos de la clase
+    # --- Recursos
 
     # fonts
     def GetSysFonts():

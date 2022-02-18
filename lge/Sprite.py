@@ -14,54 +14,55 @@ class Sprite( GameObject ):
         for iname in inames:
             self.surfaces[iname] = Engine.GetImages( iname )
 
-        entry = list( self.surfaces.keys() )[0]
-        self.shape = [ 0, entry ]
-        self.surface = self.surfaces[entry][0]
+        iname = list( self.surfaces.keys() )[0]
+        self.shape = [ iname, 0 ]
+        self.surface = self.surfaces[iname][0]
         size = self.surface.get_rect().size
         self.rect.SetSize( size )
 
     def GetCurrentShape( self ):
-        return self.shape[0], self.shape[1]
+        iname, idx = self.shape
+        return iname, idx
 
     def NextShape( self, dt, millis=0 ):
         self.elapsed = self.elapsed + dt
         if( self.elapsed < millis ): return
         self.elapsed = 0
-        idx, entry = self.shape
+        iname, idx = self.shape
         idx = idx + 1
-        if( idx >= len( self.surfaces[entry] ) ):
+        if( idx >= len( self.surfaces[iname] ) ):
             idx = 0
-        self.shape[0] = idx
-        self.surface = self.surfaces[entry][idx]
+        self.shape = iname, idx
+        self.surface = self.surfaces[iname][idx]
         size = self.surface.get_rect().size
         self.rect.SetSize( size )
 
-    def SetShape( self, idx, entry ):
-        self.shape = [ idx, entry ]
-        self.surface = self.surfaces[entry][idx]
+    def SetShape( self, iname, idx ):
+        self.elapsed = 0
+        self.shape = iname, idx
+        self.surface = self.surfaces[iname][idx]
         size = self.surface.get_rect().size
         self.rect.SetSize( size )
-        self.elapsed = 0
 
     def SetSize( self, size ):
         pass
 
     def ReSize( self, size ):
-        for entry in self.surfaces:
-            surfaces = self.surfaces[entry]
+        for iname in self.surfaces:
+            surfaces = self.surfaces[iname]
             n = len( surfaces )
             for i in range( n ):
                 s = surfaces[i]
                 surfaces[i] = pygame.transform.smoothscale( s, size )
 
-        idx, entry = self.shape
-        self.surface = self.surfaces[entry][idx]
+        iname, idx = self.shape
+        self.surface = self.surfaces[iname][idx]
         size = self.surface.get_rect().size
         self.rect.SetSize( size )
 
     def Scale( self, factor ):
-        for entry in self.surfaces:
-            surfaces = self.surfaces[entry]
+        for iname in self.surfaces:
+            surfaces = self.surfaces[iname]
             n = len( surfaces )
             for i in range( n ):
                 s = surfaces[i]
@@ -69,20 +70,20 @@ class Sprite( GameObject ):
                 size = ( int(w*factor),int(h*factor) )
                 surfaces[i] = pygame.transform.smoothscale( s, size )
 
-        idx, entry = self.shape
-        self.surface = self.surfaces[entry][idx]
+        iname, idx = self.shape
+        self.surface = self.surfaces[iname][idx]
         size = self.surface.get_rect().size
         self.rect.SetSize( size )
 
     def Flip( self, fx, fy ):
-        for entry in self.surfaces:
-            surfaces = self.surfaces[entry]
+        for iname in self.surfaces:
+            surfaces = self.surfaces[iname]
             n = len( surfaces )
             for i in range( n ):
                 s = surfaces[i]
                 surfaces[i] = pygame.transform.flip( s, fx, fy )
 
-        idx, entry = self.shape
-        self.surface = self.surfaces[entry][idx]
+        iname, idx = self.shape
+        self.surface = self.surfaces[iname][idx]
         size = self.surface.get_rect().size
         self.rect.SetSize( size )

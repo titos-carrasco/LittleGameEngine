@@ -3,10 +3,12 @@
 Todas las coordenadas están en el **Sistema Cartesiano**
 
 ```Python
-from lge.Rect import rect
-from lge.GameObject import GameObject
+from lge.Engine import Engine
+from lge.Camera import Camera
 from lge.Sprite import Sprite
 from lge.Text import Text
+from lge.GameObject import GameObject
+from lge.Rect import rect
 ```
 
 ## Engine
@@ -33,7 +35,7 @@ Quit()
 
 ---
 ```
-SetMainTask( task=None )
+SetUpdate( func=None )
 ```
 
 ---
@@ -41,39 +43,14 @@ SetMainTask( task=None )
 GetFPS()
 ```
 
----
-```
-SetWorlBounds()
-```
-
----
-```
-GetWorldBounds()
-```
-
----
-```
-ResetWorlBounds()
-```
-
 #### Camara
 ```
-SetCamPosition( position )
+GetCamera()
 ```
 
 ---
 ```
-GetCamPosition()
-```
-
----
-```
-GetCamSize()
-```
-
----
-```
-SetCamTarget( gobj=None, center=True )
+SetCameraTarget( gobj=None, center=True )
 ```
 
 #### Game Objects
@@ -178,6 +155,39 @@ LoadImage( iname, pattern )
 GetImages( iname )
 ```
 
+
+### Camera
+Clase para mostrar la zona visible de la superficie del juego
+
+---
+```
+camera = Camera( position, size )
+```
+
+---
+```
+position = camera.GetPosition()
+```
+
+---
+```
+size = camera.GetSize()
+```
+
+---
+```
+camera.SetBounds( bounds )
+```
+
+---
+```
+bounds = camera.GetBounds()
+```
+
+---
+```
+camera.SetPosition( position )
+```
 
 
 ## Sprites

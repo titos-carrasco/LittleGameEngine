@@ -4,12 +4,12 @@ from lge.Sprite import Sprite
 from lge.Text import Text
 from lge.Rect import Rect
 
+
 class MiJuego():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (640,480), "Colliders" )
-        Engine.SetWorldBounds( Rect( (0,0), (1920,1056) ) )
-        Engine.SetMainTask( self.MainControl )
+        Engine.SetUpdate( self.MainUpdate )
 
         # activamos la musica de fondo
         Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
@@ -43,14 +43,18 @@ class MiJuego():
         infobar = Text( None, (0,460), "monospace", (0,0,0), None, "infobar" )
         Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
+        # configuramos la camara
+        camera = Engine.GetCamera()
+        camera.SetBounds( Rect( (0,0), (1920,1056) ) )
+
         # establecemos que la camara siga al heroe en su origen
-        Engine.SetCamTarget( heroe, False )
+        Engine.SetCameraTarget( heroe, False )
 
         # para visualizar el despliegue de los contornos de los objetos
         Engine.ShowColliders( (0xFF,0x00,0x00) )
         self.showColliders = True
 
-    def MainControl( self, dt ):
+    def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
@@ -89,7 +93,7 @@ class MiHeroe( Sprite ):
         # agregamos el heroe con diferentes imagenes
         super().__init__( ["idle","run"], (550,346), "Heroe" )
         self.Scale( 0.16 )
-        self.SetShape( 0, "idle" )
+        self.SetShape( "idle", 0 )
         self.heading = 1
 
     def TestCollisions( self, dt ):
@@ -128,22 +132,22 @@ class MiHeroe( Sprite ):
 
         # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
         moving = False
-        idx, name = self.GetCurrentShape()
+        iname, idx = self.GetCurrentShape()
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
             x = x + pixels
             if( self.heading != 1 ):
                 self.Flip( True, False )
                 self.heading = 1
-            if( name != "run" ):
-                self.SetShape( 0, "run" )
+            if( iname != "run" ):
+                self.SetShape( "run", 0 )
             moving = True
         elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
             x = x - pixels
             if( self.heading != -1 ):
                 self.Flip( True, False )
                 self.heading = -1
-            if( name != "run" ):
-                self.SetShape( 0, "run" )
+            if( iname != "run" ):
+                self.SetShape( "run", 0 )
             moving = True
 
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
@@ -153,14 +157,16 @@ class MiHeroe( Sprite ):
             y = y + pixels
             moving = True
 
-        if( not moving and name != "idle" ):
-                self.SetShape( 0, "idle" )
+        if( not moving and iname != "idle" ):
+                self.SetShape( "idle", 0 )
 
         # siguiente imagen de la secuencia
         self.NextShape( dt, 50 )
 
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
-        self.SetPosition( (x,y), Engine.GetWorldBounds() )
+        camera = Engine.GetCamera()
+        bounds = camera.GetBounds()
+        self.SetPosition( (x,y), bounds )
 
         # vemos las colisiones
         self.TestCollisions( dt )

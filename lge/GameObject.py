@@ -24,14 +24,14 @@ class GameObject():
     def IsVisible( self ):
         return self.visible
 
-    def SetPosition( self, origin, rect=None ):
-        x, y = origin
+    def SetPosition( self, position, bounds=None ):
+        x, y = position
         x, y = int(x), int(y)
 
-        if( not rect is None ):
+        if( not bounds is None ):
             r = self.rect.Copy()
             r.SetOrigin( (x,y) )
-            x,y = r.KeepInsideRect( rect )
+            x,y = r.KeepInsideRect( bounds )
 
         self.rect.SetOrigin( (x,y) )
 

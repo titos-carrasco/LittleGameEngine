@@ -1,6 +1,6 @@
 # ChangeLog
 
-## ?????
+## 2022-02-18
 - lge/Rect.py
     - Agrega métodos Copy() y KeepInsideRect()
 -lge/GameObject.py
@@ -10,6 +10,7 @@
     - Elimina parámetro worldSize del método Initi()
     - Agrega métodos SetWorldBounds(), GetWorldBounds() y ResetWorldBounds()
     - elimina método KeepInsideWorld()
+    - Mueve operaciones de la camara a nueva clase
 - demos/
     Ajusta todos los demos acorde a los cambios
 ## @v0.1.0-pre.1 2022-02-17

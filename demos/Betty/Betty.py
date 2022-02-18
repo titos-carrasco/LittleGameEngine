@@ -5,7 +5,7 @@ from lge.Engine import Engine
 class Betty( Sprite ):
     def __init__( self, name ):
         super().__init__( ["betty_idle","betty_down", "betty_up", "betty_left", "betty_right"], (0,0), name )
-        self.SetShape( 0, "betty_idle" )
+        self.SetShape( "betty_idle", 0 )
         self.tag = "Betty"
         self.alive = True
 
@@ -14,7 +14,7 @@ class Betty( Sprite ):
 
     def SetAlive( self ):
         self.alive = True
-        self.SetShape( 0, "betty_idle" )
+        self.SetShape( "betty_idle", 0 )
 
     def OnUpdate( self, dt ):
         # solo si estoy viva
@@ -30,7 +30,7 @@ class Betty( Sprite ):
         xori, yori = x, y
 
         # cambiamos sus coordenadas e imagen segun la tecla presionada
-        idx, action = self.GetCurrentShape()
+        action, idx = self.GetCurrentShape()
         new_action = action
         if( action == "betty_idle"):
             if( Engine.IsKeyDown( Engine.CONSTANTS.K_RIGHT ) ):
@@ -55,7 +55,7 @@ class Betty( Sprite ):
             else: y = y - pixels
 
         if( action != new_action ):
-            self.SetShape( 0, new_action )
+            self.SetShape( new_action, 0 )
             if( new_action == "betty_idle" ):
                 if( x%32 < 8 or x%32 > 23 ): x = round( x/32 )*32
                 if( y%32 < 8 or y%32 > 23 ): y = round( y/32 )*32
@@ -71,7 +71,7 @@ class Betty( Sprite ):
 
         # tunel?
         x, y = self.GetPosition()
-        w, h = Engine.GetWorldBounds().GetSize()
+        w, h = Engine.GetCamera().GetSize()
         if( x < -16 ): x = w - 16
         elif( x > w - 16 ): x = -16
         self.SetPosition( (x,y) )

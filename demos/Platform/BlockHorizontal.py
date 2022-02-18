@@ -6,7 +6,7 @@ class BlockHorizontal( Sprite ):
     def __init__( self, pos ):
         super().__init__( "roca", (128,128), "roca"  )
         self.x, self.y = pos
-        self.SetShape( 0, "roca" )
+        self.SetShape( "roca", 0 )
         self.tag = "ground"
         self.dir = "up"
         self.SetPosition( pos )
@@ -16,7 +16,7 @@ class BlockHorizontal( Sprite ):
         ppm = 120
         pixels = round( (ppm*dt)/1000 )
 
-        ww, wh = Engine.GetWorldBounds().GetSize()
+        ww, wh = Engine.GetCamera().GetSize()
         if( self.dir == "up" ):
             self.y = self.y + pixels
         else:
