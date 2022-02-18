@@ -65,9 +65,9 @@ class MiHeroe( Sprite ):
         self.heading = 1
 
     def OnUpdate( self, dt ):
-        # moveremos al heroe "ppm" pixeles por minuto
-        ppm = 240
-        pixels = (ppm*dt)/1000
+        # moveremos al heroe "pps" pixeles por segundo
+        pps = 240
+        pixels = round( (pps*dt)/1000 )
 
         # la posiciona actual del heroe
         x, y = self.GetPosition()

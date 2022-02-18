@@ -8,9 +8,9 @@ def HeroeControl( dt ):
     # el heroe
     heroe = Engine.GetGObject( "Heroe" )
 
-   # moveremos al heroe "ppm" pixeles por minuto
-    ppm = 240
-    pixels = (ppm*dt)/1000
+    # moveremos al heroe "pps" pixeles por segundo
+    pps = 240
+    pixels = round( (pps*dt)/1000 )
 
     # la posiciona actual del heroe
     x, y = heroe.GetPosition()

@@ -40,7 +40,7 @@ class Test():
         heroe.OnUpdate = lambda dt: heroe.NextShape(dt,60)
         Engine.AddGObject( heroe, 2 )
 
-        # agregamos pájaros
+        # agregamos pajaros
         ww, wh = Engine.GetWorldBounds().GetSize()
         start = time.time()
         for i in range( 500 ):

@@ -55,9 +55,9 @@ class MiJuego():
         info = Engine.GetGObject( "infobar" )
         info.SetText( fps + " "*15 + minfo )
 
-        # moveremos la camara "ppm" pixeles por minuto
-        ppm = 240
-        pixels = (ppm*dt)/1000
+        # moveremos la camara "pps" pixeles por segundo
+        pps = 240
+        pixels = round( (pps*dt)/1000 )
 
         # la posiciona actual de la camara
         x, y = Engine.GetCamPosition()

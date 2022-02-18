@@ -10,10 +10,9 @@ class Zombie( Sprite ):
         self.dir = "R"
 
     def OnUpdate( self, dt ):
-        # nos movemnos a "ppm" pixeles por minuto
-        #ppm = 120
-        #pixels = (ppm*dt)/1000
-        pixels = 2
+        # nos movemos a "pps" pixeles por segundo
+        pps = 120
+        pixels = round( (pps*dt)/1000 )
 
         # las coordenadas de Betty
         betty = Engine.GetGObject( "Betty" )

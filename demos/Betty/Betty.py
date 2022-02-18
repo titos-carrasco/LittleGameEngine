@@ -20,10 +20,9 @@ class Betty( Sprite ):
         # solo si estoy viva
         if( not self.alive ): return
 
-        # nos movemnos a "ppm" pixeles por minuto
-        #ppm = 120
-        #pixels = (ppm*dt)/1000
-        pixels = 2
+        # nos movemos a "pps" pixeles por segundo
+        pps = 120
+        pixels = round( (pps*dt)/1000 )
 
         # nuestra posicion actual y tamano
         x, y = self.GetPosition()

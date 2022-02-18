@@ -9,13 +9,12 @@ from lge.Rect import Rect
 class Engine():
     CONSTANTS    = pygame.constants
     CAM_LAYER    = 0xFFFF
-    WORLD_WIDTH  = 0xFFFFFFFF
-    WORLD_HEIGHT = 0xFFFFFFFF
+    WORLD_LIMIT  = 0xFFFFFFFF
 
     def Init( camSize, title, bgColor=(0,0,0) ):
         w, h = camSize
-        if( w > Engine.WORLD_WIDTH ): w = Engine.WORLD_WIDTH
-        if( h > Engine.WORLD_HEIGHT ): h = Engine.WORLD_HEIGHT
+        if( w > Engine.WORLD_LIMIT ): w = Engine.WORLD_LIMIT
+        if( h > Engine.WORLD_LIMIT ): h = Engine.WORLD_LIMIT
 
         Engine.camera = Rect( (0,0), (w,h) )
         Engine.title = title
@@ -31,7 +30,7 @@ class Engine():
         Engine.gObjectsToDelete = []
         Engine.layers = {}
 
-        Engine.worldBounds = Rect( (-Engine.WORLD_WIDTH,-Engine.WORLD_HEIGHT), (Engine.WORLD_WIDTH*2,Engine.WORLD_HEIGHT*2) )
+        Engine.worldBounds = Rect( (-Engine.WORLD_LIMIT,-Engine.WORLD_LIMIT), (Engine.WORLD_LIMIT*2,Engine.WORLD_LIMIT*2) )
         Engine.mainTask = None
         Engine.camTarget = [ None, 0 ]
 
@@ -170,10 +169,10 @@ class Engine():
         x, y = bounds.GetOrigin()
         w, h = bounds.GetSize()
 
-        if( x >= -Engine.WORLD_WIDTH and
-            x + w <= Engine.WORLD_WIDTH and
-            y >= -Engine.WORLD_HEIGHT and
-            y + h <= Engine.WORLD_HEIGHT ):
+        if( x >= -Engine.WORLD_LIMIT and
+            x + w <= Engine.WORLD_LIMIT and
+            y >= -Engine.WORLD_LIMIT and
+            y + h <= Engine.WORLD_LIMIT ):
                 Engine.worldBounds = bounds
 
     def ResetWorldBounds():
@@ -277,7 +276,7 @@ class Engine():
     def _Fix_XY( pos, size ):
         xo, yo = pos
         wo, ho = size
-        ww, wh = Engine.WORLD_WIDTH, Engine.WORLD_HEIGHT
+        ww, wh = Engine.WORLD_LIMIT, Engine.WORLD_LIMIT
         vx, vy  = Engine.camera.origin
         vw, vh = Engine.camera.size
         dy = wh - (vy + vh)

@@ -80,9 +80,9 @@ class MiJuego():
         Engine.SetMainTask( self.ControlEscenaIntro )
 
     def ControlEscenaIntro( self, dt ):
-        # movemos la camara "ppm" pixeles por minuto
-        ppm = 120
-        pixels = round( (ppm*dt)/1000 )
+        # moveremos la camara "pps" pixeles por segundo
+        pps = 240
+        pixels = round( (pps*dt)/1000 )
 
         self.CheckEscape()
 
