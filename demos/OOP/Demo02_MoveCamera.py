@@ -16,7 +16,7 @@ class MiJuego():
 
         # cargamos los recursos que usaremos
         Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-        Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png" )
+        Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png", 0.16 )
         Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
 
         # agregamos el fondo
@@ -25,7 +25,6 @@ class MiJuego():
 
         # agregamos un Sprite
         heroe = Sprite( "heroe", (550,346), "Heroe" )
-        heroe.Scale( 0.16 )
         Engine.AddGObject( heroe, 1 )
 
         # agregamos la barra de info

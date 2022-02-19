@@ -147,7 +147,7 @@ GetSoundVolume( name )
 
 #### Imágenes
 ```
-LoadImage( iname, pattern )
+LoadImage( iname, pattern, scale=None, flip=None )
 ```
 
 ---
@@ -242,37 +242,6 @@ Establece la imagen del sprite
 |---|---
 |`idx`| El número de la imagen dentro de la lista `iname`
 |`iname`| MEl nombre de la lista de imágenes
-
----
-```
-sprite.ReSize( size )
-```
-Cambia el tamaño de la imagen del sprite
-
-| Parámetros | Descripción
-|---|---
-|`size`| Nuevo tamaño (width,height)
-
----
-```
-sprite.Scale( factor )
-```
-Cambia el tamaño de la imagen del sprite
-
-| Parámetros | Descripción
-|---|---
-|`factor`| El factor de escala a utilizar para escalar la imagen
-
----
-```
-sprite.Flip( fx, fy )
-```
-Invierte la imagen en horizontal y/o vertical
-
-| Parámetros | Descripción
-|---|---
-|`fx`| `True` si se debe invertir en el eje X
-|`fx`| `True` si se debe invertir en el eje Y
 
 
 ## Textos

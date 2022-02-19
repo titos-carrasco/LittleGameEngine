@@ -21,18 +21,16 @@ def HeroeUpdate( dt ):
     if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
         x = x + pixels
         if( heroe.heading != 1 ):
-            heroe.Flip( True, False )
             heroe.heading = 1
-        if( name != "run" ):
-            heroe.SetShape( "run", 0 )
+        if( name[:9] != "heroe_run" ):
+            heroe.SetShape( "heroe_run_right", 0 )
         moving = True
     elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
         x = x - pixels
         if( heroe.heading != -1 ):
-            heroe.Flip( True, False )
             heroe.heading = -1
-        if( name != "run" ):
-            heroe.SetShape( "run", 0 )
+        if( name[:9] != "heroe_run" ):
+            heroe.SetShape( "heroe_run_left", 0 )
         moving = True
 
     if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
@@ -42,8 +40,9 @@ def HeroeUpdate( dt ):
         y = y + pixels
         moving = True
 
-    if( not moving and name != "idle" ):
-        heroe.SetShape( "idle", 0 )
+    if( not moving and name[:10] != "heroe_idle" ):
+        if( heroe.heading == 1 ): heroe.SetShape( "heroe_idle_right", 0 )
+        else: heroe.SetShape( "heroe_idle_left", 0 )
 
     # siguiente imagen de la secuencia
     heroe.NextShape( dt, 50 )
@@ -82,17 +81,18 @@ def main():
 
     # cargamos los recursos que usaremos
     Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-    Engine.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
-    Engine.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
+    Engine.LoadImage( "heroe_idle_right", "../images/Swordsman/Idle/Idle_0*.png", 0.16 )
+    Engine.LoadImage( "heroe_idle_left", "../images/Swordsman/Idle/Idle_0*.png", 0.16, (True,False) )
+    Engine.LoadImage( "heroe_run_right", "../images/Swordsman/Run/Run_0*.png", 0.16 )
+    Engine.LoadImage( "heroe_run_left", "../images/Swordsman/Run/Run_0*.png", 0.16, (True,False) )
     Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
 
     # agregamos el fondo
     fondo = Sprite( "fondo", (0,0) )
     Engine.AddGObject( fondo, 0 )
 
-    heroe = Sprite( ["idle","run"], (550,346), "Heroe" )
-    heroe.Scale( 0.16 )
-    heroe.SetShape( "idle", 0 )
+    heroe = Sprite( ["heroe_idle_right","heroe_idle_left","heroe_run_right","heroe_run_left"], (550,346), "Heroe" )
+    heroe.SetShape( "heroe_idle_right", 0 )
     heroe.OnUpdate = HeroeUpdate
     heroe.heading = 1
     Engine.AddGObject( heroe, 1 )

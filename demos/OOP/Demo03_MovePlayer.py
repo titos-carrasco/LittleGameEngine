@@ -16,7 +16,8 @@ class MiJuego():
 
         # cargamos los recursos que usaremos
         Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-        Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png" )
+        Engine.LoadImage( "heroe_right", "../images/Swordsman/Idle/Idle_000.png", 0.16 )
+        Engine.LoadImage( "heroe_left", "../images/Swordsman/Idle/Idle_000.png", 0.16, (True,False) )
         Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
 
         # agregamos el fondo
@@ -60,8 +61,8 @@ class MiJuego():
 
 class MiHeroe( Sprite ):
     def __init__( self ):
-        super().__init__( "heroe", (550,346), "Heroe" )
-        self.Scale( 0.16 )
+        super().__init__( ["heroe_right","heroe_left"], (550,346), "Heroe" )
+        self.SetShape( "heroe_right", 0 )
         self.heading = 1
         Engine.AddGObject( self, 1 )
 
@@ -77,12 +78,12 @@ class MiHeroe( Sprite ):
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
             x = x + pixels
             if( self.heading != 1 ):
-                self.Flip( True, False )
+                self.SetShape( "heroe_right", 0 )
                 self.heading = 1
         elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
             x = x - pixels
             if( self.heading != -1 ):
-                self.Flip( True, False )
+                self.SetShape( "heroe_left", 0 )
                 self.heading = -1
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
             y = y - pixels

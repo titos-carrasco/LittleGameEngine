@@ -9,7 +9,7 @@ from lge.Rect import Rect
 
 class Engine():
     CONSTANTS    = pygame.constants
-    CAM_LAYER    = 0xFFFF
+    CAM_LAYER    = 0xFFFFFFFF
 
     def Init( camSize, title, bgColor=(0,0,0) ):
         Engine.title = title
@@ -66,7 +66,7 @@ class Engine():
 
     # gobjects
     def AddGObject( gobj, layer ):
-        Engine.gObjectsToAdd.append( (gobj,layer&0xFFFF) )
+        Engine.gObjectsToAdd.append( (gobj,layer) )
 
     def DelGObject( name ):
         if( name == "*" ):
@@ -118,18 +118,10 @@ class Engine():
 
     # events
     def IsKeyDown( key ):
-        for event in Engine.events:
-            if( event.type == pygame.KEYDOWN ):
-                if( event.key == key ):
-                    return True
-        return False
+        return True if [ 1 for event in Engine.events if event.type == pygame.KEYDOWN and event.key == key ] else False
 
     def IsKeyUp( key ):
-        for event in Engine.events:
-            if( event.type == pygame.KEYUP ):
-                if( event.key == key ):
-                    return True
-        return False
+        return True if [ 1 for event in Engine.events if event.type == pygame.KEYUP and event.key == key ] else False
 
     def IsKeyPressed( key ):
         return True if Engine.keysPressed[ key ] else False
@@ -281,18 +273,23 @@ class Engine():
 
 
     # imagenes
-    def LoadImage( iname, pattern ):
-        if( "*" in pattern ): fnames = glob.glob( pattern )
+    def LoadImage( iname, pattern, scale=None, flip=None ):
+        if( "*" in pattern ): fnames = sorted( glob.glob( pattern ) )
         else: fnames = [pattern]
 
-        fnames.sort()
+        if( flip ): fx, fy = flip
         surfaces = []
-        for fname in fnames:
-            surfaces.append( pygame.image.load( fname ).convert_alpha() )
+        for fname in fnames :
+            surface = pygame.image.load( fname ).convert_alpha()
+            if( scale ):
+                if( not isinstance( scale, tuple ) ):
+                    w, h = surface.get_size()
+                    scale = ( int(w*scale),int(h*scale) )
+                surface = pygame.transform.smoothscale( surface, scale )
+            if( flip ):
+                surface = pygame.transform.flip( surface, fx, fy )
+            surfaces.append( surface )
         Engine.images[iname] = surfaces
 
     def GetImages( iname ):
-        images = []
-        for image in Engine.images[iname]:
-            images.append( image.copy() )
-        return images
+        return [ image for image in Engine.images[iname] ]

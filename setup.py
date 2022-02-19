@@ -8,19 +8,18 @@
 #   pip install dist/lge-X.Y.Z-py3-none-any.whl
 
 from setuptools import setup
-import sys
 
 SETUP = {
-    "name"             : "lge",
-    "version"          : "0.1.0-pre.2",
-    "description"      : "Little Game engine",
-    "license"          : "MIT",
-    "author"           : "Roberto Carrasco",
-    "author_email"     : "titos.carrasco@gmail.com",
-    "maintainer"       : "Roberto Carrasco",
-    "maintainer_email" : "titos.carrasco@gmail.com",
-    "packages"         : [ "lge" ],
-    "package_dir"      : { "lge": "lge"},
+    "author": "Roberto Carrasco",
+    "author_email": "titos.carrasco@gmail.com",
+    "description": "Little Game engine",
+    "license": "MIT",
+    "maintainer": "Roberto Carrasco",
+    "maintainer_email": "titos.carrasco@gmail.com",
+    "name": "lge",
+    "package_dir": {"lge": "lge"},
+    "packages": ["lge"],
+    "version": "0.1.0",
 }
 
-setup( **SETUP )
+setup(**SETUP)

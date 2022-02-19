@@ -19,12 +19,12 @@ def HeroeUpdate( dt ):
     if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
         x = x + pixels
         if( heroe.heading != 1 ):
-            heroe.Flip( True, False )
+            heroe.SetShape( "heroe_right", 0 )
             heroe.heading = 1
     elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
         x = x - pixels
         if( heroe.heading != -1 ):
-            heroe.Flip( True, False )
+            heroe.SetShape( "heroe_left", 0 )
             heroe.heading = -1
     if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
         y = y - pixels
@@ -65,7 +65,8 @@ def main():
 
     # cargamos los recursos que usaremos
     Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-    Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png" )
+    Engine.LoadImage( "heroe_right", "../images/Swordsman/Idle/Idle_000.png", 0.16 )
+    Engine.LoadImage( "heroe_left", "../images/Swordsman/Idle/Idle_000.png", 0.16, (True,False) )
     Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
 
      # agregamos el fondo
@@ -73,8 +74,8 @@ def main():
     Engine.AddGObject( fondo, 0 )
 
     # agregamos un Sprite
-    heroe = Sprite( "heroe", (550,346), "Heroe" )
-    heroe.Scale( 0.16 )
+    heroe = Sprite( ["heroe_right","heroe_left"], (550,346), "Heroe" )
+    heroe.SetShape( "heroe_right", 0 )
     heroe.OnUpdate = HeroeUpdate
     heroe.heading = 1
     Engine.AddGObject( heroe, 1 )

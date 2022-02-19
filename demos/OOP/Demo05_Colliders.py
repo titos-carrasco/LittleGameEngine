@@ -17,9 +17,11 @@ class MiJuego():
 
         # cargamos los recursos que usaremos
         Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-        Engine.LoadImage( "idle", "../images/Swordsman/Idle/Idle_0*.png" )
-        Engine.LoadImage( "run", "../images/Swordsman/Run/Run_0*.png" )
-        Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_000.png" )
+        Engine.LoadImage( "heroe_idle_right", "../images/Swordsman/Idle/Idle_0*.png", 0.16 )
+        Engine.LoadImage( "heroe_idle_left", "../images/Swordsman/Idle/Idle_0*.png", 0.16, (True,False) )
+        Engine.LoadImage( "heroe_run_right", "../images/Swordsman/Run/Run_0*.png", 0.16 )
+        Engine.LoadImage( "heroe_run_left", "../images/Swordsman/Run/Run_0*.png", 0.16, (True,False) )
+        Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_000.png", 0.16 )
         Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
         Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
         Engine.LoadSound( "aves", "../sounds/bird-thrush-nightingale.wav" )
@@ -36,7 +38,6 @@ class MiJuego():
 
         # agregamos otro ninja
         gobj = Sprite( "ninja", (350,250) )
-        gobj.Scale( 0.16 )
         Engine.AddGObject( gobj, 1 )
 
         # agregamos la barra de info
@@ -91,9 +92,8 @@ class MiJuego():
 class MiHeroe( Sprite ):
     def __init__( self ):
         # agregamos el heroe con diferentes imagenes
-        super().__init__( ["idle","run"], (550,346), "Heroe" )
-        self.Scale( 0.16 )
-        self.SetShape( "idle", 0 )
+        super().__init__( ["heroe_idle_right","heroe_idle_left","heroe_run_right","heroe_run_left"], (550,346), "Heroe" )
+        self.SetShape( "heroe_idle_right", 0 )
         self.heading = 1
 
     def TestCollisions( self, dt ):
@@ -132,22 +132,20 @@ class MiHeroe( Sprite ):
 
         # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
         moving = False
-        iname, idx = self.GetCurrentShape()
+        name, idx = self.GetCurrentShape()
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
             x = x + pixels
             if( self.heading != 1 ):
-                self.Flip( True, False )
                 self.heading = 1
-            if( iname != "run" ):
-                self.SetShape( "run", 0 )
+            if( name[:9] != "heroe_run" ):
+                self.SetShape( "heroe_run_right", 0 )
             moving = True
         elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
             x = x - pixels
             if( self.heading != -1 ):
-                self.Flip( True, False )
                 self.heading = -1
-            if( iname != "run" ):
-                self.SetShape( "run", 0 )
+            if( name[:9] != "heroe_run" ):
+                self.SetShape( "heroe_run_left", 0 )
             moving = True
 
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
@@ -157,8 +155,9 @@ class MiHeroe( Sprite ):
             y = y + pixels
             moving = True
 
-        if( not moving and iname != "idle" ):
-                self.SetShape( "idle", 0 )
+        if( not moving and name[:10] != "heroe_idle" ):
+            if( self.heading == 1 ): self.SetShape( "heroe_idle_right", 0 )
+            else: self.SetShape( "heroe_idle_left", 0 )
 
         # siguiente imagen de la secuencia
         self.NextShape( dt, 50 )

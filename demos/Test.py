@@ -19,14 +19,13 @@ class Test():
         Engine.PlaySound( "fondo", loop=-1 )
 
         # cargamos los recursos que usaremos
-        Engine.LoadImage( "fondo", "./images/Backgrounds/FreeTileset/Fondo.png" )
-        Engine.LoadImage( "heroe", "./images/Swordsman/Idle/Idle_00*.png" )
-        Engine.LoadImage( "bird", "./images/BlueBird/frame-*.png" )
+        Engine.LoadImage( "fondo", "./images/Backgrounds/FreeTileset/Fondo.png", (800,440) )
+        Engine.LoadImage( "heroe", "./images/Swordsman/Idle/Idle_00*.png", 0.08 )
+        Engine.LoadImage( "bird", "./images/BlueBird/frame-*.png", 0.04 )
         Engine.LoadTTFFont( "monospace", 20, "./fonts/FreeMono.ttf" )
 
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0) )
-        fondo.ReSize( (800,440) )
         Engine.AddGObject( fondo, 0 )
 
         # agregamos la barra de info
@@ -35,8 +34,7 @@ class Test():
 
         # agregamos al heroe
         heroe = Sprite( "heroe", (226,142), "Heroe" )
-        heroe.Scale( 0.08 )
-        heroe.OnUpdate = lambda dt: heroe.NextShape(dt,60)
+        heroe.OnUpdate = lambda dt: heroe.NextShape( dt, 60)
         Engine.AddGObject( heroe, 2 )
 
         # agregamos pajaros
@@ -46,7 +44,6 @@ class Test():
             x = int( random.random()*ww )
             y = int( random.random()*(wh - 40) )
             bird = Bird( "bird", (x,y) )
-            bird.Scale( 0.04 )
             Engine.AddGObject( bird, 1 )
         end = time.time()
         print( end - start )

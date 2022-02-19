@@ -1,5 +1,14 @@
 # ChangeLog
 
+## @v0.1.0 2022-02-19
+- lge/Engine.py
+    - Modifica LoadImage() para realizar transformaciones en la carga
+    - Optimizacioens varias
+-lge/Sprite.py
+    - Elimina métodos SetSize(), Scale() y Flip()
+- demos/
+    Ajusta todos los demos acorde a los cambios
+
 ## 2022-02-18
 - lge/Rect.py
     - Agrega métodos Copy() y KeepInsideRect()
@@ -13,6 +22,7 @@
     - Mueve operaciones de la camara a nueva clase
 - demos/
     Ajusta todos los demos acorde a los cambios
+
 ## @v0.1.0-pre.1 2022-02-17
 - Agrega Tutorial (Tutorial.md)
 - Agrega descripción de Clases (Clases.md)

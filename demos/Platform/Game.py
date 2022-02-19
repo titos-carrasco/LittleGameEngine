@@ -15,7 +15,7 @@ class MiJuego():
         # cargamos algunos recursos
         Engine.LoadImage( "fondo", "../images/Platform/Platform.png" )
         Engine.LoadImage( "roca", "../images/Volcano_Pack_1.1/volcano_pack_alt_39.png" )
-        Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_0*.png" )
+        Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_0*.png", 0.16 )
         Engine.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
         Engine.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
 
@@ -29,7 +29,6 @@ class MiJuego():
 
         # agregamos el ninja en la camara
         ninja = Sprite( "ninja", (320,370), "ninja" )
-        ninja.Scale( 0.16 )
         ninja.OnUpdate = self.NinjaUpdate
         Engine.AddGObject( ninja, Engine.CAM_LAYER )
 
