@@ -16,6 +16,7 @@ from lge.Rect import rect
 ```
 Engine.CONSTANTS
 Engine.CAM_LAYER
+Engine.VLIMIT
 ```
 
 ---
@@ -277,6 +278,49 @@ Establece el texto de este GameObject
 |`text`| El nuevo texto para este GameObject
 
 
+## Canvas
+Una pizarra para dibujar
+
+---
+```
+canvas = Canvas( position, size, color, name=None )
+```
+Crea un GameObject de tipo canvas en la posición y tamano dados. El canvas
+es inicialmente pintado con el color entregado
+
+| Parámetros | Descripción
+|---|---
+|`position`| Las coordenadas (x,y) de la posición del GameObject
+|`size`| eñ tamano del gameobject
+|`color`| El color de relleno inicial
+|`name`| El nombre único a asignar al GameObject
+
+---
+```
+canvas.DrawPoint( point, color )
+```
+
+---
+```
+canvas.DrawCircle( center, radius, thickness, fgColor, bgColor=None )
+```
+
+---
+```
+canvas.Fill( bgColor, rect=None )
+```
+
+---
+```
+canvas.DrawRectangle( rect, thickness, fgColor, bgColor=None  )
+```
+
+---
+```
+canvas.DrawLines( lines, fgColor, bgColor=None )
+```
+
+
 ## GameObject
 Clase base de **Little Game Engine** (todo es un **GameObject**)
 
@@ -356,6 +400,16 @@ Establece la posición del GameObject
 |---|---
 |`position`| La nueva posición (x,y) del GameObject
 |`rect`| Si se específica, la posición del GameObject queda confiada al rectpangulo dado
+
+---
+```
+gobj.SetTag( tag )
+```
+Establece un tag para el GameObject
+
+| Parámetros | Descripción
+|---|---
+|`tag`| El tag para el GameObject
 
 ---
 ```

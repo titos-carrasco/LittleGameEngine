@@ -64,8 +64,8 @@ class Rect():
 
         if( w <= rw and h <= rh ):
             if( x < rx ): x = rx
-            elif( x + w > rw ): x = rw - w
+            elif( x + w > rx + rw ): x = rx + rw - w
             if( y < ry ): y = ry
-            elif( y + h > rh ): y = rh - h
+            elif( y + h > ry + rh ): y = ry + rh - h
 
         return x, y

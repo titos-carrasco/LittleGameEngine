@@ -58,16 +58,19 @@ def MainUpdate( dt ):
     if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
         Engine.Quit()
 
-    # mostramos los FPS actuales y datos del mouse
+    # mostramos info
     fps = Engine.GetFPS()
     fps = "FPS: %07.2f" % fps
 
+    ngobjs = len( Engine.GetGObject( "*") )
+    ngobjs = "gObjs: %03d" % ngobjs
+
     mx, my = Engine.GetMousePos()
     mb1, mb2, mb3 = Engine.GetMousePressed()
-    minfo = "Mouse: (%4d,%4d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+    minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
     info = Engine.GetGObject( "infobar" )
-    info.SetText( fps + " "*15 + minfo )
+    info.SetText( fps + " - " + ngobjs + " - " + minfo )
 
 
 def main():

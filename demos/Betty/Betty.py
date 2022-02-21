@@ -6,7 +6,7 @@ class Betty( Sprite ):
     def __init__( self, name ):
         super().__init__( ["betty_idle","betty_down", "betty_up", "betty_left", "betty_right"], (0,0), name )
         self.SetShape( "betty_idle", 0 )
-        self.tag = "Betty"
+        self.SetTag( "Betty" )
         self.alive = True
 
     def IsAlive( self ):
@@ -77,6 +77,6 @@ class Betty( Sprite ):
         self.SetPosition( (x,y) )
 
         # dead?
-        zombies = [ gobj for gobj, layer in collisions if gobj.tag == "zombie" ]
+        zombies = [ gobj for gobj, layer in collisions if gobj.GetTag() == "zombie" ]
         if( len( zombies) > 0 ):
             self.alive = False

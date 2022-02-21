@@ -7,7 +7,7 @@ class BlockHorizontal( Sprite ):
         super().__init__( "roca", (128,128), "roca"  )
         self.x, self.y = pos
         self.SetShape( "roca", 0 )
-        self.tag = "ground"
+        self.SetTag( "ground" )
         self.dir = "up"
         self.SetPosition( pos )
 

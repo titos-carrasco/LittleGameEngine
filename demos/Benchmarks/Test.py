@@ -15,14 +15,14 @@ class Test():
         Engine.SetUpdate( self.MainUpdate )
 
         # activamos la musica de fondo
-        Engine.LoadSound( "fondo", "./sounds/happy-and-sad.wav" )
+        Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
         Engine.PlaySound( "fondo", loop=-1 )
 
         # cargamos los recursos que usaremos
-        Engine.LoadImage( "fondo", "./images/Backgrounds/FreeTileset/Fondo.png", (800,440) )
-        Engine.LoadImage( "heroe", "./images/Swordsman/Idle/Idle_00*.png", 0.08 )
-        Engine.LoadImage( "bird", "./images/BlueBird/frame-*.png", 0.04 )
-        Engine.LoadTTFFont( "monospace", 20, "./fonts/FreeMono.ttf" )
+        Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png", (800,440) )
+        Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_00*.png", 0.08 )
+        Engine.LoadImage( "bird", "../images/BlueBird/frame-*.png", 0.04 )
+        Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
 
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0) )
@@ -46,23 +46,25 @@ class Test():
             bird = Bird( "bird", (x,y) )
             Engine.AddGObject( bird, 1 )
         end = time.time()
-        print( end - start )
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
-        # mostramos los FPS actuales y datos del mouse
+        # mostramos info
         fps = Engine.GetFPS()
         fps = "FPS: %07.2f" % fps
 
+        ngobjs = len( Engine.GetGObject( "*") )
+        ngobjs = "gObjs: %03d" % ngobjs
+
         mx, my = Engine.GetMousePos()
         mb1, mb2, mb3 = Engine.GetMousePressed()
-        minfo = "Mouse: (%4d,%4d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         info = Engine.GetGObject( "infobar" )
-        info.SetText( fps + " "*15 + minfo )
+        info.SetText( fps + "    -    " + ngobjs + "    -    " + minfo )
 
     # main loop
     def Run( self ):

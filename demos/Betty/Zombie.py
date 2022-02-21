@@ -6,7 +6,7 @@ class Zombie( Sprite ):
     def __init__( self, name ):
         super().__init__( "zombie", (0,0), name  )
         self.SetShape( "zombie", 0 )
-        self.tag = "zombie"
+        self.SetTag( "zombie" )
         self.dir = "R"
 
     def OnUpdate( self, dt ):
@@ -76,7 +76,7 @@ class Zombie( Sprite ):
             elif( c == "D" ): y = y - pixels
             self.SetPosition( (x,y) )
             collisions = Engine.GetCollisions( self.name )
-            bloqueos = [ gobj for gobj, layer in collisions if gobj.tag == "muro" or gobj.tag == "zombie" ]
+            bloqueos = [ gobj for gobj, layer in collisions if gobj.GetTag() == "muro" or gobj.GetTag() == "zombie" ]
             if( len( bloqueos ) == 0 ):
                 self.dir = c
                 break

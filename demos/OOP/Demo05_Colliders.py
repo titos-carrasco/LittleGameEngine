@@ -60,16 +60,19 @@ class MiJuego():
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
-        # mostramos los FPS actuales y datos del mouse
+        # mostramos info
         fps = Engine.GetFPS()
         fps = "FPS: %07.2f" % fps
 
+        ngobjs = len( Engine.GetGObject( "*") )
+        ngobjs = "gObjs: %03d" % ngobjs
+
         mx, my = Engine.GetMousePos()
         mb1, mb2, mb3 = Engine.GetMousePressed()
-        minfo = "Mouse: (%4d,%4d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         info = Engine.GetGObject( "infobar" )
-        info.SetText( fps + " "*15 + minfo )
+        info.SetText( fps + " - " + ngobjs + " - " + minfo )
 
         # mostramos los bordes
         if( Engine.IsKeyUp( Engine.CONSTANTS.K_c) ):
@@ -96,31 +99,6 @@ class MiHeroe( Sprite ):
         self.SetShape( "heroe_idle_right", 0 )
         self.heading = 1
 
-    def TestCollisions( self, dt ):
-        crops = Engine.GetCollisions( self.name )
-        if( len(crops) == 0 ): return
-
-        Engine.PlaySound( "poing", 0 )
-
-        obj, r = crops[0]
-        xr, yr = r.GetOrigin()
-        wr,hr = r.GetSize()
-        x, y = self.GetPosition()
-        w, h = self.GetSize()
-
-        # viene horizontal
-        if( hr > wr ):
-            if( xr == x ):
-                x = xr + wr + 1
-            else:
-                x = xr - w
-        else:
-            if( yr == y ):
-                y = yr + hr + 1
-            else:
-                y = yr - h
-
-        self.SetPosition( (x,y) )
 
     def OnUpdate( self, dt ):
         # moveremos al heroe "pps" pixeles por segundo
@@ -167,9 +145,30 @@ class MiHeroe( Sprite ):
         bounds = camera.GetBounds()
         self.SetPosition( (x,y), bounds )
 
-        # vemos las colisiones
-        self.TestCollisions( dt )
+        # verificamos si hemos colisionado
+        collisions = Engine.GetCollisions( self.name )
+        if( collisions ):
+            Engine.PlaySound( "poing", 0 )
 
+            obj, r = collisions[0]
+            xr, yr = r.GetOrigin()
+            wr,hr = r.GetSize()
+            x, y = self.GetPosition()
+            w, h = self.GetSize()
+
+            # viene horizontal
+            if( hr > wr ):
+                if( xr == x ):
+                    x = xr + wr + 1
+                else:
+                    x = xr - w
+            else:
+                if( yr == y ):
+                    y = yr + hr + 1
+                else:
+                    y = yr - h
+
+            self.SetPosition( (x,y) )
 
 #--- show time
 game = MiJuego()

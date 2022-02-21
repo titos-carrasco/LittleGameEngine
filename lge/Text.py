@@ -11,7 +11,7 @@ class Text( GameObject ):
         self.font = Engine.fonts[fontName]
         self.fgColor = fgColor
         self.bgColor = bgColor
-        if( not text is None ):
+        if( text ):
             self.SetText( text )
 
     def SetText( self, text ):

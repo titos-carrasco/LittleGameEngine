@@ -24,6 +24,9 @@ class GameObject():
     def IsVisible( self ):
         return self.visible
 
+    def GetRect( self ):
+        return self.rect.Copy()
+
     def SetPosition( self, position, bounds=None ):
         x, y = position
         x, y = int(x), int(y)
@@ -34,6 +37,9 @@ class GameObject():
             x,y = r.KeepInsideRect( bounds )
 
         self.rect.SetOrigin( (x,y) )
+
+    def SetTag( self, tag ):
+        self.tag = tag
 
     def SetSize( self, size ):
         self.rect.SetSize( size )

@@ -23,11 +23,11 @@ class MiJuego():
         Engine.LoadImage( "betty_left" , "../images/Betty/left-0*.png" )
         Engine.LoadImage( "betty_right", "../images/Betty/right-0*.png" )
         Engine.LoadImage( "zombie", "../images/Kenny/Zombie/zombie_walk*.png" )
-        Engine.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
+        Engine.LoadTTFFont( "Monospace", 19, "../fonts/LiberationMono-Regular.ttf" )
         Engine.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
 
         # agregamos la barra de info
-        infobar = Text( None, (0,706), "Monospace 20", (255,255,255), None, "infobar" )
+        infobar = Text( None, (0,706), "Monospace", (255,255,255), None, "infobar" )
         Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
         # inicializamos la escena introductoria
@@ -43,16 +43,19 @@ class MiJuego():
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
-        # mostramos los FPS actuales y datos del mouse
+        # mostramos info
         fps = Engine.GetFPS()
         fps = "FPS: %07.2f" % fps
 
+        ngobjs = len( Engine.GetGObject( "*") )
+        ngobjs = "gObjs: %03d" % ngobjs
+
         mx, my = Engine.GetMousePos()
         mb1, mb2, mb3 = Engine.GetMousePressed()
-        minfo = "Mouse: (%4d,%4d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         info = Engine.GetGObject( "infobar" )
-        info.SetText( fps + " "*12 + minfo )
+        info.SetText( fps + " - " + ngobjs + " - " + minfo )
 
     # --- escena introductoria
     def IntroInit( self ):
@@ -120,7 +123,7 @@ class MiJuego():
             for tid in r:
                 if( tid == "muro" ):
                     gobj = GameObject( (x,y), (32,32), "Bloque-" + uuid.uuid4().hex )
-                    gobj.tag = "muro"
+                    gobj.SetTag( "muro" )
                     Engine.AddGObject( gobj, 1 )
                 x = x + 32
             y = y - 32
