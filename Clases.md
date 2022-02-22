@@ -223,7 +223,7 @@ Retorna cual es la imagen actual utilizada en el sprite
 
 ---
 ```
-sprite.NextShape( dt, millis=0 )
+sprite.NextShape( dt, segs=0.0 )
 
 ```
 Cambia a la siguiente imagen si es que han transcurrido los milisegundos especificados
@@ -231,7 +231,7 @@ Cambia a la siguiente imagen si es que han transcurrido los milisegundos especif
 | Parámetros | Descripción
 |---|---
 |`dt`| Tiempo transcurrido desde el último cuadro del juego
-|`millis`| Milisegundos que deben transcurrir para que se pase a la siguiente imagen
+|`segs`| segundos que deben transcurrir para que se pase a la siguiente imagen
 
 ---
 ```
@@ -243,39 +243,6 @@ Establece la imagen del sprite
 |---|---
 |`idx`| El número de la imagen dentro de la lista `iname`
 |`iname`| MEl nombre de la lista de imágenes
-
-
-## Textos
-GameObject para operar con textos
-
----
-```
-textGObj= Text( text, position, fontName, fgColor, bgColor=None, name=None )
-```
-Crea un GameObject de tipo Text en la posición y nombre de la fuente, color y color de fondo dados.
-
-| Parámetros | Descripción
-|---|---
-|`text`| El texto para este GameObject
-|`position`| Las coordenadas (x,y) de la posición del GameObject
-|`fontName`| El nombre de la fuente a utilizar (cargada previamente)
-|`fgColor`| El color del texto
-|`bgColor`| El color de fondo a utilizar. Para fondo transparente utiliza `None`
-|`name`| El nombre único a asignar al GameObject
-
-| Retorno | Descripción
-|---|---
-|`textGObj`| El GameObject creado
-
----
-```
-textGObj.SetText( text )
-```
-Establece el texto de este GameObject
-
-| Parámetros | Descripción
-|---|---
-|`text`| El nuevo texto para este GameObject
 
 
 ## Canvas

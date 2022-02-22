@@ -1,12 +1,10 @@
-import pygame
-
 from lge.GameObject import GameObject
 from lge.Engine import Engine
 
 
 class Sprite( GameObject ):
     def __init__( self, inames, position, name=None ):
-        super().__init__( position, (0,0), name )
+        super().__init__( position, (1,1), name )
         self.elapsed = 0
 
         if( not isinstance( inames, list ) ): inames = [ inames ]
@@ -20,13 +18,16 @@ class Sprite( GameObject ):
         size = self.surface.get_rect().size
         self.rect.SetSize( size )
 
+    def SetSize( self, size ):
+        pass
+
     def GetCurrentShape( self ):
         iname, idx = self.shape
         return iname, idx
 
-    def NextShape( self, dt, millis=0 ):
+    def NextShape( self, dt, segs=0 ):
         self.elapsed = self.elapsed + dt
-        if( self.elapsed < millis ): return
+        if( self.elapsed < segs ): return
         self.elapsed = 0
         iname, idx = self.shape
         idx = idx + 1
@@ -43,6 +44,3 @@ class Sprite( GameObject ):
         self.surface = self.surfaces[iname][idx]
         size = self.surface.get_rect().size
         self.rect.SetSize( size )
-
-    def SetSize( self, size ):
-        pass

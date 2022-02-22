@@ -3,7 +3,7 @@ import uuid
 from lge.Engine import Engine
 from lge.GameObject import GameObject
 from lge.Sprite import Sprite
-from lge.Text import Text
+from lge.Canvas import Canvas
 from lge.Rect import Rect
 
 from Betty import Betty
@@ -23,90 +23,12 @@ class MiJuego():
         Engine.LoadImage( "betty_left" , "../images/Betty/left-0*.png" )
         Engine.LoadImage( "betty_right", "../images/Betty/right-0*.png" )
         Engine.LoadImage( "zombie", "../images/Kenny/Zombie/zombie_walk*.png" )
-        Engine.LoadTTFFont( "Monospace", 19, "../fonts/LiberationMono-Regular.ttf" )
-        Engine.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
+        Engine.LoadTTFFont( "monospace", 16, "../fonts/LiberationMono-Regular.ttf" )
+        Engine.LoadTTFFont( "cool", 30, "../fonts/backlash.ttf" )
 
-        # agregamos la barra de info
-        infobar = Text( None, (0,706), "Monospace", (255,255,255), None, "infobar" )
-        Engine.AddGObject( infobar, Engine.CAM_LAYER )
-
-        # inicializamos la escena introductoria
-        self.IntroInit()
-
-    # main loop
-    def Run( self ):
-        Engine.Run( 60 )
-
-    # --- la barra de info y chequeo de fin del juego
-    def _InfoBar( self ):
-        # abortamos con la tecla Escape
-        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
-            Engine.Quit()
-
-        # mostramos info
-        fps = Engine.GetFPS()
-        fps = "FPS: %07.2f" % fps
-
-        ngobjs = len( Engine.GetGObject( "*") )
-        ngobjs = "gObjs: %03d" % ngobjs
-
-        mx, my = Engine.GetMousePos()
-        mb1, mb2, mb3 = Engine.GetMousePressed()
-        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
-
-        info = Engine.GetGObject( "infobar" )
-        info.SetText( fps + " - " + ngobjs + " - " + minfo )
-
-    # --- escena introductoria
-    def IntroInit( self ):
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0), "fondo" )
         Engine.AddGObject( fondo, 0 )
-
-        # agregamos un mensaje
-        pressbar = Text( "Presiona la Barra Espaciadora", (120,340), "Cool 30", (255,255,255), None, "pressbar" )
-        Engine.AddGObject( pressbar, Engine.CAM_LAYER )
-
-        # posicionamos la camara
-        Engine.GetCamera().SetPosition( (0,0) )
-
-        # agregamos el control
-        Engine.SetUpdate( self.IntroControl )
-
-    def IntroControl( self, dt ):
-        # infobar
-        self._InfoBar()
-
-        # esperamos que presionen la barra espaciadora
-        if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
-
-        # borramos todo lo que hemos creado
-        Engine.DelGObject( "fondo" )
-        Engine.DelGObject( "pressbar" )
-
-        # inicializamos el juego
-        self.GameInit()
-
-    def GameInit( self ):
-        # agregamos el fondo
-        fondo = Sprite( "fondo", (0,0), "fondo" )
-        Engine.AddGObject( fondo, 0 )
-
-        # agregamos un mensaje
-        pressbar = Text( "Presiona la Barra Espaciadora", (120,340), "Cool 30", (255,255,255), None, "pressbar" )
-        pressbar.SetVisible( False )
-        Engine.AddGObject( pressbar, Engine.CAM_LAYER )
-
-        # agregamos a Betty
-        betty = Betty( "Betty" )
-        Engine.AddGObject( betty, 1 )
-        betty.SetPosition( (32*9, 32*13) )
-
-        # agregamos 3 zombies
-        for i in range(3):
-            zombie = Zombie( "Zombie-" + uuid.uuid4().hex )
-            zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
-            Engine.AddGObject( zombie, 1 )
 
         # agregamos los muros para las colisiones
         # 1. fue creado con Tiled
@@ -128,10 +50,75 @@ class MiJuego():
                 x = x + 32
             y = y - 32
 
-        Engine.ShowColliders( (255,0,0) )
+        # agregamos a Betty
+        betty = Betty( "Betty" )
+        betty.SetPosition( (32*9, 32*13) )
+        Engine.AddGObject( betty, 1 )
 
-        # agregamos el control del juego
+        # agregamos 3 zombies
+        for i in range(3):
+            zombie = Zombie( "Zombie-" + uuid.uuid4().hex )
+            zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
+            Engine.AddGObject( zombie, 1 )
+
+        # agregamos la barra de info
+        infobar = Canvas( (0,710), (640,20), "infobar" )
+        Engine.AddGObject( infobar, Engine.CAM_LAYER )
+
+        # agregamos el mensaje de la barra espaciadora
+        pressbar = Canvas( (120,340), (400, 30), "pressbar" )
+        pressbar.DrawText( "Presiona la Barra Espaciadora", (0,0), "cool", (255,255,255) )
+        Engine.AddGObject( pressbar, Engine.CAM_LAYER )
+
+        # posicionamos la camara
+        Engine.GetCamera().SetPosition( (0,0) )
+
+        # agregamos el control
+        Engine.SetUpdate( self.IntroControl )
+
+    # la barra de info y chequeo de fin del juego
+    def _InfoBar( self ):
+        # abortamos con la tecla Escape
+        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+            Engine.Quit()
+
+        # mostramos info
+        fps = Engine.GetFPS()
+        fps = "FPS: %07.2f" % fps
+
+        ngobjs = len( Engine.GetGObject( "*") )
+        ngobjs = "gObjs: %03d" % ngobjs
+
+        mx, my = Engine.GetMousePos()
+        mb1, mb2, mb3 = Engine.GetMousePressed()
+        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+
+        infobar = Engine.GetGObject( "infobar" )
+        infobar.Fill( (0,0,0,0) )
+        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (50,0), "monospace", (255,255,255) )
+
+    def IntroControl( self, dt ):
+        # infobar
+        self._InfoBar()
+
+        # esperamos que presionen la barra espaciadora
+        if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
+
+        # ocultamos mensaje
+        pressbar = Engine.GetGObject( "pressbar" )
+        pressbar.SetVisible( False )
+
+        # cambiamos el control
         Engine.SetUpdate( self.GameControl )
+
+        # activamos los actores
+        Engine.GetGObject( "Betty" ).SetAlive()
+        for zombie in Engine.GetGObject( "Zombie-*" ):
+            print(zombie)
+            zombie.SetActive( True )
+
+        # mostramos los bordes
+        Engine.ShowColliders( (255,0,0) )
 
     def GameControl( self, dt ):
         # infobar
@@ -157,6 +144,11 @@ class MiJuego():
         for i in range( len(zombies) ):
             zombie = zombies[i]
             zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
+
+    # main loop
+    def Run( self ):
+        Engine.Run( 60 )
+
 
 # -- show time
 game = MiJuego()

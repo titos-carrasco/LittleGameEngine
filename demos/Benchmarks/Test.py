@@ -1,11 +1,8 @@
-import uuid
 import random
-import time
 
 from lge.Engine import Engine
 from lge.Sprite import Sprite
-from lge.Text import Text
-from lge.Rect import Rect
+from lge.Canvas import Canvas
 
 
 class Test():
@@ -29,23 +26,21 @@ class Test():
         Engine.AddGObject( fondo, 0 )
 
         # agregamos la barra de info
-        infobar = Text( None, (0,420), "monospace", (0,0,0), None, "infobar" )
+        infobar =Canvas( (0,420), (800,20), "infobar" )
         Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
         # agregamos al heroe
         heroe = Sprite( "heroe", (226,142), "Heroe" )
-        heroe.OnUpdate = lambda dt: heroe.NextShape( dt, 60)
+        heroe.OnUpdate = lambda dt: heroe.NextShape( dt, 0.060 )
         Engine.AddGObject( heroe, 2 )
 
         # agregamos pajaros
         ww, wh = Engine.GetCamera().GetSize()
-        start = time.time()
         for i in range( 500 ):
             x = int( random.random()*ww )
             y = int( random.random()*(wh - 40) )
             bird = Bird( "bird", (x,y) )
             Engine.AddGObject( bird, 1 )
-        end = time.time()
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
@@ -63,8 +58,9 @@ class Test():
         mb1, mb2, mb3 = Engine.GetMousePressed()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
-        info = Engine.GetGObject( "infobar" )
-        info.SetText( fps + "    -    " + ngobjs + "    -    " + minfo )
+        infobar = Engine.GetGObject( "infobar" )
+        infobar.Fill( (0,0,0,20) )
+        infobar.DrawText( fps + "    -    " + ngobjs + "    -    " + minfo, (0,0), "monospace", (0,0,0) )
 
     # main loop
     def Run( self ):
@@ -76,7 +72,7 @@ class Bird(Sprite):
         super().__init__( inames, position )
 
     def OnUpdate( self, dt ):
-        self.NextShape( dt, 60)
+        self.NextShape( dt, 0.060 )
 
 # ----
 test=Test()

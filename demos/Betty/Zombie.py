@@ -8,11 +8,17 @@ class Zombie( Sprite ):
         self.SetShape( "zombie", 0 )
         self.SetTag( "zombie" )
         self.dir = "R"
+        self.active = False
+
+    def SetActive( self, state ):
+        self.active = state
 
     def OnUpdate( self, dt ):
+        if( not self.active ): return
+
         # nos movemos a "pps" pixeles por segundo
         pps = 120
-        pixels = round( (pps*dt)/1000 )
+        pixels = pps*dt
 
         # las coordenadas de Betty
         betty = Engine.GetGObject( "Betty" )
@@ -91,4 +97,4 @@ class Zombie( Sprite ):
         self.SetPosition( (x,y) )
 
         # siguiente imagen de la secuencia
-        self.NextShape( dt, 100 )
+        self.NextShape( dt, 0.100 )

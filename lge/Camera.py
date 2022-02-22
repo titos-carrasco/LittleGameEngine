@@ -13,11 +13,12 @@ class Camera():
         return self.rect.GetSize()
 
     def SetBounds( self, bounds=None ):
-        self.bounds = bounds.Copy()
+        if( bounds ): self.bounds = bounds.Copy()
+        else: self.bounds = None
 
     def GetBounds( self ):
-        if( self.bounds is None ): return None
-        else: return self.bounds.Copy()
+        if( self.bounds  ): return self.bounds.Copy()
+        else: return None
 
     def SetPosition( self, position ):
         # no tiene limites
@@ -27,7 +28,6 @@ class Camera():
 
         # el posible origen
         cx, cy = position
-        cx, cy = int(cx), int(cy)
         cw, ch = self.rect.GetSize()
 
         # debemos mantenerla dentro de los limites

@@ -1,12 +1,11 @@
 class Rect():
     def __init__( self, origin, size ):
         x, y = origin
-        self.origin = int(x), int(y)
-
         w, h = size
-        if( w < 0 ): w = 0
-        if( h < 0 ): h = 0
-        self.size = int(w), int(h)
+        assert w > 0 and h > 0, "'size' invalido"
+
+        self.origin = x, y
+        self.size = w, h
 
     def Copy( self ):
         return Rect( self.origin, self.size )
@@ -21,18 +20,17 @@ class Rect():
 
     def SetOrigin( self, origin ):
         x, y = origin
-        self.origin = int(x), int(y)
+        self.origin = x, y
 
     def SetSize( self, size ):
         w, h = size
-        if( w < 0 ): w = 0
-        if( h < 0 ): h = 0
-        self.size = int(w), int(h)
+        assert w > 0 and h > 0, "'size' invalido"
+        self.size = w, h
 
     def CollidePoint( self, point ):
         x, y = self.origin
         w, h = self.size
-        px, py = int(point[0]), int(point[1])
+        px, py = point
         return px >= x and px < x+w and py >= y and py < y+h
 
     def CollideRect( self, rect ):
@@ -54,13 +52,13 @@ class Rect():
         else:
             y = y2
             h = y1 + h1 - 1 - y2
-        return Rect( (x,y), (w,h) ) if w >= 0 and h >= 0 else None
+        return Rect( (x,y), (w,h) ) if w > 0 and h > 0 else None
 
     def KeepInsideRect( self, rect ):
         x, y = self.origin
         w, h = self.size
-        rx, ry = rect.GetOrigin()
-        rw, rh = rect.GetSize()
+        rx, ry = rect.origin
+        rw, rh = rect.size
 
         if( w <= rw and h <= rh ):
             if( x < rx ): x = rx

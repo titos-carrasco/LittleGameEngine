@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 2022-02-22
+- Elimina round() e int() de todos los métodos
+- dt es entregado como segundos en lugar de milisegundos
+- Elimina game object del tipo Text
+- Agrega game object del tipo Canvas
+- Reordena directorio de demos
+- Ajusta demos acorde a los cambios
+
+
 ## @v0.1.0 2022-02-19
 - lge/Engine.py
     - Modifica LoadImage() para realizar transformaciones en la carga

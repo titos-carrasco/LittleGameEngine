@@ -29,13 +29,10 @@ class GameObject():
 
     def SetPosition( self, position, bounds=None ):
         x, y = position
-        x, y = int(x), int(y)
-
-        if( not bounds is None ):
+        if( bounds ):
             r = self.rect.Copy()
             r.SetOrigin( (x,y) )
             x,y = r.KeepInsideRect( bounds )
-
         self.rect.SetOrigin( (x,y) )
 
     def SetTag( self, tag ):

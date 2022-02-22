@@ -1,6 +1,6 @@
 from lge.Engine import Engine
 from lge.Sprite import Sprite
-from lge.Text import Text
+from lge.Canvas import Canvas
 from lge.Rect import Rect
 
 class MiJuego():
@@ -19,7 +19,7 @@ class MiJuego():
         Engine.LoadImage( "heroe_idle_left", "../images/Swordsman/Idle/Idle_0*.png", 0.16, (True,False) )
         Engine.LoadImage( "heroe_run_right", "../images/Swordsman/Run/Run_0*.png", 0.16 )
         Engine.LoadImage( "heroe_run_left", "../images/Swordsman/Run/Run_0*.png", 0.16, (True,False) )
-        Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
+        Engine.LoadTTFFont( "monospace", 16, "../fonts/FreeMono.ttf" )
 
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0) )
@@ -30,7 +30,7 @@ class MiJuego():
         Engine.AddGObject( heroe, 1 )
 
         # agregamos la barra de info
-        infobar = Text( None, (0,460), "monospace", (0,0,0), None, "infobar" )
+        infobar = Canvas( (0,460), (640,20), "infobar" )
         Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
         # configuramos la camara
@@ -56,8 +56,9 @@ class MiJuego():
         mb1, mb2, mb3 = Engine.GetMousePressed()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
-        info = Engine.GetGObject( "infobar" )
-        info.SetText( fps + " - " + ngobjs + " - " + minfo )
+        infobar = Engine.GetGObject( "infobar" )
+        infobar.Fill( (0,0,0,20) )
+        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (50,0), "monospace", (0,0,0) )
 
     # main loop
     def Run( self ):
@@ -74,7 +75,7 @@ class MiHeroe( Sprite ):
     def OnUpdate( self, dt ):
         # moveremos al heroe "pps" pixeles por segundo
         pps = 240
-        pixels = round( (pps*dt)/1000 )
+        pixels = pps*dt
 
         # la posiciona actual del heroe
         x, y = self.GetPosition()
@@ -109,7 +110,7 @@ class MiHeroe( Sprite ):
             else: self.SetShape( "heroe_idle_left", 0 )
 
         # siguiente imagen de la secuencia
-        self.NextShape( dt, 50 )
+        self.NextShape( dt, 0.050 )
 
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
         camera = Engine.GetCamera()

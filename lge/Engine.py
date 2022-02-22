@@ -1,10 +1,7 @@
-import time
-import sys
 import glob
 import pygame
 
 from lge.Camera import Camera
-from lge.Rect import Rect
 
 
 class Engine():
@@ -32,6 +29,7 @@ class Engine():
 
         Engine.events = []
         Engine.keysPressed = []
+        Engine.running = False
 
         pygame.init()
         pygame.font.init()
@@ -54,8 +52,7 @@ class Engine():
         if( gobj is None ): return
 
         _, layer = Engine.gObjects[gobj.name]
-        if( layer >= Engine.CAM_LAYER ):
-            raise ValueError( "'layer' invalido" )
+        assert layer < Engine.CAM_LAYER, "SetCameraTarget: 'layer' invalido"
 
         x, y = gobj.GetPosition()
         w, h = gobj.GetSize()
@@ -68,8 +65,7 @@ class Engine():
 
     # gobjects
     def AddGObject( gobj, layer ):
-        if( layer > Engine.CAM_LAYER ):
-            raise ValueError( "'layer' invalido" )
+        assert layer <= Engine.CAM_LAYER, "AddGObject: 'layer' invalido"
         Engine.gObjectsToAdd.append( (gobj,layer) )
 
     def DelGObject( name ):
@@ -144,8 +140,7 @@ class Engine():
         return Engine.clock.get_fps()
 
     def Quit():
-        pygame.quit()
-        sys.exit()
+        Engine.running = False
 
     # main loop
     def Run( fps ):
@@ -157,9 +152,10 @@ class Engine():
         # 5. onUpdate main logic
         # 6 render
 
-        while( True ):
+        Engine.running = True
+        while( Engine.running ):
             # tiempo en ms desde el ciclo anterior
-            dt = Engine.clock.tick( fps )
+            dt = Engine.clock.tick( fps )/1000.0
 
             # system events
             Engine.events = pygame.event.get()
@@ -239,6 +235,9 @@ class Engine():
             # actualizamos la ventana
             pygame.display.update()
 
+        # eso es todo
+        pygame.quit()
+
     # sistema cartesiano y zona visible dada por la camara
     def _Fix_XY( pos, size ):
         xo, yo = pos
@@ -250,11 +249,6 @@ class Engine():
         x = xo - vx
         y = wh - (yo + ho) - dy
         return x, y
-
-    # sistema cartesiano a pygame
-    def _Fix_Coordinates( coordinates, height ):
-        x, y = coordinates
-        return x, height - y
 
     # --- Recursos
 

@@ -1,56 +1,61 @@
-import uuid
-import random
-import time
-
 from lge.Engine import Engine
-from lge.Text import Text
 from lge.Canvas import Canvas
-from lge.Rect import Rect
 
-import pygame
+
 class Game():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (640,640), "Pong" )
         Engine.SetUpdate( self.MainUpdate )
 
-        field = Canvas( (5,35), (630,524), (0,0,100), "field" )
+        field = Canvas( (5,35), (630,524), "field" )
+        field.Fill( (0,0,100) )
         Engine.AddGObject( field, 0 )
 
         # cargamos los recursos que usaremos
-        Engine.LoadTTFFont( "monospace", 20, "../fonts/FreeMono.ttf" )
+        Engine.LoadTTFFont( "monospace", 16, "../fonts/FreeMono.ttf" )
 
         # agregamos la barra de info
-        infobar = Text( None, (0,610), "monospace", (255,255,255), None, "infobar" )
+        infobar = Canvas( (0,620), (640,20), "infobar" )
         Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
         # los bordes
-        wall = Canvas( (0,560), (640,4), (255,255,255) )
+        wall = Canvas( (0,560), (640,4)  )
+        wall.Fill( (255,255,255) )
         wall.SetTag( "wall-horizontal" )
         Engine.AddGObject( wall, 1 )
 
-        wall = Canvas( (0,30), (640,4), (255,255,255) )
+        wall = Canvas( (0,30), (640,4) )
+        wall.Fill( (255,255,255) )
         wall.SetTag( "wall-horizontal" )
         Engine.AddGObject( wall, 1 )
 
-        wall = Canvas( (20,34), (4,526), (255,255,255) )
+        wall = Canvas( (20,34), (4,526) )
+        wall.Fill( (255,255,255) )
         wall.SetTag( "wall-vertical" )
         Engine.AddGObject( wall, 1 )
 
-        wall = Canvas( (616,34), (4,526), (255,255,255) )
+        wall = Canvas( (616,34), (4,526) )
+        wall.Fill( (255,255,255) )
         wall.SetTag( "wall-vertical" )
         Engine.AddGObject( wall, 1 )
 
-        ball = Ball( (320,320), (8,8), (255,255,255), "ball" )
+        # los actores
+        ball = Ball( (320,400), (8,8), "ball" )
+        ball.Fill( (255,255,255) )
         Engine.AddGObject( ball, 1 )
 
-        paddle = Canvas( (90,270), (8,60), (255,255,255), "user-paddle" )
+        paddle = Canvas( (90,270), (8,60), "user-paddle" )
+        paddle.Fill( (255,255,255) )
         paddle.SetTag( "paddle")
         Engine.AddGObject( paddle, 1 )
 
-        paddle = Canvas( (540,270), (8,60), (255,255,255), "system-paddle" )
+        paddle = Canvas( (540,270), (8,60), "system-paddle" )
+        paddle.Fill( (255,255,255) )
         paddle.SetTag( "paddle")
         Engine.AddGObject( paddle, 1 )
+
+        self.paddle_speed = 240
 
         #Engine.ShowColliders( (255,0,255) )
 
@@ -70,19 +75,21 @@ class Game():
         mb1, mb2, mb3 = Engine.GetMousePressed()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
-        info = Engine.GetGObject( "infobar" )
-        info.SetText( fps + " - " + ngobjs + " - " + minfo )
+        infobar = Engine.GetGObject( "infobar" )
+        infobar.Fill( (255,255,255,20) )
+        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (50,0), "monospace", (255,255,255) )
 
         # el campo de juego
         field = Engine.GetGObject( "field" ).GetRect()
 
         # user paddle
         user_paddle = Engine.GetGObject( "user-paddle" )
+        speed = self.paddle_speed*dt
         x, y = user_paddle.GetPosition()
         if( Engine.IsKeyPressed( Engine.CONSTANTS.K_UP ) ):
-            user_paddle.SetPosition( (x,y+4), field )
+            user_paddle.SetPosition( (x,y+speed), field )
         elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
-            user_paddle.SetPosition( (x,y-4), field )
+            user_paddle.SetPosition( (x,y-speed), field )
 
         # system paddle
         system_paddle = Engine.GetGObject( "system-paddle" )
@@ -90,8 +97,8 @@ class Game():
         px, py = system_paddle.GetPosition()
         bx, by = Engine.GetGObject( "ball").GetPosition()
 
-        if( py + ph/2 < by ): py = py + 4
-        elif( py + ph/2 > by ): py = py - 4
+        if( py + ph/2 < by ): py = py + speed
+        elif( py + ph/2 > by ): py = py - speed
         system_paddle.SetPosition( (px,py), field )
 
 
@@ -101,25 +108,30 @@ class Game():
 
 
 class Ball( Canvas ):
-    def __init__( self, position, size, color, name ):
-        super().__init__( position, size, color, name )
-        self.speedX = 4
-        self.speedY = 5
+    def __init__( self, position, size, name ):
+        super().__init__( position, size, name )
+        self.speedX = 180
+        self.speedY = -180
 
     def OnUpdate( self, dt ):
+        dx = self.speedX*dt
+        dy = self.speedY*dt
+
         x, y = self.GetPosition()
+        self.SetPosition( (x+dx,y+dy) )
 
-        self.SetPosition( (x+self.speedX,y+self.speedY) )
         collisions = Engine.GetCollisions( self.GetName() )
+        if( not collisions ): return
 
-        if( not collisions ):
-            return
-        if( [ True for t in collisions if t[0].GetTag() in [ "wall-horizontal" ] ] ):
+        if( [ True for t in collisions if t[0].GetTag() == "wall-horizontal" ] ):
             self.speedY = -self.speedY
-        if( [ True for t in collisions if t[0].GetTag() in [ "wall-vertical", "paddle" ] ] ):
+            dy = -dy
+        if( [ True for t in collisions if t[0].GetTag() == "paddle" ] ):
             self.speedX = -self.speedX
-
-        self.SetPosition( (x+self.speedX,y+self.speedY) )
+            dx = -dx
+        if( [ True for t in collisions if t[0].GetTag() == "wall-vertical" ] ):
+            x, y = 320, 400
+        self.SetPosition( (x+dx,y+dy) )
 
 # ----
 game=Game()

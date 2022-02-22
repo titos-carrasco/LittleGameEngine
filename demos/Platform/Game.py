@@ -1,6 +1,6 @@
 from lge.Engine import Engine
 from lge.Sprite import Sprite
-from lge.Text import Text
+from lge.Canvas import Canvas
 from lge.Rect import Rect
 
 from BlockHorizontal import BlockHorizontal
@@ -16,19 +16,19 @@ class MiJuego():
         Engine.LoadImage( "fondo", "../images/Platform/Platform.png" )
         Engine.LoadImage( "roca", "../images/Volcano_Pack_1.1/volcano_pack_alt_39.png" )
         Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_0*.png", 0.16 )
-        Engine.LoadTTFFont( "Monospace 20", 20, "../fonts/LiberationMono-Regular.ttf" )
-        Engine.LoadTTFFont( "Cool 30", 30, "../fonts/backlash.ttf" )
+        Engine.LoadTTFFont( "monospace", 16, "../fonts/LiberationMono-Regular.ttf" )
+        Engine.LoadTTFFont( "cool", 30, "../fonts/backlash.ttf" )
 
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0) )
         Engine.AddGObject( fondo, 0 )
 
         # agregamos la barra de info
-        infobar = Text( None, (0,680), "Monospace 20", (255,255,255), None, "infobar" )
+        infobar = Canvas( (0,684), (800,20), "infobar" )
         Engine.AddGObject( infobar, Engine.CAM_LAYER )
 
         # agregamos el ninja en la camara
-        ninja = Sprite( "ninja", (320,370), "ninja" )
+        ninja = Sprite( "ninja", (340,370), "ninja" )
         ninja.OnUpdate = self.NinjaUpdate
         Engine.AddGObject( ninja, Engine.CAM_LAYER )
 
@@ -37,7 +37,7 @@ class MiJuego():
 
     def NinjaUpdate( self, dt ):
         ninja = Engine.GetGObject( "ninja" )
-        ninja.NextShape( dt, 50 )
+        ninja.NextShape( dt, 0.050 )
 
     # main loop
     def Run( self ):
@@ -60,8 +60,9 @@ class MiJuego():
         mb1, mb2, mb3 = Engine.GetMousePressed()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
-        info = Engine.GetGObject( "infobar" )
-        info.SetText( fps + "    -    " + ngobjs + "    -    " + minfo )
+        infobar = Engine.GetGObject( "infobar" )
+        infobar.Fill( (0,0,0,50) )
+        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (120,0), "monospace", (255,255,255) )
 
     #-------------------------------------------------------------------------------------------
     def EscenaIntro( self ):
@@ -73,7 +74,8 @@ class MiJuego():
         Engine.AddGObject( bloque, 1 )
 
         # agregamos mensaje
-        pressbar = Text( "Presiona la Barra Espaciadora", (200,340), "Cool 30", (255,255,255), None, "pressbar" )
+        pressbar = Canvas( (200,340), (400, 30), "pressbar" )
+        pressbar.DrawText( "Presiona la Barra Espaciadora", (0,0), "cool", (255,255,255) )
         Engine.AddGObject( pressbar, Engine.CAM_LAYER )
 
         # agregamos el control de esta escena
@@ -83,7 +85,7 @@ class MiJuego():
     def IntroUpdate( self, dt ):
         # moveremos la camara "pps" pixeles por segundo
         pps = 240
-        pixels = round( (pps*dt)/1000 )
+        pixels = pps*dt
 
         # verificamos ESCP
         self.CheckEscape()

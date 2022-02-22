@@ -7,7 +7,7 @@ class Betty( Sprite ):
         super().__init__( ["betty_idle","betty_down", "betty_up", "betty_left", "betty_right"], (0,0), name )
         self.SetShape( "betty_idle", 0 )
         self.SetTag( "Betty" )
-        self.alive = True
+        self.alive = False
 
     def IsAlive( self ):
         return self.alive
@@ -22,7 +22,7 @@ class Betty( Sprite ):
 
         # nos movemos a "pps" pixeles por segundo
         pps = 120
-        pixels = round( (pps*dt)/1000 )
+        pixels = pps*dt
 
         # nuestra posicion actual y tamano
         x, y = self.GetPosition()
@@ -61,7 +61,7 @@ class Betty( Sprite ):
                 if( y%32 < 8 or y%32 > 23 ): y = round( y/32 )*32
 
         # siguiente imagen de la secuencia
-        self.NextShape( dt, 100 )
+        self.NextShape( dt, 0.100 )
 
         # lo posicionamos
         self.SetPosition( (x,y) )
