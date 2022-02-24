@@ -9,7 +9,7 @@ class Test():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (800,440), "The World" )
-        Engine.SetUpdate( self.MainUpdate )
+        Engine.SetOnUpdate( self.MainUpdate )
 
         # activamos la musica de fondo
         Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
@@ -27,7 +27,7 @@ class Test():
 
         # agregamos la barra de info
         infobar =Canvas( (0,420), (800,20), "infobar" )
-        Engine.AddGObject( infobar, Engine.CAM_LAYER )
+        Engine.AddGObjectGUI( infobar )
 
         # agregamos al heroe
         heroe = Sprite( "heroe", (226,142), "Heroe" )
@@ -44,7 +44,7 @@ class Test():
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.IsKeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info

@@ -20,9 +20,10 @@ class Betty( Sprite ):
         # solo si estoy viva
         if( not self.alive ): return
 
-        # nos movemos a "pps" pixeles por segundo
-        pps = 120
-        pixels = pps*dt
+        # velocity = pixeles por segundo
+        velocity = 120
+        #pixels = velocity*dt
+        pixels = 2
 
         # nuestra posicion actual y tamano
         x, y = self.GetPosition()
@@ -66,8 +67,16 @@ class Betty( Sprite ):
         # lo posicionamos
         self.SetPosition( (x,y) )
         collisions = Engine.GetCollisions( self.name )
-        if( len( collisions ) > 0 ):
+        if( collisions ):
+            # zombi?
+            zombies = [ gobj for gobj in collisions if gobj.GetTag() == "zombie" ]
+            if( zombies ):
+                self.alive = False
+                return
+
+            # es un muro
             self.SetPosition( (xori, yori) )
+            return
 
         # tunel?
         x, y = self.GetPosition()
@@ -75,8 +84,3 @@ class Betty( Sprite ):
         if( x < -16 ): x = w - 16
         elif( x > w - 16 ): x = -16
         self.SetPosition( (x,y) )
-
-        # dead?
-        zombies = [ gobj for gobj, layer in collisions if gobj.GetTag() == "zombie" ]
-        if( len( zombies) > 0 ):
-            self.alive = False

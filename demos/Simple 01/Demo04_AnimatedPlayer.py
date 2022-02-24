@@ -5,42 +5,48 @@ from lge.Rect import Rect
 
 
 def HeroeUpdate( dt ):
+    global key_pressed
+
     # el heroe
     heroe = Engine.GetGObject( "Heroe" )
 
-    # moveremos al heroe "pps" pixeles por segundo
-    pps = 240
-    pixels = pps*dt
+    # velocity = pixeles por segundo
+    velocity = 240
+    pixels = velocity*dt
 
     # la posiciona actual del heroe
     x, y = heroe.GetPosition()
 
+    # la tecla presionada
+    if( key_pressed == -1 ):
+        if( Engine.IsKeyDown( Engine.CONSTANTS.K_RIGHT ) ): key_pressed = Engine.CONSTANTS.K_RIGHT
+        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_LEFT ) ): key_pressed = Engine.CONSTANTS.K_LEFT
+        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_DOWN ) ): key_pressed = Engine.CONSTANTS.K_DOWN
+        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_UP ) ): key_pressed = Engine.CONSTANTS.K_UP
+    else:
+        if( Engine.IsKeyUp( key_pressed ) ):
+            key_pressed = -1
+
     # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
-    moving = False
     name, idx = heroe.GetCurrentShape()
-    if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
+    if( key_pressed == Engine.CONSTANTS.K_RIGHT ):
         x = x + pixels
         if( heroe.heading != 1 ):
             heroe.heading = 1
         if( name[:9] != "heroe_run" ):
             heroe.SetShape( "heroe_run_right", 0 )
-        moving = True
-    elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
+    elif( key_pressed == Engine.CONSTANTS.K_LEFT ):
         x = x - pixels
         if( heroe.heading != -1 ):
             heroe.heading = -1
         if( name[:9] != "heroe_run" ):
             heroe.SetShape( "heroe_run_left", 0 )
-        moving = True
-
-    if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
+    elif( key_pressed == Engine.CONSTANTS.K_DOWN ):
         y = y - pixels
-        moving = True
-    elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_UP ) ):
+    elif( key_pressed == Engine.CONSTANTS.K_UP ):
         y = y + pixels
-        moving = True
 
-    if( not moving and name[:10] != "heroe_idle" ):
+    if( key_pressed == -1 and name[:10] != "heroe_idle" ):
         if( heroe.heading == 1 ): heroe.SetShape( "heroe_idle_right", 0 )
         else: heroe.SetShape( "heroe_idle_left", 0 )
 
@@ -55,7 +61,7 @@ def HeroeUpdate( dt ):
 
 def MainUpdate( dt ):
     # abortamos con la tecla Escape
-    if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+    if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
         Engine.Quit()
 
     # mostramos info
@@ -75,9 +81,11 @@ def MainUpdate( dt ):
 
 
 def main():
+    global key_pressed
+
     # creamos el juego
     Engine.Init( (640,480), "Animated Player" )
-    Engine.SetUpdate( MainUpdate )
+    Engine.SetOnUpdate( MainUpdate )
 
     # activamos la musica de fondo
     Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
@@ -103,16 +111,17 @@ def main():
 
     # agregamos la barra de info
     infobar = Canvas( (0,460), (640,20), "infobar" )
-    Engine.AddGObject( infobar, Engine.CAM_LAYER )
+    Engine.AddGObjectGUI( infobar )
 
     # configuramos la camara
     camera = Engine.GetCamera()
     camera.SetBounds( Rect( (0,0), (1920,1056) ) )
 
     # establecemos que la camara siga al heroe
-    Engine.SetCameraTarget( heroe, True )
+    Engine.SetCameraTarget( heroe )
 
     # main loop
+    key_pressed = -1
     Engine.Run( 60 )
 
 

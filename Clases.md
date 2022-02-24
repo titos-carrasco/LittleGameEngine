@@ -15,7 +15,6 @@ from lge.Rect import rect
 
 ```
 Engine.CONSTANTS
-Engine.CAM_LAYER
 Engine.VLIMIT
 ```
 
@@ -36,7 +35,7 @@ Quit()
 
 ---
 ```
-SetUpdate( func=None )
+SetOnUpdate( func=None )
 ```
 
 ---
@@ -51,12 +50,17 @@ GetCamera()
 
 ---
 ```
-SetCameraTarget( gobj=None, center=True )
+SetCameraTarget( gobj=None, center=False )
 ```
 
 #### Game Objects
 ```
 AddGObject( gobj, layer )
+```
+
+---
+```
+AddGObjectGUI( gobj )
 ```
 
 ---
@@ -167,6 +171,11 @@ camera = Camera( position, size )
 
 ---
 ```
+rect = camera.GetRect()
+```
+
+---
+```
 position = camera.GetPosition()
 ```
 
@@ -177,17 +186,17 @@ size = camera.GetSize()
 
 ---
 ```
-camera.SetBounds( bounds )
-```
-
----
-```
 bounds = camera.GetBounds()
 ```
 
 ---
 ```
 camera.SetPosition( position )
+```
+
+---
+```
+camera.SetBounds( bounds )
 ```
 
 
@@ -250,17 +259,25 @@ Una pizarra para dibujar
 
 ---
 ```
-canvas = Canvas( position, size, color, name=None )
+canvas = Canvas( position, size, name=None )
 ```
-Crea un GameObject de tipo canvas en la posición y tamano dados. El canvas
-es inicialmente pintado con el color entregado
+Crea un GameObject de tipo canvas en la posición y tamano dados.
 
 | Parámetros | Descripción
 |---|---
 |`position`| Las coordenadas (x,y) de la posición del GameObject
 |`size`| eñ tamano del gameobject
-|`color`| El color de relleno inicial
 |`name`| El nombre único a asignar al GameObject
+
+---
+```
+canvas.Fill( bgColor, rect=None )
+```
+
+---
+```
+canvas.DrawText( text, position, fontName, color ):
+```
 
 ---
 ```
@@ -270,11 +287,6 @@ canvas.DrawPoint( point, color )
 ---
 ```
 canvas.DrawCircle( center, radius, thickness, fgColor, bgColor=None )
-```
-
----
-```
-canvas.Fill( bgColor, rect=None )
 ```
 
 ---
@@ -306,6 +318,11 @@ Crea un GameObject en la posición y dimensiones especificadas
 | Retorno | Descripción
 |---|---
 |`gobj`| El GameObject creado
+
+---
+```
+rect = gobj.GetRect()
+```
 
 ---
 ```
@@ -359,7 +376,12 @@ Retorna la visibilidad del GameObject
 
 ---
 ```
-gobj.SetPosition( position, rect=None )
+active = gobj.IsActive()
+```
+
+---
+```
+gobj.SetPosition( position, bounds=None )
 ```
 Establece la posición del GameObject
 
@@ -367,16 +389,6 @@ Establece la posición del GameObject
 |---|---
 |`position`| La nueva posición (x,y) del GameObject
 |`rect`| Si se específica, la posición del GameObject queda confiada al rectpangulo dado
-
----
-```
-gobj.SetTag( tag )
-```
-Establece un tag para el GameObject
-
-| Parámetros | Descripción
-|---|---
-|`tag`| El tag para el GameObject
 
 ---
 ```
@@ -390,6 +402,16 @@ Establece la dimensión del GameObject
 
 ---
 ```
+gobj.SetTag( tag )
+```
+Establece un tag para el GameObject
+
+| Parámetros | Descripción
+|---|---
+|`tag`| El tag para el GameObject
+
+---
+```
 gobj.SetVisible( visibility )
 ```
 Establece la visibilidad del GameObject
@@ -400,45 +422,13 @@ Establece la visibilidad del GameObject
 
 ---
 ```
-rect = gobj.CollideGObject( gobj2 )
+gobj.SetActive( active )
 ```
-Verifica si el GameObject intersecta con otro
-
-| Parámetros | Descripción
-|---|---
-|`gobj2`| El GameObject contra el cual verificar
-
-| Retorno | Descripción
-|---|---
-|`rect`| Un rectángulo dado por la intersección de ambos GameObjects. `None` en caso de que no intersecten
 
 ---
 ```
-rect = gobj.CollideRect( rect )
+gobj.SetColliders( enabled )
 ```
-Verifica si el GameObject intersecta con el rectángulo dado
-
-| Parámetros | Descripción
-|---|---
-|`rect`| El rectángulo contra el cual verificar
-
-| Retorno | Descripción
-|---|---
-|`rect`| Un rectángulo dado por la intersección con el rectángulo. `None` en caso de que no intersecten
-
----
-```
-collide = gobj.CollidePoint( point )
-```
-Determina si un punto intersecta al GameObject
-
-| Parámetros | Descripción
-|---|---
-|`point`| Las coordenadas (x,y) del punto a verificar
-
-| Retorno | Descripción
-|---|---
-|`collide`| `True` si es que el punto intersecta al GameObject, `False` en caso contrario
 
 
 ## Rectángulo

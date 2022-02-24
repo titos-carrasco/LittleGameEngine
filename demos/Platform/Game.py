@@ -9,7 +9,7 @@ from BlockHorizontal import BlockHorizontal
 class MiJuego():
     def __init__( self ):
         # creamos el juego
-        Engine.Init( (800,704), "Vulcano" )
+        Engine.Init( (800,600), "Vulcano" )
         Engine.GetCamera().SetBounds( Rect( (0,0), (2560,704) ) )
 
         # cargamos algunos recursos
@@ -25,12 +25,12 @@ class MiJuego():
 
         # agregamos la barra de info
         infobar = Canvas( (0,684), (800,20), "infobar" )
-        Engine.AddGObject( infobar, Engine.CAM_LAYER )
+        Engine.AddGObjectGUI( infobar )
 
         # agregamos el ninja en la camara
-        ninja = Sprite( "ninja", (340,370), "ninja" )
+        ninja = Sprite( "ninja", (340,300), "ninja" )
         ninja.OnUpdate = self.NinjaUpdate
-        Engine.AddGObject( ninja, Engine.CAM_LAYER )
+        Engine.AddGObjectGUI( ninja )
 
         # Dejamos lista la escena
         self.EscenaIntro()
@@ -46,7 +46,7 @@ class MiJuego():
     # barra de info
     def CheckEscape( self ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info
@@ -74,18 +74,18 @@ class MiJuego():
         Engine.AddGObject( bloque, 1 )
 
         # agregamos mensaje
-        pressbar = Canvas( (200,340), (400, 30), "pressbar" )
+        pressbar = Canvas( (200,260), (400, 30), "pressbar" )
         pressbar.DrawText( "Presiona la Barra Espaciadora", (0,0), "cool", (255,255,255) )
-        Engine.AddGObject( pressbar, Engine.CAM_LAYER )
+        Engine.AddGObjectGUI( pressbar )
 
         # agregamos el control de esta escena
         self.camRight = True
-        Engine.SetUpdate( self.IntroUpdate )
+        Engine.SetOnUpdate( self.IntroUpdate )
 
     def IntroUpdate( self, dt ):
-        # moveremos la camara "pps" pixeles por segundo
-        pps = 240
-        pixels = pps*dt
+        # velocity = pixeles por segundo
+        velocity = 240
+        pixels = velocity*dt
 
         # verificamos ESCP
         self.CheckEscape()

@@ -39,20 +39,20 @@ class Rect():
         x2, y2 = rect.origin
         w2, h2 = rect.size
 
-        if( x1 > x2 ):
+        if( x1 >= x2 ):
             x = x1
-            w = x2 + w2 - 1 - x1
+            w = x2 + w2 - x1
         else:
             x = x2
-            w = x1 + w1 - 1 - x2
+            w = x1 + w1 - x2
 
-        if( y1 > y2 ):
+        if( y1 >= y2 ):
             y = y1
-            h = y2 + h2 - 1 - y1
+            h = y2 + h2 - y1
         else:
             y = y2
-            h = y1 + h1 - 1 - y2
-        return Rect( (x,y), (w,h) ) if w > 0 and h > 0 else None
+            h = y1 + h1 - y2
+        return w > 0 and h > 0
 
     def KeepInsideRect( self, rect ):
         x, y = self.origin
@@ -66,4 +66,4 @@ class Rect():
             if( y < ry ): y = ry
             elif( y + h > ry + rh ): y = ry + rh - h
 
-        return x, y
+        self.origin =  x, y

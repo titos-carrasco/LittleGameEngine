@@ -1,12 +1,11 @@
 import pygame
-
 from lge.Engine import Engine
 from lge.GameObject import GameObject
 
 class Canvas( GameObject ):
     def __init__( self, position, size, name=None ):
         super().__init__( position, size, name )
-        self.surface = pygame.Surface( self.GetSize(),pygame.SRCALPHA )
+        self.surface = pygame.Surface( size, pygame.SRCALPHA )
 
     def SetSize( self, size ):
         pass
@@ -33,7 +32,6 @@ class Canvas( GameObject ):
 
         if( bgColor ): pygame.draw.circle( self.surface, bgColor, center, radius, 0 )
         pygame.draw.circle( self.surface, fgColor, center, radius, thickness )
-
 
     def DrawRectangle( self, rect, thickness, fgColor, bgColor=None  ):
         x, y = Engine._Fix_Coordinates( rect.GetOrigin(), self.GetSize()[1] )

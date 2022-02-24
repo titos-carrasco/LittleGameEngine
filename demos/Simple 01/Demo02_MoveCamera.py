@@ -5,8 +5,10 @@ from lge.Rect import Rect
 
 
 def MainUpdate( dt ):
+    global key_pressed
+
     # abortamos con la tecla Escape
-    if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+    if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
         Engine.Quit()
 
     # mostramos info
@@ -24,22 +26,32 @@ def MainUpdate( dt ):
     infobar.Fill( (0,0,0,20) )
     infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (50,0), "monospace", (0,0,0) )
 
-    # moveremos la camara "pps" pixeles por segundo
-    pps = 240
-    pixels = pps*dt
+    # velocity = pixeles por segundo
+    velocity = 240
+    pixels = velocity*dt
 
     # la posiciona actual de la camara
     camera = Engine.GetCamera()
     x, y = camera.GetPosition()
 
+    # la tecla presionada
+    if( key_pressed == -1 ):
+        if( Engine.IsKeyDown( Engine.CONSTANTS.K_RIGHT ) ): key_pressed = Engine.CONSTANTS.K_RIGHT
+        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_LEFT ) ): key_pressed = Engine.CONSTANTS.K_LEFT
+        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_DOWN ) ): key_pressed = Engine.CONSTANTS.K_DOWN
+        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_UP ) ): key_pressed = Engine.CONSTANTS.K_UP
+    else:
+        if( Engine.IsKeyUp( key_pressed ) ):
+            key_pressed = -1
+
     # cambiamos sus coordenadas segun la tecla presionada
-    if( Engine.IsKeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
+    if( key_pressed == Engine.CONSTANTS.K_RIGHT ):
         x = x + pixels
-    elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_LEFT ) ):
+    elif( key_pressed == Engine.CONSTANTS.K_LEFT  ):
         x = x - pixels
-    if( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
+    elif( key_pressed == Engine.CONSTANTS.K_DOWN  ):
         y = y - pixels
-    elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_UP ) ):
+    elif( key_pressed == Engine.CONSTANTS.K_UP  ):
         y = y + pixels
 
     # posicionamos la camara
@@ -47,9 +59,11 @@ def MainUpdate( dt ):
 
 
 def main():
+    global key_pressed
+
     # creamos el juego
     Engine.Init( (640,480), "Move Camera" )
-    Engine.SetUpdate( MainUpdate )
+    Engine.SetOnUpdate( MainUpdate )
 
     # activamos la musica de fondo
     Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
@@ -70,7 +84,7 @@ def main():
 
     # agregamos la barra de info
     infobar = Canvas( (0,460), (640,20), "infobar" )
-    Engine.AddGObject( infobar, Engine.CAM_LAYER )
+    Engine.AddGObjectGUI( infobar )
 
     # configuramos la camara
     camera = Engine.GetCamera()
@@ -83,6 +97,7 @@ def main():
     camera.SetPosition( (x+w/2-cw/2,y+h/2-ch/2) )
 
     # main loop
+    key_pressed = -1
     Engine.Run( 60 )
 
 

@@ -1,5 +1,4 @@
 import uuid
-
 from lge.Rect import Rect
 
 class GameObject():
@@ -8,6 +7,11 @@ class GameObject():
         self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
         self.tag = ""
         self.visible = True
+        self.active = True
+        self.use_collider = False
+
+    def GetRect( self ):
+        return self.rect.Copy()
 
     def GetPosition( self ):
         return self.rect.GetOrigin()
@@ -24,31 +28,25 @@ class GameObject():
     def IsVisible( self ):
         return self.visible
 
-    def GetRect( self ):
-        return self.rect.Copy()
+    def IsActive( self ):
+        return self.active
 
     def SetPosition( self, position, bounds=None ):
-        x, y = position
+        self.rect.SetOrigin( position )
         if( bounds ):
-            r = self.rect.Copy()
-            r.SetOrigin( (x,y) )
-            x,y = r.KeepInsideRect( bounds )
-        self.rect.SetOrigin( (x,y) )
-
-    def SetTag( self, tag ):
-        self.tag = tag
+            self.rect.KeepInsideRect( bounds )
 
     def SetSize( self, size ):
         self.rect.SetSize( size )
 
+    def SetTag( self, tag ):
+        self.tag = tag
+
     def SetVisible( self, visible ):
         self.visible = visible
 
-    def CollideGObject( self, gobj ):
-        return self.rect.CollideRect( gobj.rect )
+    def SetActive( self, active ):
+        self.active = active
 
-    def CollidePoint( self, point ):
-        return self.rect.CollidePoint( point )
-
-    def CollideRect( self, rect ):
-        return self.rect.CollideRect( rect )
+    def SetColliders( self, enable ):
+        self.use_collider = enable

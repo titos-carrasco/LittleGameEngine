@@ -6,33 +6,24 @@ class Camera():
         self.rect = Rect( position, size )
         self.bounds = None
 
+    def GetRect( self ):
+        return self.rect.Copy()
+
     def GetPosition( self ):
         return self.rect.GetOrigin()
 
     def GetSize( self ):
         return self.rect.GetSize()
 
-    def SetBounds( self, bounds=None ):
-        if( bounds ): self.bounds = bounds.Copy()
-        else: self.bounds = None
-
     def GetBounds( self ):
         if( self.bounds  ): return self.bounds.Copy()
         else: return None
 
     def SetPosition( self, position ):
-        # no tiene limites
-        if( self.bounds is None ):
-            self.rect.SetOrigin( position )
-            return
+        self.rect.SetOrigin( position )
+        if( self.bounds ):
+            self.rect.KeepInsideRect( self.bounds )
 
-        # el posible origen
-        cx, cy = position
-        cw, ch = self.rect.GetSize()
-
-        # debemos mantenerla dentro de los limites
-        me = Rect( (cx,cy), (cw,ch) )
-        cx, cy = me.KeepInsideRect( self.bounds )
-
-        # la reposicionamos
-        self.rect.SetOrigin( (cx,cy) )
+    def SetBounds( self, bounds=None) :
+        if( bounds ): self.bounds = bounds.Copy()
+        else: self.bounds = bounds

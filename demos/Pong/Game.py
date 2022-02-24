@@ -6,7 +6,7 @@ class Game():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (640,640), "Pong" )
-        Engine.SetUpdate( self.MainUpdate )
+        Engine.SetOnUpdate( self.MainUpdate )
 
         field = Canvas( (5,35), (630,524), "field" )
         field.Fill( (0,0,100) )
@@ -17,42 +17,49 @@ class Game():
 
         # agregamos la barra de info
         infobar = Canvas( (0,620), (640,20), "infobar" )
-        Engine.AddGObject( infobar, Engine.CAM_LAYER )
+        Engine.AddGObjectGUI( infobar )
 
         # los bordes
         wall = Canvas( (0,560), (640,4)  )
         wall.Fill( (255,255,255) )
         wall.SetTag( "wall-horizontal" )
+        wall.SetColliders( True )
         Engine.AddGObject( wall, 1 )
 
         wall = Canvas( (0,30), (640,4) )
         wall.Fill( (255,255,255) )
         wall.SetTag( "wall-horizontal" )
+        wall.SetColliders( True )
         Engine.AddGObject( wall, 1 )
 
         wall = Canvas( (20,34), (4,526) )
         wall.Fill( (255,255,255) )
         wall.SetTag( "wall-vertical" )
+        wall.SetColliders( True )
         Engine.AddGObject( wall, 1 )
 
         wall = Canvas( (616,34), (4,526) )
         wall.Fill( (255,255,255) )
         wall.SetTag( "wall-vertical" )
+        wall.SetColliders( True )
         Engine.AddGObject( wall, 1 )
 
         # los actores
         ball = Ball( (320,400), (8,8), "ball" )
         ball.Fill( (255,255,255) )
+        ball.SetColliders( True )
         Engine.AddGObject( ball, 1 )
 
         paddle = Canvas( (90,270), (8,60), "user-paddle" )
         paddle.Fill( (255,255,255) )
         paddle.SetTag( "paddle")
+        paddle.SetColliders( True )
         Engine.AddGObject( paddle, 1 )
 
         paddle = Canvas( (540,270), (8,60), "system-paddle" )
         paddle.Fill( (255,255,255) )
         paddle.SetTag( "paddle")
+        paddle.SetColliders( True )
         Engine.AddGObject( paddle, 1 )
 
         self.paddle_speed = 240
@@ -61,7 +68,7 @@ class Game():
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info
@@ -113,6 +120,25 @@ class Ball( Canvas ):
         self.speedX = 180
         self.speedY = -180
 
+    def OnPreUpdate( self, dt ):
+        x, y = self.GetPosition()
+        dx = self.speedX*dt
+        dy = self.speedY*dt
+
+        collisions = Engine.GetCollisions( self.GetName() )
+        if( not collisions ): return
+
+        for gobj in collisions:
+            if( gobj.GetTag() == "wall-horizontal" ):
+                self.speedY = -self.speedY
+                dy = -dy
+            if( gobj.GetTag() == "paddle" ):
+                self.speedX = -self.speedX
+                dx = -dx
+            if( gobj.GetTag() == "wall-vertical" ):
+                x, y = 320, 400
+        self.SetPosition( (x+dx,y+dy) )
+
     def OnUpdate( self, dt ):
         dx = self.speedX*dt
         dy = self.speedY*dt
@@ -120,18 +146,6 @@ class Ball( Canvas ):
         x, y = self.GetPosition()
         self.SetPosition( (x+dx,y+dy) )
 
-        collisions = Engine.GetCollisions( self.GetName() )
-        if( not collisions ): return
-
-        if( [ True for t in collisions if t[0].GetTag() == "wall-horizontal" ] ):
-            self.speedY = -self.speedY
-            dy = -dy
-        if( [ True for t in collisions if t[0].GetTag() == "paddle" ] ):
-            self.speedX = -self.speedX
-            dx = -dx
-        if( [ True for t in collisions if t[0].GetTag() == "wall-vertical" ] ):
-            x, y = 320, 400
-        self.SetPosition( (x+dx,y+dy) )
 
 # ----
 game=Game()

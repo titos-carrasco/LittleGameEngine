@@ -5,10 +5,11 @@ from lge.Engine import Engine
 class Sprite( GameObject ):
     def __init__( self, inames, position, name=None ):
         super().__init__( position, (1,1), name )
+
         self.elapsed = 0
+        self.surfaces = {}
 
         if( not isinstance( inames, list ) ): inames = [ inames ]
-        self.surfaces = {}
         for iname in inames:
             self.surfaces[iname] = Engine.GetImages( iname )
 
@@ -31,8 +32,7 @@ class Sprite( GameObject ):
         self.elapsed = 0
         iname, idx = self.shape
         idx = idx + 1
-        if( idx >= len( self.surfaces[iname] ) ):
-            idx = 0
+        if( idx >= len( self.surfaces[iname] ) ): idx = 0
         self.shape = iname, idx
         self.surface = self.surfaces[iname][idx]
         size = self.surface.get_rect().size

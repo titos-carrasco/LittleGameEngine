@@ -16,9 +16,10 @@ class Zombie( Sprite ):
     def OnUpdate( self, dt ):
         if( not self.active ): return
 
-        # nos movemos a "pps" pixeles por segundo
-        pps = 120
-        pixels = pps*dt
+        # velocity = pixeles por segundo
+        velocity = 120
+        #pixels = velocity*dt
+        pixels = 2
 
         # las coordenadas de Betty
         betty = Engine.GetGObject( "Betty" )
@@ -81,8 +82,9 @@ class Zombie( Sprite ):
             elif( c == "U" ): y = y + pixels
             elif( c == "D" ): y = y - pixels
             self.SetPosition( (x,y) )
+
             collisions = Engine.GetCollisions( self.name )
-            bloqueos = [ gobj for gobj, layer in collisions if gobj.GetTag() == "muro" or gobj.GetTag() == "zombie" ]
+            bloqueos = [ gobj for gobj in collisions if gobj.GetTag() == "muro" or gobj.GetTag() == "zombie" ]
             if( len( bloqueos ) == 0 ):
                 self.dir = c
                 break

@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 2022-02-23
+- Corrige algunos cálculos en Rect.py y Camera.py
+- Los GameObject deben ahora habilitar el uso del collider
+- Agregas mas eventos en el loop principal
+- Ajusta demos acorde a los cambios
+
 ## 2022-02-22
 - Elimina round() e int() de todos los métodos
 - dt es entregado como segundos en lugar de milisegundos
@@ -7,7 +13,6 @@
 - Agrega game object del tipo Canvas
 - Reordena directorio de demos
 - Ajusta demos acorde a los cambios
-
 
 ## @v0.1.0 2022-02-19
 - lge/Engine.py

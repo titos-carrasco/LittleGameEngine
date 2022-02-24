@@ -30,7 +30,7 @@ Engine.AddGObject( heroe, 1 )
 canvas = Canvas( (200,110), (400,200) )
 canvas.Fill( (0,0,0,40) )
 canvas.DrawText( "Little Game Engine", (40,70), "backlash", (30,30,30) )
-Engine.AddGObject( canvas, Engine.CAM_LAYER )
+Engine.AddGObjectGUI( canvas )
 
 # python un poco mas avanzado
 heroe.OnUpdate = lambda dt: heroe.NextShape(dt,0.060)

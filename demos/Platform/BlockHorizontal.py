@@ -12,9 +12,9 @@ class BlockHorizontal( Sprite ):
         self.SetPosition( pos )
 
     def OnUpdate( self, dt ):
-        # nos movemnos a "pps" pixeles por segundo
-        pps = 120
-        pixels = pps*dt
+        # velocity = pixeles por segundo
+        velocity = 120
+        pixels = velocity*dt
 
         ww, wh = Engine.GetCamera().GetSize()
         if( self.dir == "up" ):

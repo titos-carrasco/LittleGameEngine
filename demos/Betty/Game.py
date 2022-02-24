@@ -46,6 +46,7 @@ class MiJuego():
                 if( tid == "muro" ):
                     gobj = GameObject( (x,y), (32,32), "Bloque-" + uuid.uuid4().hex )
                     gobj.SetTag( "muro" )
+                    gobj.SetColliders( True )
                     Engine.AddGObject( gobj, 1 )
                 x = x + 32
             y = y - 32
@@ -53,28 +54,30 @@ class MiJuego():
         # agregamos a Betty
         betty = Betty( "Betty" )
         betty.SetPosition( (32*9, 32*13) )
+        betty.SetColliders( True )
         Engine.AddGObject( betty, 1 )
 
         # agregamos 3 zombies
         for i in range(3):
             zombie = Zombie( "Zombie-" + uuid.uuid4().hex )
             zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
+            zombie.SetColliders( True )
             Engine.AddGObject( zombie, 1 )
 
         # agregamos la barra de info
         infobar = Canvas( (0,710), (640,20), "infobar" )
-        Engine.AddGObject( infobar, Engine.CAM_LAYER )
+        Engine.AddGObjectGUI( infobar )
 
         # agregamos el mensaje de la barra espaciadora
         pressbar = Canvas( (120,340), (400, 30), "pressbar" )
         pressbar.DrawText( "Presiona la Barra Espaciadora", (0,0), "cool", (255,255,255) )
-        Engine.AddGObject( pressbar, Engine.CAM_LAYER )
+        Engine.AddGObjectGUI( pressbar )
 
         # posicionamos la camara
         Engine.GetCamera().SetPosition( (0,0) )
 
         # agregamos el control
-        Engine.SetUpdate( self.IntroControl )
+        Engine.SetOnUpdate( self.IntroControl )
 
     # la barra de info y chequeo de fin del juego
     def _InfoBar( self ):
@@ -109,7 +112,7 @@ class MiJuego():
         pressbar.SetVisible( False )
 
         # cambiamos el control
-        Engine.SetUpdate( self.GameControl )
+        Engine.SetOnUpdate( self.GameControl )
 
         # activamos los actores
         Engine.GetGObject( "Betty" ).SetAlive()
