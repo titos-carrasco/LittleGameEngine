@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 2022-02-24
+- Agrego demo de Canvas con rebote de pelotas
+- Optimiza CollideRect en Rect
+- Avanza en Canvas
+- Corrige y mejora demos
+
 ## 2022-02-23
 - Corrige algunos cálculos en Rect.py y Camera.py
 - Los GameObject deben ahora habilitar el uso del collider

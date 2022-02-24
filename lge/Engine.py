@@ -150,11 +150,15 @@ class Engine():
     def GetFPS():
         return Engine.clock.get_fps()
 
+    def GetRequestedFPS():
+        return Engine.fps
+
     def Quit():
         Engine.running = False
 
     # main loop
     def Run( fps ):
+        Engine.fps = 1.0/fps
         Engine.running = True
         while( Engine.running ):
             # --- tiempo en ms desde el ciclo anterior
@@ -185,7 +189,7 @@ class Engine():
             # --- gobj.OnDelete
             ondelete = []
             for name in Engine.gObjectsToDel:
-                assert gobj.name in Engine.gObjects, "DelObject: 'gobj' no existe"
+                assert name in Engine.gObjects, "DelGObject: 'gobj' no existe"
                 gobj, layer = Engine.gObjects[name]
                 del Engine.gObjects[name]
                 if( Engine.cameraTarget[0] == gobj ): Engine.cameraTarget = None, False
@@ -203,17 +207,17 @@ class Engine():
 
             # --- gobj.OnPreUpdate
             for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( layer >= 0 and gobj.IsActive() and hasattr( gobj, "OnPreUpdate" ) ):
+                if( gobj.IsActive() and hasattr( gobj, "OnPreUpdate" ) ):
                     gobj.OnPreUpdate( dt )
 
             # --- gobj.OnUpdate
             for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( layer >= 0 and gobj.IsActive() and hasattr( gobj, "OnUpdate" ) ):
+                if( gobj.IsActive() and hasattr( gobj, "OnUpdate" ) ):
                     gobj.OnUpdate( dt )
 
             # --- gobj.OnPostUpdate
             for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( layer >= 0 and gobj.IsActive() and hasattr( gobj, "OnPostUpdate" ) ):
+                if( gobj.IsActive() and hasattr( gobj, "OnPostUpdate" ) ):
                     gobj.OnPostUpdate( dt )
 
             # --- game.OnUpdate

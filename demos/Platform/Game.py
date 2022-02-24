@@ -10,7 +10,9 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (800,600), "Vulcano" )
-        Engine.GetCamera().SetBounds( Rect( (0,0), (2560,704) ) )
+        camera = Engine.GetCamera()
+        camera.SetBounds( Rect( (0,0), (2560,704) ) )
+        camera.SetPosition( (0,0) )
 
         # cargamos algunos recursos
         Engine.LoadImage( "fondo", "../images/Platform/Platform.png" )
@@ -27,21 +29,52 @@ class MiJuego():
         infobar = Canvas( (0,684), (800,20), "infobar" )
         Engine.AddGObjectGUI( infobar )
 
-        # agregamos el ninja en la camara
+        # agregamos el ninja
         ninja = Sprite( "ninja", (340,300), "ninja" )
         ninja.OnUpdate = self.NinjaUpdate
         Engine.AddGObjectGUI( ninja )
 
-        # Dejamos lista la escena
-        self.EscenaIntro()
+        # agregamos el bloque que se mueve vertical
+        bloque = BlockHorizontal( (13*64, 1*64) )
+        Engine.AddGObject( bloque, 1 )
+
+        # agregamos el mensaje
+        pressbar = Canvas( (200,260), (400, 30), "pressbar" )
+        pressbar.DrawText( "Presiona la Barra Espaciadora", (0,0), "cool", (255,255,255) )
+        Engine.AddGObjectGUI( pressbar )
+
+        # agregamos el control del juego
+        self.camRight = True
+        Engine.SetOnUpdate( self.MainUpdate )
+
+    def MainUpdate( self, dt ):
+        # velocity = pixeles por segundo
+        velocity = 240
+        pixels = velocity*dt
+
+        # verificamos la salida
+        self.CheckEscape()
+
+        # movemos la camara
+        camera = Engine.GetCamera()
+        x, y = camera.GetPosition()
+
+        if( self.camRight ): x = x + pixels
+        else: x = x - pixels
+        camera.SetPosition( (x,y) )
+
+        xn, yn = camera.GetPosition()
+        if( xn != x ): self.camRight = not self.camRight
+
+        # verificamos si se ha presionada la barra espaciadora
+        if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
+
+        # reposicionamos la camara
+        camera.SetPosition( (0,0) )
 
     def NinjaUpdate( self, dt ):
         ninja = Engine.GetGObject( "ninja" )
         ninja.NextShape( dt, 0.050 )
-
-    # main loop
-    def Run( self ):
-        Engine.Run( 60 )
 
     # barra de info
     def CheckEscape( self ):
@@ -63,49 +96,9 @@ class MiJuego():
         infobar = Engine.GetGObject( "infobar" )
         infobar.Fill( (0,0,0,50) )
         infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (120,0), "monospace", (255,255,255) )
-
-    #-------------------------------------------------------------------------------------------
-    def EscenaIntro( self ):
-        # posicionamos la camara
-        Engine.GetCamera().SetPosition( (0,0) )
-
-        # el bloque que se mueve horizontal
-        bloque = BlockHorizontal( (13*64, 1*64) )
-        Engine.AddGObject( bloque, 1 )
-
-        # agregamos mensaje
-        pressbar = Canvas( (200,260), (400, 30), "pressbar" )
-        pressbar.DrawText( "Presiona la Barra Espaciadora", (0,0), "cool", (255,255,255) )
-        Engine.AddGObjectGUI( pressbar )
-
-        # agregamos el control de esta escena
-        self.camRight = True
-        Engine.SetOnUpdate( self.IntroUpdate )
-
-    def IntroUpdate( self, dt ):
-        # velocity = pixeles por segundo
-        velocity = 240
-        pixels = velocity*dt
-
-        # verificamos ESCP
-        self.CheckEscape()
-
-        # novemos la camara
-        camera = Engine.GetCamera()
-        x, y = camera.GetPosition()
-
-        if( self.camRight ): x = x + pixels
-        else: x = x - pixels
-        camera.SetPosition( (x,y) )
-
-        xn, yn = camera.GetPosition()
-        if( xn != x ): self.camRight = not self.camRight
-
-        # verificamos si se ha presionada la barra espaciadora
-        if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
-
-        # reposicionamos la camara
-        camera.SetPosition( (0,0) )
+    # main loop
+    def Run( self ):
+        Engine.Run( 60 )
 
 
 # -- show time

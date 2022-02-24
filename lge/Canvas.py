@@ -10,11 +10,8 @@ class Canvas( GameObject ):
     def SetSize( self, size ):
         pass
 
-    def Fill( self, bgColor, rect=None ):
-        if( rect ):
-            x, y = Engine._Fix_Coordinates( rect.GetOrigin(), self.GetSize()[1] )
-            rect = pygame.Rect( (x,y-rect.GetSize()[1]), rect.GetSize() )
-        self.surface.fill( bgColor, rect )
+    def Fill( self, bgColor ):
+        self.surface.fill( bgColor )
 
     def DrawText( self, text, position, fontName, color ):
         s  = Engine.fonts[fontName].render( text, True, color )
@@ -22,24 +19,27 @@ class Canvas( GameObject ):
         self.surface.blit( s, ( x,self.rect.GetSize()[1]-s.get_height()-y) )
 
     def DrawPoint( self, point, color ):
-        point = Engine._Fix_Coordinates( point, self.GetSize()[1] )
-        pygame.draw.circle( self.surface, color, point, 0 )
+        x, y = point
+        y = self.rect.GetSize()[1] - y
+        pygame.draw.circle( self.surface, color, (x,y), 0, 0 )
 
-    def DrawCircle( self, center, radius, thickness, fgColor, bgColor=None ):
-        center = Engine._Fix_Coordinates( center, self.GetSize()[1] )
+    def DrawCircle( self, center, radius, color, thickness=False ):
         if( radius <= 0 ): radius = 1
-        if( thickness <= 0 ): thickness = 1
+        thickness = 1 if thickness else 0
 
-        if( bgColor ): pygame.draw.circle( self.surface, bgColor, center, radius, 0 )
-        pygame.draw.circle( self.surface, fgColor, center, radius, thickness )
+        x, y = center
+        y = self.rect.GetSize()[1] - y
+        pygame.draw.circle( self.surface, color, (x,y), radius, thickness )
 
-    def DrawRectangle( self, rect, thickness, fgColor, bgColor=None  ):
-        x, y = Engine._Fix_Coordinates( rect.GetOrigin(), self.GetSize()[1] )
-        rect = pygame.Rect( (x,y-rect.GetSize()[1]), rect.GetSize() )
-        if( thickness <= 0 ): thickness = 1
+    def DrawRectangle( self, position, size, color, thickness=False ):
+        x, y = position
+        w, h = size
+        if( w <= 0 ): w = 1
+        if( h <= 0 ): h = 1
+        thickness = 1 if thickness else 0
 
-        if( bgColor ): self.surface.fill( bgColor, rect )
-        pygame.draw.rect( self.surface, fgColor, rect, thickness )
+        y = self.rect.GetSize()[1] - h - y
+        pygame.draw.rect( self.surface, color, pygame.Rect( (x,y), (w,h) ), thickness )
 
-    def DrawLines( self, lines, fgColor, bgColor=None ):
-        pass
+    #def DrawLines( self, lines, fgColor, bgColor=None ):
+    #    pass
