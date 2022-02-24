@@ -41,12 +41,15 @@ heroe.OnUpdate = lambda dt: heroe.NextShape(dt,0.060)
 Engine.Run( 60 )
 ```
 ![](images/world.png)
-
 ![](images/collisions.png)
-![](images/Betty.png)
 
+![](images/Betty.png)
 ![](images/Plataforma.png)
+
 ![](images/Pong.png)
+![](images/Canvas.png)
+
+![](images/Birds.png)
 
 
 ## Imágenes
