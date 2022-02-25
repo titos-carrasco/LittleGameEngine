@@ -19,7 +19,7 @@ SETUP = {
     "name": "lge",
     "package_dir": {"lge": "lge"},
     "packages": ["lge"],
-    "version": "0.1.0",
+    "version": "0.2.0",
 }
 
 setup(**SETUP)
