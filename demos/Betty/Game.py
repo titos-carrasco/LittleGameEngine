@@ -46,7 +46,7 @@ class MiJuego():
                 if( tid == "muro" ):
                     gobj = GameObject( (x,y), (32,32), "Bloque-" + uuid.uuid4().hex )
                     gobj.SetTag( "muro" )
-                    gobj.SetColliders( True )
+                    gobj.SetColliders()
                     Engine.AddGObject( gobj, 1 )
                 x = x + 32
             y = y - 32
@@ -54,14 +54,14 @@ class MiJuego():
         # agregamos a Betty
         betty = Betty( "Betty" )
         betty.SetPosition( (32*9, 32*13) )
-        betty.SetColliders( True )
+        betty.SetColliders()
         Engine.AddGObject( betty, 1 )
 
         # agregamos 3 zombies
         for i in range(3):
             zombie = Zombie( "Zombie-" + uuid.uuid4().hex )
             zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
-            zombie.SetColliders( True )
+            zombie.SetColliders()
             Engine.AddGObject( zombie, 1 )
 
         # agregamos la barra de info

@@ -23,7 +23,7 @@ class MiJuego():
         ground = Canvas( (0,0), (800,100), "ground" )
         ground.physics = Physics( 0, 0, 0, 0, 0 )
         ground.Fill( (200,200,200) )
-        ground.SetColliders( True )
+        ground.SetColliders()
         Engine.AddGObject( ground, 1 )
 
         # configuramos la camara
@@ -95,7 +95,9 @@ class Circle( Canvas ):
         x, y = random.random()*(800-r*2), 500
         super().__init__( (x,y), (r*2,r*2), "gobj-" + uuid.uuid4().hex )
         self.DrawCircle( (r,r), r, (0,255,0,128), False )
-        self.SetColliders( True )
+
+        d = r/math.sqrt(2)
+        self.SetColliders()
 
         sx = -1 if round( random.random() ) == 0 else 1
         self.physics = Physics( sx*60, -120, 240, 0.4, 0.4 )
@@ -103,7 +105,7 @@ class Circle( Canvas ):
     def OnUpdate( self, dt ):
         x, y = self.GetPosition()
         w, h = self.GetSize()
-        if( x + w <= 0 or x > 800 ):
+        if( x + w < 0 or x > 800 or y + h < 0 or y > 600 ):
             Engine.DelGObject( self.name )
 
 
@@ -113,7 +115,7 @@ class Box( Canvas ):
         x, y = random.random()*(800-w), 500
         super().__init__( (x,y), (w,h), "gobj-" + uuid.uuid4().hex )
         self.DrawRectangle( (0,0), (w,h), (134,32,32,128), False )
-        self.SetColliders( True )
+        self.SetColliders()
 
         sx = -1 if round( random.random() ) == 0 else 1
         self.physics = Physics( sx*60, -240, 240, 0.4, 0.4 )
@@ -121,7 +123,7 @@ class Box( Canvas ):
     def OnUpdate( self, dt ):
         x, y = self.GetPosition()
         w, h = self.GetSize()
-        if( x + w <= 0 or x > 800 ):
+        if( x + w < 0 or x > 800 or y + h < 0 or y > 600 ):
             Engine.DelGObject( self.GetName() )
 
 
@@ -136,6 +138,7 @@ class Physics():
     def __repr__( self ):
         return "(vx: %30.28f, vy: %30.28f, a: %f, e: %f, f: %f )" % (self.vx, self.vy, self.a, self.e, self.f )
 
+    # *** no esta finalizado aun ***
     def Update( dt, gobj ):
         phys = gobj.physics
         print( gobj.GetName(), phys )
@@ -153,11 +156,12 @@ class Physics():
         collisions = Engine.GetCollisions( gobj.GetName() )
         if( not collisions ): return
 
-        o = collisions[0]
+        o, r = collisions[0]
         ox, oy = o.GetPosition()
         ow, oh = o.GetSize()
 
-        r = gobj.GetRectangle().GetCollideRectangle( o.GetRectangle() )
+        r = gobj.GetRectangle().GetCollideRectangle( r )
+
         rx, ry = r.GetOrigin()
         rw, rh = r.GetSize()
 

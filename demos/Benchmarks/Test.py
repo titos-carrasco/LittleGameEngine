@@ -39,7 +39,7 @@ class Test():
             x = int( random.random()*ww )
             y = int( random.random()*(wh - 40) )
             bird = Bird( "bird", (x,y) )
-            bird.SetColliders( True )
+            bird.SetColliders()
             Engine.AddGObject( bird, 1 )
 
         Engine.ShowColliders( (0xFF,0x00,0x00) )

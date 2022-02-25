@@ -84,7 +84,7 @@ class Zombie( Sprite ):
             self.SetPosition( (x,y) )
 
             collisions = Engine.GetCollisions( self.name )
-            bloqueos = [ gobj for gobj in collisions if gobj.GetTag() == "muro" or gobj.GetTag() == "zombie" ]
+            bloqueos = [ gobj for gobj, collider in collisions if gobj.GetTag() == "muro" or gobj.GetTag() == "zombie" ]
             if( len( bloqueos ) == 0 ):
                 self.dir = c
                 break

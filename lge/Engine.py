@@ -1,6 +1,7 @@
 import glob
 import pygame
 from lge.Camera import Camera
+from lge.Rectangle import Rectangle
 
 
 class Engine():
@@ -113,16 +114,42 @@ class Engine():
     def GetCollisions( name ):
         gobj, layer = Engine.gObjects[name]
         collisions = []
-        for oname, ( o, olayer ) in Engine.gObjects.items():
-            if( olayer != layer ): continue
-            if( o == gobj ): continue
-            if( not o.use_collider ): continue
-            if( not o.IsVisible() ): continue
-            if( not o.IsActive() ): continue
 
-            if( gobj.rect.CollideRectangle( o.GetRectangle() ) ):
-                collisions.append( o )
+        if( gobj.colliders ):
+            for oname, ( o, olayer ) in Engine.gObjects.items():
+                if( olayer != layer ): continue
+                if( o == gobj ): continue
+                if( not o.colliders ): continue
+                if( not o.IsVisible() ): continue
+                if( not o.IsActive() ): continue
+
+                collider = Engine._CheckCollisions( gobj, o )
+                if( collider ): collisions.append( ( o, collider ) )
+
         return collisions
+
+    def _CheckCollisions( gobj1, gobj2 ):
+        colliders1 = []
+        x, y = gobj1.GetPosition()
+        for c in gobj1.colliders:
+            o = c.Copy()
+            xo, yo = o.GetOrigin()
+            o.SetOrigin( (x+xo, y+yo) )
+            colliders1.append( o )
+
+        colliders2 = []
+        x, y = gobj2.GetPosition()
+        for c in gobj2.colliders:
+            o = c.Copy()
+            xo, yo = o.GetOrigin()
+            o.SetOrigin( (x+xo, y+yo) )
+            colliders2.append( o )
+
+        for c1 in colliders1:
+            for c2 in colliders2:
+                if( c1.CollideRectangle( c2 ) ):
+                    return c2
+        return None
 
     # events
     def IsKeyDown( key ):
@@ -241,9 +268,12 @@ class Engine():
                 if( hasattr( gobj, "surface" ) ):
                     Engine.screen.blit( gobj.surface, (x,y) )
 
-                if( Engine.collidersColor and gobj.use_collider ):
-                    points = [ (x,y), (x,y+h-1), (x+w-1,y+h-1), (x+w-1,y) ]
-                    pygame.draw.lines( Engine.screen, Engine.collidersColor, True, points, 1 )
+                if( Engine.collidersColor ):
+                    for collider in gobj.colliders:
+                        cx, cy = collider.GetOrigin()
+                        cw, ch = collider.GetSize()
+                        cx, cy = x + cx, y + ( h - (cy + ch) )
+                        pygame.draw.rect( Engine.screen, Engine.collidersColor, pygame.Rect( (cx,cy), (cw,ch) ), 1 )
 
             # --- GUI rendering
             for name, ( gobj, layer ) in Engine.gObjects.items():

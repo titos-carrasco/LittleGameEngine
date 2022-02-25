@@ -1,51 +1,64 @@
 class Rectangle():
     def __init__( self, origin, size ):
-        x, y = origin
         w, h = size
         assert w > 0 and h > 0, "'size' invalido"
 
-        self.origin = x, y
-        self.size = w, h
+        self.x, self.y = origin
+        self.w, self.h = size
+
+    def __repl__( self ):
+        return "Rect( ( %f, %f ), ( %f, %f ) )" % ( self.x, self.y, self.w, self.h )
 
     def Copy( self ):
-        return Rectangle( self.origin, self.size )
+        return Rectangle( ( self.x, self.y ), ( self.w, self.h ) )
 
     def GetOrigin( self ):
-        x, y = self.origin
-        return x, y
+        return self.x, self.y
 
     def GetSize( self ):
-        w, h = self.size
-        return w, h
+        return self.w, self.h
 
     def SetOrigin( self, origin ):
-        x, y = origin
-        self.origin = x, y
+        self.x, self.y = origin
 
     def SetSize( self, size ):
         w, h = size
         assert w > 0 and h > 0, "'size' invalido"
-        self.size = w, h
+        self.w, self.h = size
+
+    def KeepInsideRectangle( self, rect ):
+        x, y = self.x, self.y
+        w, h = self.w, self.h
+        rx, ry = rect.x, rect.y
+        rw, rh = rect.w, rect.h
+
+        if( w <= rw and h <= rh ):
+            if( x < rx ): x = rx
+            elif( x + w > rx + rw ): x = rx + rw - w
+            if( y < ry ): y = ry
+            elif( y + h > ry + rh ): y = ry + rh - h
+
+        self.x, self.y =  x, y
 
     def CollidePoint( self, point ):
         x, y = self.origin
-        w, h = self.size
+        w, h = self.w, self.h
         px, py = point
         return px >= x and px < x+w and py >= y and py < y+h
 
     def CollideRectangle( self, rect ):
-        x1, y1 = self.origin
-        w1, h1 = self.size
-        x2, y2 = rect.origin
-        w2, h2 = rect.size
+        x1, y1 = self.x, self.y
+        w1, h1 = self.w, self.h
+        x2, y2 = rect.x, rect.y
+        w2, h2 = rect.w, rect.h
 
         return not ( x2 >= x1 + w1 or x1 >= x2 + w2 or y2 >= y1 + h1 or y1 >= y2 + h2 )
 
     def GetCollideRectangle( self, rect ):
-        x1, y1 = self.origin
-        w1, h1 = self.size
-        x2, y2 = rect.origin
-        w2, h2 = rect.size
+        x1, y1 = self.x, self.y
+        w1, h1 = self.w, self.h
+        x2, y2 = rect.x, rect.y
+        w2, h2 = rect.w, rect.h
 
         if( x1 > x2 ):
             x = x1
@@ -61,17 +74,3 @@ class Rectangle():
             y = y2
             h = y1 + h1 - y2
         return Rectangle( (x, y), (w, h) ) if w > 0 and h > 0 else None
-
-    def KeepInsideRectangle( self, rect ):
-        x, y = self.origin
-        w, h = self.size
-        rx, ry = rect.origin
-        rw, rh = rect.size
-
-        if( w <= rw and h <= rh ):
-            if( x < rx ): x = rx
-            elif( x + w > rx + rw ): x = rx + rw - w
-            if( y < ry ): y = ry
-            elif( y + h > ry + rh ): y = ry + rh - h
-
-        self.origin =  x, y

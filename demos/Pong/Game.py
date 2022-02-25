@@ -23,43 +23,43 @@ class Game():
         wall = Canvas( (0,560), (640,4)  )
         wall.Fill( (255,255,255) )
         wall.SetTag( "wall-horizontal" )
-        wall.SetColliders( True )
+        wall.SetColliders()
         Engine.AddGObject( wall, 1 )
 
         wall = Canvas( (0,30), (640,4) )
         wall.Fill( (255,255,255) )
         wall.SetTag( "wall-horizontal" )
-        wall.SetColliders( True )
+        wall.SetColliders()
         Engine.AddGObject( wall, 1 )
 
         wall = Canvas( (20,34), (4,526) )
         wall.Fill( (255,255,255) )
         wall.SetTag( "wall-vertical" )
-        wall.SetColliders( True )
+        wall.SetColliders()
         Engine.AddGObject( wall, 1 )
 
         wall = Canvas( (616,34), (4,526) )
         wall.Fill( (255,255,255) )
         wall.SetTag( "wall-vertical" )
-        wall.SetColliders( True )
+        wall.SetColliders()
         Engine.AddGObject( wall, 1 )
 
         # los actores
         ball = Ball( (320,400), (8,8), "ball" )
         ball.Fill( (255,255,255) )
-        ball.SetColliders( True )
+        ball.SetColliders()
         Engine.AddGObject( ball, 1 )
 
         paddle = Canvas( (90,270), (8,60), "user-paddle" )
         paddle.Fill( (255,255,255) )
         paddle.SetTag( "paddle")
-        paddle.SetColliders( True )
+        paddle.SetColliders()
         Engine.AddGObject( paddle, 1 )
 
         paddle = Canvas( (540,270), (8,60), "system-paddle" )
         paddle.Fill( (255,255,255) )
         paddle.SetTag( "paddle")
-        paddle.SetColliders( True )
+        paddle.SetColliders()
         Engine.AddGObject( paddle, 1 )
 
         self.paddle_speed = 240
@@ -128,7 +128,7 @@ class Ball( Canvas ):
         collisions = Engine.GetCollisions( self.GetName() )
         if( not collisions ): return
 
-        for gobj in collisions:
+        for gobj, collider in collisions:
             if( gobj.GetTag() == "wall-horizontal" ):
                 self.speedY = -self.speedY
                 dy = -dy

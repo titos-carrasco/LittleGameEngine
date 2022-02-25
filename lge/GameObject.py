@@ -8,7 +8,7 @@ class GameObject():
         self.tag = ""
         self.visible = True
         self.active = True
-        self.use_collider = False
+        self.colliders = []
 
     def GetRectangle( self ):
         return self.rect.Copy()
@@ -48,5 +48,12 @@ class GameObject():
     def SetActive( self, active ):
         self.active = active
 
-    def SetColliders( self, enable ):
-        self.use_collider = enable
+    def SetColliders( self, colliders=True ):
+        if( colliders is True ):
+            r = self.rect.Copy()
+            r.SetOrigin( (0,0) )
+            self.colliders = [ r ]
+        elif( isinstance( colliders, list ) ):
+            self.colliders = colliders
+        else:
+            self.colliders = []

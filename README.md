@@ -1,5 +1,5 @@
 # LittleGameEngine
-Un pequeño motor de juegos para aprender a programar con Python
+Un pequeño (e ineficiente) motor de juegos para aprender a programar con Python
 
 ```python
 from lge.Engine import Engine

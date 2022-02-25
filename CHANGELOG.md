@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2022-02-25
+- Renombra Rect.py a Rectangle.py y actualiza todos los archivos afectados
+- Agrega demo con pseudo-física
+- Modifica uso de colliders permitiendo multiples rectángulos
+
 ## 2022-02-24
 - Agrego demo de Canvas con rebote de pelotas
 - Optimiza CollideRect en Rect

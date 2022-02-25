@@ -4,7 +4,6 @@ from lge.Sprite import Sprite
 from lge.Canvas import Canvas
 from lge.Rectangle import Rectangle
 
-
 class MiJuego():
     def __init__( self ):
         # creamos el juego
@@ -34,12 +33,16 @@ class MiJuego():
 
         # agregamos al heroe
         heroe = MiHeroe()
-        heroe.SetColliders( True )
+        heroe.SetColliders()
         Engine.AddGObject( heroe, 1 )
 
         # agregamos otro ninja
         ninja = Sprite( "ninja", (350,250), "ninja" )
-        ninja.SetColliders( True )
+        ninja.SetColliders( [
+                                Rectangle( (0,0),(86,30) ),
+                                Rectangle( (44,30),(22,14) ),
+                                Rectangle( (26,44),(46,34) )
+                            ] )
         Engine.AddGObject( ninja, 1 )
 
         # agregamos la barra de info
@@ -104,29 +107,6 @@ class MiHeroe( Sprite ):
         self.direction = ""
         self.key_pressed = -1
 
-    def OnPreUpdate( self, dt ):
-        # verificamos si hemos colisionado
-        gobjs = Engine.GetCollisions( self.name )
-        if( not gobjs ): return
-
-        Engine.PlaySound( "poing", 0 )
-        c = gobjs[0].GetRectangle()
-        x, y = self.GetPosition()
-        w, h = self.GetSize()
-        xc, yc = c.GetOrigin()
-        hc, wc = c.GetSize()
-
-        if( self.direction == "L" ):
-            x = xc + wc + 1
-        elif( self.direction == "R" ):
-            x = xc - w + 1
-        elif( self.direction == "U" ):
-            y = yc - h
-        elif( self.direction == "D" ):
-            y = yc + hc - 1
-
-        self.SetPosition( (x,y) )
-
     def OnUpdate( self, dt ):
         # velocity = pixeles por segundo
         velocity = 240
@@ -134,6 +114,7 @@ class MiHeroe( Sprite ):
 
         # la posiciona actual del heroe
         x, y = self.GetPosition()
+        _x, _y = x, y
 
         # la tecla presionada
         if( self.key_pressed == -1 ):
@@ -180,6 +161,13 @@ class MiHeroe( Sprite ):
         camera = Engine.GetCamera()
         bounds = camera.GetBounds()
         self.SetPosition( (x,y), bounds )
+
+        # verificamos si hemos colisionado
+        gobjs = Engine.GetCollisions( self.name )
+        if( not gobjs ): return
+
+        Engine.PlaySound( "poing", 0 )
+        self.SetPosition( (_x,_y), bounds )
 
     def OnPostUpdate( self, dt ):
         pass
