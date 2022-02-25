@@ -4,7 +4,7 @@ from lge.Engine import Engine
 from lge.GameObject import GameObject
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
-from lge.Rect import Rect
+from lge.Rectangle import Rectangle
 
 from Betty import Betty
 from Zombie import Zombie
@@ -13,7 +13,7 @@ class MiJuego():
     def __init__( self ):
         # creamos el juego
         Engine.Init( (608,736), "Betty" )
-        Engine.GetCamera().SetBounds( Rect( (0,0), (608,736) ) )
+        Engine.GetCamera().SetBounds( Rectangle( (0,0), (608,736) ) )
 
         # cargamos algunos recursos
         Engine.LoadImage( "fondo", "../images/Betty/Fondo.png" )

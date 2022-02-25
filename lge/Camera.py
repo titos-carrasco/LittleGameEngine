@@ -1,12 +1,12 @@
-from lge.Rect import Rect
+from lge.Rectangle import Rectangle
 
 
 class Camera():
     def __init__( self, position, size ):
-        self.rect = Rect( position, size )
+        self.rect = Rectangle( position, size )
         self.bounds = None
 
-    def GetRect( self ):
+    def GetRectangle( self ):
         return self.rect.Copy()
 
     def GetPosition( self ):
@@ -22,7 +22,7 @@ class Camera():
     def SetPosition( self, position ):
         self.rect.SetOrigin( position )
         if( self.bounds ):
-            self.rect.KeepInsideRect( self.bounds )
+            self.rect.KeepInsideRectangle( self.bounds )
 
     def SetBounds( self, bounds=None) :
         if( bounds ): self.bounds = bounds.Copy()

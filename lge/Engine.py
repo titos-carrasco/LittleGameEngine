@@ -120,7 +120,7 @@ class Engine():
             if( not o.IsVisible() ): continue
             if( not o.IsActive() ): continue
 
-            if( gobj.rect.CollideRect( o.GetRect() ) ):
+            if( gobj.rect.CollideRectangle( o.GetRectangle() ) ):
                 collisions.append( o )
         return collisions
 
@@ -233,7 +233,7 @@ class Engine():
                 if( layer < 0 ): continue
                 if( not gobj.IsVisible() ): continue
                 if( not gobj.IsActive() ): continue
-                if( not gobj.GetRect().CollideRect( Engine.camera.GetRect() ) ): continue
+                if( not gobj.GetRectangle().CollideRectangle( Engine.camera.GetRectangle() ) ): continue
 
                 w, h = gobj.GetSize()
                 x, y = Engine._Fix_XY( gobj.GetPosition(), (w,h) )

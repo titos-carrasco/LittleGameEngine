@@ -1,7 +1,7 @@
 from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
-from lge.Rect import Rect
+from lge.Rectangle import Rectangle
 
 
 def MainUpdate( dt ):
@@ -88,7 +88,7 @@ def main():
 
     # configuramos la camara
     camera = Engine.GetCamera()
-    camera.SetBounds( Rect( (0,0), (1920,1056) ) )
+    camera.SetBounds( Rectangle( (0,0), (1920,1056) ) )
 
     # posicionamos la camara
     x, y = heroe.GetPosition()

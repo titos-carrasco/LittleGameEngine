@@ -87,7 +87,7 @@ class Game():
         infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (50,0), "monospace", (255,255,255) )
 
         # el campo de juego
-        field = Engine.GetGObject( "field" ).GetRect()
+        field = Engine.GetGObject( "field" ).GetRectangle()
 
         # user paddle
         user_paddle = Engine.GetGObject( "user-paddle" )

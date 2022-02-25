@@ -2,7 +2,7 @@ from random import random
 from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
-from lge.Rect import Rect
+from lge.Rectangle import Rectangle
 
 
 class MiJuego():
@@ -48,7 +48,7 @@ class MiJuego():
 
         # configuramos la camara
         camera = Engine.GetCamera()
-        camera.SetBounds( Rect( (0,0), (1920,1056) ) )
+        camera.SetBounds( Rectangle( (0,0), (1920,1056) ) )
 
         # establecemos que la camara siga al heroe
         Engine.SetCameraTarget( heroe )
@@ -110,7 +110,7 @@ class MiHeroe( Sprite ):
         if( not gobjs ): return
 
         Engine.PlaySound( "poing", 0 )
-        c = gobjs[0].GetRect()
+        c = gobjs[0].GetRectangle()
         x, y = self.GetPosition()
         w, h = self.GetSize()
         xc, yc = c.GetOrigin()

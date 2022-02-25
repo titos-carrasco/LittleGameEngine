@@ -1,16 +1,16 @@
 import uuid
-from lge.Rect import Rect
+from lge.Rectangle import Rectangle
 
 class GameObject():
     def __init__( self, position, size, name=None ):
-        self.rect = Rect( position, size )
+        self.rect = Rectangle( position, size )
         self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
         self.tag = ""
         self.visible = True
         self.active = True
         self.use_collider = False
 
-    def GetRect( self ):
+    def GetRectangle( self ):
         return self.rect.Copy()
 
     def GetPosition( self ):
@@ -34,7 +34,7 @@ class GameObject():
     def SetPosition( self, position, bounds=None ):
         self.rect.SetOrigin( position )
         if( bounds ):
-            self.rect.KeepInsideRect( bounds )
+            self.rect.KeepInsideRectangle( bounds )
 
     def SetSize( self, size ):
         self.rect.SetSize( size )

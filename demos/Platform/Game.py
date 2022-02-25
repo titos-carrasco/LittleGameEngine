@@ -1,7 +1,7 @@
 from lge.Engine import Engine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
-from lge.Rect import Rect
+from lge.Rectangle import Rectangle
 
 from BlockHorizontal import BlockHorizontal
 
@@ -11,7 +11,7 @@ class MiJuego():
         # creamos el juego
         Engine.Init( (800,600), "Vulcano" )
         camera = Engine.GetCamera()
-        camera.SetBounds( Rect( (0,0), (2560,704) ) )
+        camera.SetBounds( Rectangle( (0,0), (2560,704) ) )
         camera.SetPosition( (0,0) )
 
         # cargamos algunos recursos
