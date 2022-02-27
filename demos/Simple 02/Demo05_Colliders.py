@@ -38,11 +38,7 @@ class MiJuego():
 
         # agregamos otro ninja
         ninja = Sprite( "ninja", (350,250), "ninja" )
-        ninja.SetColliders( [
-                                Rectangle( (0,0),(86,30) ),
-                                Rectangle( (44,30),(22,14) ),
-                                Rectangle( (26,44),(46,34) )
-                            ] )
+        ninja.SetColliders()
         Engine.AddGObject( ninja, 1 )
 
         # agregamos la barra de info
@@ -107,6 +103,31 @@ class MiHeroe( Sprite ):
         self.direction = ""
         self.key_pressed = -1
 
+    def OnPreUpdate( self, dt ):
+        # verificamos si hemos colisionado
+        gobjs = Engine.GetCollisions( self.name )
+        if( not gobjs ): return
+
+        Engine.PlaySound( "poing", 0 )
+        o = gobjs[0]
+
+        x, y = self.GetPosition()
+        w, h = self.GetSize()
+
+        ox, oy = o.GetPosition()
+        ow, oh = o.GetSize()
+
+        if( self.direction == "U"):
+            y = oy - h
+        elif( self.direction == "D"):
+            y = oy + oh
+        elif( self.direction == "L"):
+            x = ox + ow
+        elif( self.direction == "R"):
+            x = ox - w
+
+        self.SetPosition( (x,y) )
+
     def OnUpdate( self, dt ):
         # velocity = pixeles por segundo
         velocity = 240
@@ -114,7 +135,6 @@ class MiHeroe( Sprite ):
 
         # la posiciona actual del heroe
         x, y = self.GetPosition()
-        _x, _y = x, y
 
         # la tecla presionada
         if( self.key_pressed == -1 ):
@@ -161,13 +181,6 @@ class MiHeroe( Sprite ):
         camera = Engine.GetCamera()
         bounds = camera.GetBounds()
         self.SetPosition( (x,y), bounds )
-
-        # verificamos si hemos colisionado
-        gobjs = Engine.GetCollisions( self.name )
-        if( not gobjs ): return
-
-        Engine.PlaySound( "poing", 0 )
-        self.SetPosition( (_x,_y), bounds )
 
     def OnPostUpdate( self, dt ):
         pass

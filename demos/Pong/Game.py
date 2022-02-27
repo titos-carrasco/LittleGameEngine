@@ -128,7 +128,7 @@ class Ball( Canvas ):
         collisions = Engine.GetCollisions( self.GetName() )
         if( not collisions ): return
 
-        for gobj, collider in collisions:
+        for gobj in collisions:
             if( gobj.GetTag() == "wall-horizontal" ):
                 self.speedY = -self.speedY
                 dy = -dy

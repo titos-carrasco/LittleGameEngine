@@ -30,8 +30,6 @@ Engine.AddGObjectGUI( canvas )
 
 # un poco mas avanzado
 heroe.OnUpdate = lambda dt: heroe.NextShape(dt,0.060)
-#heroe.SetColliders()
-#Engine.ShowColliders( (0xFF,0x00,0x00) )
 
 # main loop
 Engine.Run( 60 )

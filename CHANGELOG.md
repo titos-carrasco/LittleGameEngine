@@ -1,5 +1,11 @@
 # ChangeLog
 
+## @v0.3.0 2022-02-26
+- Se reversa el uso de múltiples colliders en un GameObject hasta no tener un mejor algoritmo
+- Optimizaciones varias
+- Se ajustan los demos acorde a los cambios
+
+
 ## 2022-02-25
 - Renombra Rect.py a Rectangle.py y actualiza todos los archivos afectados
 - Agrega demo con pseudo-física

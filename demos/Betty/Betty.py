@@ -69,7 +69,7 @@ class Betty( Sprite ):
         collisions = Engine.GetCollisions( self.name )
         if( collisions ):
             # zombi?
-            zombies = [ gobj for gobj, collider in collisions if gobj.GetTag() == "zombie" ]
+            zombies = [ gobj for gobj in collisions if gobj.GetTag() == "zombie" ]
             if( zombies ):
                 self.alive = False
                 return

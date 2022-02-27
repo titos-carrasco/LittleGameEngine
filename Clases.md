@@ -43,6 +43,11 @@ SetOnUpdate( func=None )
 GetFPS()
 ```
 
+---
+```
+GetRequestedFPS()
+```
+
 #### Camara
 ```
 GetCamera()
@@ -171,7 +176,7 @@ camera = Camera( position, size )
 
 ---
 ```
-rect = camera.GetRect()
+rect = camera.GetRectangle()
 ```
 
 ---
@@ -271,7 +276,7 @@ Crea un GameObject de tipo canvas en la posición y tamano dados.
 
 ---
 ```
-canvas.Fill( bgColor, rect=None )
+canvas.Fill( bgColor )
 ```
 
 ---
@@ -286,17 +291,12 @@ canvas.DrawPoint( point, color )
 
 ---
 ```
-canvas.DrawCircle( center, radius, thickness, fgColor, bgColor=None )
+canvas.DrawCircle( center, radius, color, thickness=False )
 ```
 
 ---
 ```
-canvas.DrawRectangle( rect, thickness, fgColor, bgColor=None  )
-```
-
----
-```
-canvas.DrawLines( lines, fgColor, bgColor=None )
+canvas.DrawRectangle( position, size, color, thickness=False  )
 ```
 
 
@@ -321,7 +321,7 @@ Crea un GameObject en la posición y dimensiones especificadas
 
 ---
 ```
-rect = gobj.GetRect()
+rect = gobj.GetRectangle()
 ```
 
 ---
@@ -376,11 +376,6 @@ Retorna la visibilidad del GameObject
 
 ---
 ```
-active = gobj.IsActive()
-```
-
----
-```
 gobj.SetPosition( position, bounds=None )
 ```
 Establece la posición del GameObject
@@ -422,11 +417,6 @@ Establece la visibilidad del GameObject
 
 ---
 ```
-gobj.SetActive( active )
-```
-
----
-```
 gobj.SetColliders( enabled )
 ```
 
@@ -436,7 +426,7 @@ Clase de apoyo utilizada en todo **Little Game Engine**
 
 ---
 ```
-rect = Rect( origen, size )
+rect = Rectangle( origen, size )
 ```
 Crea un rectángulo en el origen y dimensiones especificadas
 
@@ -501,7 +491,17 @@ Establece la dimensión del rectángulo
 
 ---
 ```
-collide = rect.CollidePoint( point )
+rect.KeepInsideRect( rect2 )
+```
+Ajusta el origen tal que el rectángulo queda dentro del rectángulo dado
+
+| Parámetros | Descripción
+|---|---
+|`rect2`| El rectángulo a utilizar como límites
+
+---
+```
+b = rect.CollidePoint( point )
 ```
 Determina si un punto intersecta al rectángulo
 
@@ -511,11 +511,11 @@ Determina si un punto intersecta al rectángulo
 
 | Retorno | Descripción
 |---|---
-|`collide`| `True` si es que el punto intersecta al rectángulo, `False` en caso contrario
+|`b`| `True` si es que el punto intersecta al rectángulo, `False` en caso contrario
 
 ---
 ```
-rect3 = rect.CollideRect( rect2 )
+b = rect.CollideRect( rect2 )
 ```
 Determina si un rectángulo intersecta a este rectángulo
 
@@ -525,18 +525,18 @@ Determina si un rectángulo intersecta a este rectángulo
 
 | Retorno | Descripción
 |---|---
-|`rect3`| Un rectángulo dado por la intersección de ambos rectángulos. `None` en caso de que no intersecten
+|`b`| `True` si es que el rectángulo intersecta al otro rectángulo, `False` en caso contrario
 
 ---
 ```
-point = rect.KeepInsideRect( rect2 )
+rect3 = rect.GetCollideRectangle( rect2 )
 ```
-Retorna un origen ah¿justado tal que el rectángulo queda dentro del rectángulo dado
+Determina el rectángulo de intersección con el rectángulo dado
 
 | Parámetros | Descripción
 |---|---
-|`rect2`| El rectángulo a utilizar como límites
+|`rect2`| El rectángulo a evaluar
 
 | Retorno | Descripción
 |---|---
-|`point`| Origen (x,y) ajustados
+|`rect3`| `Rectangle` de intersección, `None` en caso contrario

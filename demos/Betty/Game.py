@@ -117,7 +117,6 @@ class MiJuego():
         # activamos los actores
         Engine.GetGObject( "Betty" ).SetAlive()
         for zombie in Engine.GetGObject( "Zombie-*" ):
-            print(zombie)
             zombie.SetActive( True )
 
         # mostramos los bordes

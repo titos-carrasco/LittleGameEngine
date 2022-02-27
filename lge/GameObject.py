@@ -7,8 +7,7 @@ class GameObject():
         self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
         self.tag = ""
         self.visible = True
-        self.active = True
-        self.colliders = []
+        self.use_colliders = False
 
     def GetRectangle( self ):
         return self.rect.Copy()
@@ -28,9 +27,6 @@ class GameObject():
     def IsVisible( self ):
         return self.visible
 
-    def IsActive( self ):
-        return self.active
-
     def SetPosition( self, position, bounds=None ):
         self.rect.SetOrigin( position )
         if( bounds ):
@@ -45,15 +41,5 @@ class GameObject():
     def SetVisible( self, visible ):
         self.visible = visible
 
-    def SetActive( self, active ):
-        self.active = active
-
-    def SetColliders( self, colliders=True ):
-        if( colliders is True ):
-            r = self.rect.Copy()
-            r.SetOrigin( (0,0) )
-            self.colliders = [ r ]
-        elif( isinstance( colliders, list ) ):
-            self.colliders = colliders
-        else:
-            self.colliders = []
+    def SetColliders( self, enabled=True ):
+        self.use_colliders = enabled

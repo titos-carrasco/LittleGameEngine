@@ -1,5 +1,6 @@
-import glob
+from glob import glob
 import pygame
+
 from lge.Camera import Camera
 from lge.Rectangle import Rectangle
 
@@ -89,18 +90,11 @@ class Engine():
 
     def GetGObject( name ):
         if( name == "*" ):
-            gobjs = []
-            for name in Engine.gObjects:
-                gobj, layer = Engine.gObjects[name]
-                gobjs.append( gobj )
+            gobjs = [ Engine.gObjects[name][0] for name in Engine.gObjects ]
             return gobjs
         elif( name[-1] == "*" ):
             s = name[:-1]
-            gobjs = []
-            for name in Engine.gObjects:
-                if( name.startswith( s ) ):
-                    gobj, layer = Engine.gObjects[name]
-                    gobjs.append( gobj )
+            gobjs = [ Engine.gObjects[name][0] for name in Engine.gObjects if name.startswith( s ) ]
             return gobjs
         elif( name in Engine.gObjects ):
             gobj, layer = Engine.gObjects[name]
@@ -115,41 +109,14 @@ class Engine():
         gobj, layer = Engine.gObjects[name]
         collisions = []
 
-        if( gobj.colliders ):
-            for oname, ( o, olayer ) in Engine.gObjects.items():
-                if( olayer != layer ): continue
-                if( o == gobj ): continue
-                if( not o.colliders ): continue
-                if( not o.IsVisible() ): continue
-                if( not o.IsActive() ): continue
-
-                collider = Engine._CheckCollisions( gobj, o )
-                if( collider ): collisions.append( ( o, collider ) )
+        if( gobj.use_colliders ):
+            gobjs = [ o
+                      for oname, ( o, olayer ) in Engine.gObjects.items()
+                        if olayer == layer and o!= gobj and  o.use_colliders and o.IsVisible()
+                    ]
+            collisions = [ o for o in gobjs if gobj.rect.CollideRectangle( o.rect ) ]
 
         return collisions
-
-    def _CheckCollisions( gobj1, gobj2 ):
-        colliders1 = []
-        x, y = gobj1.GetPosition()
-        for c in gobj1.colliders:
-            o = c.Copy()
-            xo, yo = o.GetOrigin()
-            o.SetOrigin( (x+xo, y+yo) )
-            colliders1.append( o )
-
-        colliders2 = []
-        x, y = gobj2.GetPosition()
-        for c in gobj2.colliders:
-            o = c.Copy()
-            xo, yo = o.GetOrigin()
-            o.SetOrigin( (x+xo, y+yo) )
-            colliders2.append( o )
-
-        for c1 in colliders1:
-            for c2 in colliders2:
-                if( c1.CollideRectangle( c2 ) ):
-                    return c2
-        return None
 
     # events
     def IsKeyDown( key ):
@@ -233,22 +200,16 @@ class Engine():
             # --
 
             # --- gobj.OnPreUpdate
-            for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( gobj.IsActive() and hasattr( gobj, "OnPreUpdate" ) ):
-                    gobj.OnPreUpdate( dt )
+            list( gobj.OnPreUpdate( dt ) for name, ( gobj, layer ) in Engine.gObjects.items() if hasattr( gobj, "OnPreUpdate" ) )
 
             # --- gobj.OnUpdate
-            for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( gobj.IsActive() and hasattr( gobj, "OnUpdate" ) ):
-                    gobj.OnUpdate( dt )
+            list( gobj.OnUpdate( dt ) for name, ( gobj, layer ) in Engine.gObjects.items() if hasattr( gobj, "OnUpdate" ) )
 
             # --- gobj.OnPostUpdate
-            for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( gobj.IsActive() and hasattr( gobj, "OnPostUpdate" ) ):
-                    gobj.OnPostUpdate( dt )
+            list ( gobj.OnPostUpdate( dt ) for name, ( gobj, layer ) in Engine.gObjects.items() if hasattr( gobj, "OnPostUpdate" ) )
 
             # --- game.OnUpdate
-            if(  Engine.onUpdate ):
+            if( Engine.onUpdate ):
                 Engine.onUpdate( dt )
 
             # --- Camera Tracking
@@ -257,35 +218,23 @@ class Engine():
             # -- Layer Rendering
             Engine.screen.fill( Engine.bgColor )
             for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( layer < 0 ): continue
-                if( not gobj.IsVisible() ): continue
-                if( not gobj.IsActive() ): continue
-                if( not gobj.GetRectangle().CollideRectangle( Engine.camera.GetRectangle() ) ): continue
+                if( layer >= 0 and gobj.IsVisible() and gobj.GetRectangle().CollideRectangle( Engine.camera.GetRectangle() ) ):
+                    w, h = gobj.GetSize()
+                    x, y = Engine._Fix_XY( gobj.GetPosition(), (w,h) )
 
-                w, h = gobj.GetSize()
-                x, y = Engine._Fix_XY( gobj.GetPosition(), (w,h) )
+                    if( hasattr( gobj, "surface" ) ):
+                        Engine.screen.blit( gobj.surface, (x,y) )
 
-                if( hasattr( gobj, "surface" ) ):
-                    Engine.screen.blit( gobj.surface, (x,y) )
-
-                if( Engine.collidersColor ):
-                    for collider in gobj.colliders:
-                        cx, cy = collider.GetOrigin()
-                        cw, ch = collider.GetSize()
-                        cx, cy = x + cx, y + ( h - (cy + ch) )
-                        pygame.draw.rect( Engine.screen, Engine.collidersColor, pygame.Rect( (cx,cy), (cw,ch) ), 1 )
+                    if( Engine.collidersColor and gobj.use_colliders ):
+                        pygame.draw.rect( Engine.screen, Engine.collidersColor, pygame.Rect( (x,y), (w,h) ), 1 )
 
             # --- GUI rendering
             for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( layer >= 0 ): continue
-                if( not gobj.IsVisible() ): continue
-                if( not gobj.IsActive() ): continue
-                if( not hasattr( gobj, "surface" )): continue
-
-                x, y = gobj.GetPosition()
-                w, h = gobj.GetSize()
-                vw, vh = Engine.camera.GetSize()
-                Engine.screen.blit( gobj.surface, (x,vh-y-h) )
+                if( layer < 0 and  gobj.IsVisible() and hasattr( gobj, "surface" ) ):
+                    x, y = gobj.GetPosition()
+                    w, h = gobj.GetSize()
+                    vw, vh = Engine.camera.GetSize()
+                    Engine.screen.blit( gobj.surface, (x,vh-y-h) )
 
             # ---
             pygame.display.update()
@@ -298,8 +247,8 @@ class Engine():
         xo, yo = pos
         wo, ho = size
         wh = Engine.VLIMIT
-        vx, vy  = Engine.camera.GetPosition()
-        vw, vh = Engine.camera.GetSize()
+        vx, vy  = Engine.camera.rect.x, Engine.camera.rect.y
+        vw, vh = Engine.camera.rect.w, Engine.camera.rect.h
         dy = wh - (vy + vh)
         x = xo - vx
         y = wh - (yo + ho) - dy
@@ -341,7 +290,7 @@ class Engine():
 
     # imagenes
     def LoadImage( iname, pattern, scale=None, flip=None ):
-        if( "*" in pattern ): fnames = sorted( glob.glob( pattern ) )
+        if( "*" in pattern ): fnames = sorted( glob( pattern ) )
         else: fnames = [pattern]
 
         if( flip ): fx, fy = flip

@@ -9,6 +9,8 @@ from lge.Rectangle import Rectangle
 
 class MiJuego():
     def __init__( self ):
+        self.niters = 60*30
+
         # creamos el juego
         Engine.Init( (800,600), "Demo de Canvas", (255,255,255) )
 
@@ -16,7 +18,7 @@ class MiJuego():
         Engine.LoadTTFFont( "monospace", 16, "../fonts/FreeMono.ttf" )
 
         # agregamos la barra de info
-        infobar = Canvas( (0,550), (800,50), "infobar" )
+        infobar = Canvas( (0,580), (800,20), "infobar" )
         Engine.AddGObjectGUI( infobar )
 
         # un canvas para plotear y usar de piso
@@ -45,7 +47,7 @@ class MiJuego():
         fps = "FPS: %07.2f" % fps
 
         ngobjs = len( Engine.GetGObject( "*") )
-        ngobjs = "gObjs: %03d" % ngobjs
+        ngobjs = "gObjs: %05d" % ngobjs
 
         mx, my = Engine.GetMousePos()
         mb1, mb2, mb3 = Engine.GetMousePressed()
@@ -53,41 +55,33 @@ class MiJuego():
 
         infobar = Engine.GetGObject( "infobar" )
         infobar.Fill( (0,0,0,20) )
-        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (140,30), "monospace", (0,0,0) )
-        infobar.DrawText( "Presione B(ox), C(ircle), D(elete)", (240,5), "monospace", (0,0,0) )
+        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (140,0), "monospace", (0,0,0) )
 
         #
         ground = Engine.GetGObject( "ground" )
 
         # agregamos nuevos objetos
-        mx, my = Engine.GetMousePos()
-        mb1, mb2, mb3 = Engine.GetMousePressed()
+        if( (self.niters % 20) == 0 ):
+            mx, my = Engine.GetMousePos()
+            mb1, mb2, mb3 = Engine.GetMousePressed()
 
-        if( Engine.IsKeyUp( Engine.CONSTANTS.K_p ) ):
-            x, y = int(random.random()*800), int(random.random()*100)
-            for i in range( 50 ):
-                dx, dy = -10 + int(random.random()*20), -10 - int(random.random()*20)
-                ground.DrawPoint( (x+dx,y+dy), (255,0,0) )
-        elif( Engine.IsKeyUp( Engine.CONSTANTS.K_c ) ):
-            gobj = Circle()
+            if( random.random()< 0.5 ):
+                gobj = Circle()
+            else:
+                gobj = Box()
             Engine.AddGObject( gobj, 1 )
-        elif( Engine.IsKeyUp( Engine.CONSTANTS.K_b ) ):
-            gobj = Box()
-            Engine.AddGObject( gobj, 1 )
-        elif( Engine.IsKeyUp( Engine.CONSTANTS.K_l ) ):
-            pass
-        elif( Engine.IsKeyUp( Engine.CONSTANTS.K_d ) ):
-            Engine.DelGObject( "gobj-*" )
-            ground.Fill( (200,200,200) )
 
         # ajustamos acorde a nuestra pseudo-fisica
         for gobj in Engine.GetGObject( "*" ):
             if( hasattr( gobj, "physics") ):
                 Physics.Update( dt, gobj )
 
+        self.niters -= 1
+        if( self.niters <= 0 ): Engine.Quit()
 
     def Run( self ):
-        Engine.Run( 60 )
+        import cProfile
+        cProfile.run( "Engine.Run( 60 )" )
 
 class Circle( Canvas ):
     def __init__( self ):
@@ -100,7 +94,7 @@ class Circle( Canvas ):
         self.SetColliders()
 
         sx = -1 if round( random.random() ) == 0 else 1
-        self.physics = Physics( sx*60, -120, 240, 0.4, 0.4 )
+        self.physics = Physics( sx*80, -120, 240, 0.4, 0.4 )
 
     def OnUpdate( self, dt ):
         x, y = self.GetPosition()
@@ -118,7 +112,7 @@ class Box( Canvas ):
         self.SetColliders()
 
         sx = -1 if round( random.random() ) == 0 else 1
-        self.physics = Physics( sx*60, -240, 240, 0.4, 0.4 )
+        self.physics = Physics( sx*80, -240, 240, 0.4, 0.4 )
 
     def OnUpdate( self, dt ):
         x, y = self.GetPosition()
@@ -141,7 +135,6 @@ class Physics():
     # *** no esta finalizado aun ***
     def Update( dt, gobj ):
         phys = gobj.physics
-        print( gobj.GetName(), phys )
 
         x, y = gobj.GetPosition()
         w, h = gobj.GetSize()
@@ -156,11 +149,11 @@ class Physics():
         collisions = Engine.GetCollisions( gobj.GetName() )
         if( not collisions ): return
 
-        o, r = collisions[0]
+        o = collisions[0]
         ox, oy = o.GetPosition()
         ow, oh = o.GetSize()
 
-        r = gobj.GetRectangle().GetCollideRectangle( r )
+        r = gobj.GetRectangle().GetCollideRectangle( o.GetRectangle() )
 
         rx, ry = r.GetOrigin()
         rw, rh = r.GetSize()
