@@ -12,12 +12,14 @@ class MiJuego():
 
         # activamos la musica de fondo
         Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        Engine.SetSoundVolume( "fondo", 0.5 )
         Engine.PlaySound( "fondo", loop=-1 )
 
         # cargamos los recursos que usaremos
         Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
         Engine.LoadImage( "heroe_right", "../images/Swordsman/Idle/Idle_000.png", 0.16 )
         Engine.LoadImage( "heroe_left", "../images/Swordsman/Idle/Idle_000.png", 0.16, (True,False) )
+        Engine.LoadImage( "mute", "../images/icons/sound-*.png" )
         Engine.LoadTTFFont( "monospace", 16, "../fonts/FreeMono.ttf" )
 
         # agregamos el fondo
@@ -31,6 +33,10 @@ class MiJuego():
         infobar = Canvas( (0,460), (640,20), "infobar" )
         Engine.AddGObjectGUI( infobar )
 
+        mute = Sprite( "mute", (8,463), "mute" )
+        mute.SetShape( "mute", 1 )
+        Engine.AddGObjectGUI( mute )
+
         # configuramos la camara
         camera = Engine.GetCamera()
         camera.SetBounds( Rectangle( (0,0), (1920,1056) ) )
@@ -40,7 +46,7 @@ class MiJuego():
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info
@@ -50,13 +56,26 @@ class MiJuego():
         ngobjs = len( Engine.GetGObject( "*") )
         ngobjs = "gObjs: %03d" % ngobjs
 
-        mx, my = Engine.GetMousePos()
-        mb1, mb2, mb3 = Engine.GetMousePressed()
+        mx, my = Engine.GetMousePosition()
+        mb1, mb2, mb3 = Engine.GetMouseButtons()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         infobar = Engine.GetGObject( "infobar" )
         infobar.Fill( (0,0,0,20) )
-        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (50,0), "monospace", (0,0,0) )
+        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (70,0), "monospace", (0,0,0) )
+
+        mp = Engine.GetMousePressed( 1 )
+        if( mp ):
+            mx, my = mp
+
+            mute = Engine.GetGObject( "mute")
+            iname, idx = mute.GetCurrentShape()
+            if( idx ):
+                Engine.SetSoundVolume( "fondo", 0 )
+                mute.SetShape( iname, 0 )
+            else:
+                Engine.SetSoundVolume( "fondo", 0.5 )
+                mute.SetShape( iname, 1 )
 
     # main loop
     def Run( self ):
@@ -81,12 +100,12 @@ class MiHeroe( Sprite ):
 
         # la tecla presionada
         if( self.key_pressed == -1 ):
-            if( Engine.IsKeyDown( Engine.CONSTANTS.K_RIGHT ) ): self.key_pressed = Engine.CONSTANTS.K_RIGHT
-            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_LEFT ) ): self.key_pressed = Engine.CONSTANTS.K_LEFT
-            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_DOWN ) ): self.key_pressed = Engine.CONSTANTS.K_DOWN
-            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_UP ) ): self.key_pressed = Engine.CONSTANTS.K_UP
+            if( Engine.KeyDown( Engine.CONSTANTS.K_RIGHT ) ): self.key_pressed = Engine.CONSTANTS.K_RIGHT
+            elif( Engine.KeyDown( Engine.CONSTANTS.K_LEFT ) ): self.key_pressed = Engine.CONSTANTS.K_LEFT
+            elif( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): self.key_pressed = Engine.CONSTANTS.K_DOWN
+            elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): self.key_pressed = Engine.CONSTANTS.K_UP
         else:
-            if( Engine.IsKeyUp( self.key_pressed ) ):
+            if( Engine.KeyUp( self.key_pressed ) ):
                 self.key_pressed = -1
 
         # cambiamos sus coordenadas y orientacion segun la tecla presionada
@@ -108,7 +127,7 @@ class MiHeroe( Sprite ):
         # lo posicionamos asegurando que se encuentre dentro de los limites
         camera = Engine.GetCamera()
         bounds = camera.GetBounds()
-        self.SetPosition( (x,y), bounds )
+        self.SetPosition( x, y, bounds )
 
 
 #--- show time

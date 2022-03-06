@@ -12,6 +12,7 @@ class MiJuego():
 
         # activamos la musica de fondo
         Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
+        Engine.SetSoundVolume( "fondo", 0.5 )
         Engine.PlaySound( "fondo", loop=-1 )
 
         # cargamos los recursos que usaremos
@@ -21,11 +22,11 @@ class MiJuego():
         Engine.LoadImage( "heroe_run_right", "../images/Swordsman/Run/Run_0*.png", 0.16 )
         Engine.LoadImage( "heroe_run_left", "../images/Swordsman/Run/Run_0*.png", 0.16, (True,False) )
         Engine.LoadImage( "ninja", "../images/Swordsman/Idle/Idle_000.png", 0.16 )
+        Engine.LoadImage( "mute", "../images/icons/sound-*.png" )
         Engine.LoadTTFFont( "monospace", 16, "../fonts/FreeMono.ttf" )
-        Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
         Engine.LoadSound( "aves", "../sounds/bird-thrush-nightingale.wav" )
         Engine.LoadSound( "poing", "../sounds/cartoon-poing.wav" )
-        Engine.SetSoundVolume( "poing", 0.1 )
+        Engine.SetSoundVolume( "poing", 0.03 )
 
         # agregamos el fondo
         fondo = Sprite( "fondo", (0,0) )
@@ -45,6 +46,10 @@ class MiJuego():
         infobar = Canvas( (0,460), (640,20), "infobar" )
         Engine.AddGObjectGUI( infobar )
 
+        mute = Sprite( "mute", (8,463), "mute" )
+        mute.SetShape( "mute", 1 )
+        Engine.AddGObjectGUI( mute )
+
         # configuramos la camara
         camera = Engine.GetCamera()
         camera.SetBounds( Rectangle( (0,0), (1920,1056) ) )
@@ -58,7 +63,7 @@ class MiJuego():
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info
@@ -68,16 +73,29 @@ class MiJuego():
         ngobjs = len( Engine.GetGObject( "*") )
         ngobjs = "gObjs: %03d" % ngobjs
 
-        mx, my = Engine.GetMousePos()
-        mb1, mb2, mb3 = Engine.GetMousePressed()
+        mx, my = Engine.GetMousePosition()
+        mb1, mb2, mb3 = Engine.GetMouseButtons()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         infobar = Engine.GetGObject( "infobar" )
         infobar.Fill( (0,0,0,20) )
-        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (50,0), "monospace", (0,0,0) )
+        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (70,0), "monospace", (0,0,0) )
+
+        mp = Engine.GetMousePressed( 1 )
+        if( mp ):
+            mx, my = mp
+
+            mute = Engine.GetGObject( "mute" )
+            iname, idx = mute.GetCurrentShape()
+            if( idx ):
+                Engine.SetSoundVolume( "fondo", 0 )
+                mute.SetShape( iname, 0 )
+            else:
+                Engine.SetSoundVolume( "fondo", 0.5 )
+                mute.SetShape( iname, 1 )
 
         # mostramos los bordes
-        if( Engine.IsKeyUp( Engine.CONSTANTS.K_c) ):
+        if( Engine.KeyUp( Engine.CONSTANTS.K_c) ):
             self.showColliders = not self.showColliders
             if( self.showColliders ):
                 Engine.ShowColliders( (0xFF, 0x00, 0x00) )
@@ -103,31 +121,6 @@ class MiHeroe( Sprite ):
         self.direction = ""
         self.key_pressed = -1
 
-    def OnPreUpdate( self, dt ):
-        # verificamos si hemos colisionado
-        gobjs = Engine.GetCollisions( self.name )
-        if( not gobjs ): return
-
-        Engine.PlaySound( "poing", 0 )
-        o = gobjs[0]
-
-        x, y = self.GetPosition()
-        w, h = self.GetSize()
-
-        ox, oy = o.GetPosition()
-        ow, oh = o.GetSize()
-
-        if( self.direction == "U"):
-            y = oy - h
-        elif( self.direction == "D"):
-            y = oy + oh
-        elif( self.direction == "L"):
-            x = ox + ow
-        elif( self.direction == "R"):
-            x = ox - w
-
-        self.SetPosition( (x,y) )
-
     def OnUpdate( self, dt ):
         # velocity = pixeles por segundo
         velocity = 240
@@ -138,12 +131,12 @@ class MiHeroe( Sprite ):
 
         # la tecla presionada
         if( self.key_pressed == -1 ):
-            if( Engine.IsKeyDown( Engine.CONSTANTS.K_RIGHT ) ): self.key_pressed = Engine.CONSTANTS.K_RIGHT
-            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_LEFT ) ): self.key_pressed = Engine.CONSTANTS.K_LEFT
-            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_DOWN ) ): self.key_pressed = Engine.CONSTANTS.K_DOWN
-            elif( Engine.IsKeyDown( Engine.CONSTANTS.K_UP ) ): self.key_pressed = Engine.CONSTANTS.K_UP
+            if( Engine.KeyDown( Engine.CONSTANTS.K_RIGHT ) ): self.key_pressed = Engine.CONSTANTS.K_RIGHT
+            elif( Engine.KeyDown( Engine.CONSTANTS.K_LEFT ) ): self.key_pressed = Engine.CONSTANTS.K_LEFT
+            elif( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): self.key_pressed = Engine.CONSTANTS.K_DOWN
+            elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): self.key_pressed = Engine.CONSTANTS.K_UP
         else:
-            if( Engine.IsKeyUp( self.key_pressed ) ):
+            if( Engine.KeyUp( self.key_pressed ) ):
                 self.key_pressed = -1
 
         # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
@@ -180,10 +173,28 @@ class MiHeroe( Sprite ):
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
         camera = Engine.GetCamera()
         bounds = camera.GetBounds()
-        self.SetPosition( (x,y), bounds )
+        self.SetPosition( x, y, bounds )
 
-    def OnPostUpdate( self, dt ):
-        pass
+    def OnCollision( self, dt, collisions ):
+        Engine.PlaySound( "poing", 0 )
+        o, r = collisions[0]
+
+        x, y = self.GetPosition()
+        w, h = self.GetSize()
+
+        x1, y1, x2, y2 = r.GetPoints()
+
+        if( self.direction == "U"):
+            y = y1 - h
+        elif( self.direction == "D"):
+            y = y2 + 1
+        elif( self.direction == "L"):
+            x = x2 + 1
+        elif( self.direction == "R"):
+            x = x1 - w
+
+        self.SetPosition( x, y )
+
 
 #--- show time
 game = MiJuego()

@@ -16,6 +16,7 @@ from lge.Rect import rect
 ```
 Engine.CONSTANTS
 Engine.VLIMIT
+Engine.GUI_LAYER
 ```
 
 ---
@@ -48,16 +49,6 @@ GetFPS()
 GetRequestedFPS()
 ```
 
-#### Camara
-```
-GetCamera()
-```
-
----
-```
-SetCameraTarget( gobj=None, center=False )
-```
-
 #### Game Objects
 ```
 AddGObject( gobj, layer )
@@ -70,12 +61,17 @@ AddGObjectGUI( gobj )
 
 ---
 ```
-DelGObject( name )
+GetGObject( name )
 ```
 
 ---
 ```
-GetGObject( name )
+DelGObject( gobj )
+```
+
+---
+```
+DelGObjectByName( name )
 ```
 
 ---
@@ -85,17 +81,29 @@ ShowColliders( color=None )
 
 ---
 ```
-GetCollisions( name )
+GetCollisions( gobj )
 ```
 
-#### Eventos
+
+#### Camara
 ```
-IsKeyDown( key )
+GetCamera()
 ```
 
 ---
 ```
-IsKeyUp( key )
+SetCameraTarget( gobj=None, center=False )
+```
+
+
+#### Eventos
+```
+KeyDown( key )
+```
+
+---
+```
+KeyUp( key )
 ```
 
 ---
@@ -105,12 +113,22 @@ IsKeyPressed( key )
 
 ---
 ```
-GetMousePos()
+GetMousePosition()
 ```
 
 ---
 ```
-GetMousePressed()
+GetMouseButtons()
+```
+
+---
+```
+GetMousePressed( button )
+```
+
+---
+```
+GetMouseReleased( button )
 ```
 
 ---
@@ -181,27 +199,27 @@ rect = camera.GetRectangle()
 
 ---
 ```
-position = camera.GetPosition()
+x, y = camera.GetPosition()
 ```
 
 ---
 ```
-size = camera.GetSize()
+w, h = camera.GetSize()
 ```
 
 ---
 ```
-bounds = camera.GetBounds()
+rect = camera.GetBounds()
 ```
 
 ---
 ```
-camera.SetPosition( position )
+camera.SetPosition( x, y )
 ```
 
 ---
 ```
-camera.SetBounds( bounds )
+camera.SetBounds( rect )
 ```
 
 
@@ -299,6 +317,11 @@ canvas.DrawCircle( center, radius, color, thickness=False )
 canvas.DrawRectangle( position, size, color, thickness=False  )
 ```
 
+---
+```
+canvas.DrawImage( position, image_id )
+```
+
 
 ## GameObject
 Clase base de **Little Game Engine** (todo es un **GameObject**)
@@ -326,23 +349,23 @@ rect = gobj.GetRectangle()
 
 ---
 ```
-position = gobj.GetPosition()
+x, y = gobj.GetPosition()
 ```
 Retorna la posición del GameObject
 
 | Retorno | Descripción
 |---|---
-|`position`| La posición (x,y) del GameObject
+|`x, y`| La posición (x,y) del GameObject
 
 ---
 ```
-size = gobj.GetSize()
+w, h = gobj.GetSize()
 ```
 Retorna la dimensión del GameObject
 
 | Retorno | Descripción
 |---|---
-|`size`| La dimensión (width, height) del rGameObject
+|`w, h`| La dimensión (width, height) del rGameObject
 
 ---
 ```
@@ -366,34 +389,24 @@ Retorna el tag del GameObject
 
 ---
 ```
-visible = gobj.IsVisible()
-```
-Retorna la visibilidad del GameObject
-
-| Retorno | Descripción
-|---|---
-|`Visible`| `True` si es que el GameObject es visible, `False` en caso contrario
-
----
-```
-gobj.SetPosition( position, bounds=None )
+gobj.SetPosition( x, y, rect=None )
 ```
 Establece la posición del GameObject
 
 | Parámetros | Descripción
 |---|---
-|`position`| La nueva posición (x,y) del GameObject
-|`rect`| Si se específica, la posición del GameObject queda confiada al rectpangulo dado
+|`x, y`| La nueva posición (x,y) del GameObject
+|`rect`| Si se específica, la posición del GameObject queda confiada al rectángulo dado
 
 ---
 ```
-gobj.SetSize( size )
+gobj.SetSize( w, h )
 ```
 Establece la dimensión del GameObject
 
 | Parámetros | Descripción
 |---|---
-|`size`| La nueva dimensión (width,height)  del GameObject
+|`w, h`| La nueva dimensión (width,height)  del GameObject
 
 ---
 ```
@@ -407,17 +420,7 @@ Establece un tag para el GameObject
 
 ---
 ```
-gobj.SetVisible( visibility )
-```
-Establece la visibilidad del GameObject
-
-| Parámetros | Descripción
-|---|---
-|`visibility`| `True` para especificar que el GameObject es visible, `False` en caso contrario
-
----
-```
-gobj.SetColliders( enabled )
+gobj.SetColliders( enabled=True )
 ```
 
 
@@ -451,47 +454,47 @@ Crea una copia del rectángulo
 
 ---
 ```
-origen = rect.GetOrigin()
+x1, y1, x2, y2 = rect.Getpoints()
 ```
 Retorna el origen del rectángulo
 
 | Retorno | Descripción
 |---|---
-|`origen`| El origen (x,y) del rectángulo
+|`x1, y1, x2, y2 `| Las coordenadas del rectángulo
 
 ---
 ```
-size = rect.GetSize()
+w, h = rect.GetSize()
 ```
 Retorna la dimensión del rectángulo
 
 | Retorno | Descripción
 |---|---
-|`size`| La dimensión (width, height) del rectángulo
+|`w, h`| La dimensión (width, height) del rectángulo
 
 ---
 ```
-rect.SetOrigin( origen ) )
+rect.SetOrigin( x, y ) )
 ```
 Establece las coordenadas de origen del rectángulo
 
 | Parámetros | Descripción
 |---|---
-|`origen`| Las nuevas coordenadas (x,y) del origen del rectángulo
+|`x, y`| Las nuevas coordenadas (x,y) del origen del rectángulo
 
 ---
 ```
-rect.SetSize( size )
+rect.SetSize( w, h )
 ```
 Establece la dimensión del rectángulo
 
 | Parámetros | Descripción
 |---|---
-|`size`| La nueva dimensión (width, height) del rectángulo
+|`w, h`| La nueva dimensión (width, height) del rectángulo
 
 ---
 ```
-rect.KeepInsideRect( rect2 )
+rect.KeepInsideRectangle( rect2 )
 ```
 Ajusta el origen tal que el rectángulo queda dentro del rectángulo dado
 
@@ -501,13 +504,13 @@ Ajusta el origen tal que el rectángulo queda dentro del rectángulo dado
 
 ---
 ```
-b = rect.CollidePoint( point )
+b = rect.CollidePoint( px, py )
 ```
 Determina si un punto intersecta al rectángulo
 
 | Parámetros | Descripción
 |---|---
-|`point`| Las coordenadas (x,y) del punto a verificar
+|`px, py`| Las coordenadas (x,y) del punto a verificar
 
 | Retorno | Descripción
 |---|---
@@ -515,7 +518,7 @@ Determina si un punto intersecta al rectángulo
 
 ---
 ```
-b = rect.CollideRect( rect2 )
+b = rect.CollideRectangle( rect2 )
 ```
 Determina si un rectángulo intersecta a este rectángulo
 

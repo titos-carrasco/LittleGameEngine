@@ -3,27 +3,28 @@ from lge.Rectangle import Rectangle
 
 class Camera():
     def __init__( self, position, size ):
-        self.rect = Rectangle( position, size )
-        self.bounds = None
+        self._rect = Rectangle( position, size )
+        self._bounds = None
 
     def GetRectangle( self ):
-        return self.rect.Copy()
+        return self._rect.Copy()
 
     def GetPosition( self ):
-        return self.rect.GetOrigin()
+        x1, y1, x2, y2 = self._rect.GetPoints()
+        return x1, y1
 
     def GetSize( self ):
-        return self.rect.GetSize()
+        return self._rect.GetSize()
 
     def GetBounds( self ):
-        if( self.bounds  ): return self.bounds.Copy()
+        if( self._bounds  ): return self._bounds.Copy()
         else: return None
 
-    def SetPosition( self, position ):
-        self.rect.SetOrigin( position )
-        if( self.bounds ):
-            self.rect.KeepInsideRectangle( self.bounds )
+    def SetPosition( self, x, y ):
+        self._rect.SetOrigin( x, y )
+        if( self._bounds ):
+            self._rect.KeepInsideRectangle( self._bounds )
 
     def SetBounds( self, bounds=None) :
-        if( bounds ): self.bounds = bounds.Copy()
-        else: self.bounds = bounds
+        if( bounds ): self._bounds = bounds.Copy()
+        else: self._bounds = None

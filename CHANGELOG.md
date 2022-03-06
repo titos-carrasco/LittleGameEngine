@@ -1,5 +1,12 @@
 # ChangeLog
 
+## @v0.4.0 2022-03-05
+- Optimizaciones en la clase Rectangle
+- Optimización en el manejo de colisiones
+- Agrega prefijo "_" a las variables de clase
+- Agrega método DrawImage en Canvas
+- Optimizaciones varias en Engine
+
 ## @v0.3.0 2022-02-26
 - Se reversa el uso de múltiples colliders en un GameObject hasta no tener un mejor algoritmo
 - Optimizaciones varias

@@ -46,7 +46,7 @@ class Test():
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info
@@ -56,8 +56,8 @@ class Test():
         ngobjs = len( Engine.GetGObject( "*") )
         ngobjs = "gObjs: %03d" % ngobjs
 
-        mx, my = Engine.GetMousePos()
-        mb1, mb2, mb3 = Engine.GetMousePressed()
+        mx, my = Engine.GetMousePosition()
+        mb1, mb2, mb3 = Engine.GetMouseButtons()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         infobar = Engine.GetGObject( "infobar" )
@@ -66,7 +66,8 @@ class Test():
 
     # main loop
     def Run( self ):
-        Engine.Run( 60 )
+        import cProfile
+        cProfile.run( "Engine.Run( 60 )" )
 
 
 class Bird(Sprite):

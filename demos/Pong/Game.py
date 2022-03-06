@@ -63,12 +63,11 @@ class Game():
         Engine.AddGObject( paddle, 1 )
 
         self.paddle_speed = 240
-
-        #Engine.ShowColliders( (255,0,255) )
+        self.key_pressed = -1
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info
@@ -78,8 +77,8 @@ class Game():
         ngobjs = len( Engine.GetGObject( "*") )
         ngobjs = "gObjs: %03d" % ngobjs
 
-        mx, my = Engine.GetMousePos()
-        mb1, mb2, mb3 = Engine.GetMousePressed()
+        mx, my = Engine.GetMousePosition()
+        mb1, mb2, mb3 = Engine.GetMouseButtons()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         infobar = Engine.GetGObject( "infobar" )
@@ -93,10 +92,18 @@ class Game():
         user_paddle = Engine.GetGObject( "user-paddle" )
         speed = self.paddle_speed*dt
         x, y = user_paddle.GetPosition()
-        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_UP ) ):
-            user_paddle.SetPosition( (x,y+speed), field )
-        elif( Engine.IsKeyPressed( Engine.CONSTANTS.K_DOWN ) ):
-            user_paddle.SetPosition( (x,y-speed), field )
+
+        if( self.key_pressed == -1 ):
+            if( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): self.key_pressed = Engine.CONSTANTS.K_DOWN
+            elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): self.key_pressed = Engine.CONSTANTS.K_UP
+        else:
+            if( Engine.KeyUp( self.key_pressed ) ):
+                self.key_pressed = -1
+
+        if( self.key_pressed == Engine.CONSTANTS.K_UP ):
+            user_paddle.SetPosition( x, y+speed, field )
+        elif( self.key_pressed == Engine.CONSTANTS.K_DOWN ):
+            user_paddle.SetPosition( x, y-speed , field )
 
         # system paddle
         system_paddle = Engine.GetGObject( "system-paddle" )
@@ -106,7 +113,7 @@ class Game():
 
         if( py + ph/2 < by ): py = py + speed
         elif( py + ph/2 > by ): py = py - speed
-        system_paddle.SetPosition( (px,py), field )
+        system_paddle.SetPosition( px, py, field )
 
 
     # main loop
@@ -120,15 +127,19 @@ class Ball( Canvas ):
         self.speedX = 180
         self.speedY = -180
 
-    def OnPreUpdate( self, dt ):
+    def OnUpdate( self, dt ):
+        dx = self.speedX*dt
+        dy = self.speedY*dt
+
+        x, y = self.GetPosition()
+        self.SetPosition( x+dx, y+dy )
+
+    def OnCollision( self, dt, collisions ):
         x, y = self.GetPosition()
         dx = self.speedX*dt
         dy = self.speedY*dt
 
-        collisions = Engine.GetCollisions( self.GetName() )
-        if( not collisions ): return
-
-        for gobj in collisions:
+        for gobj, r  in collisions:
             if( gobj.GetTag() == "wall-horizontal" ):
                 self.speedY = -self.speedY
                 dy = -dy
@@ -137,14 +148,8 @@ class Ball( Canvas ):
                 dx = -dx
             if( gobj.GetTag() == "wall-vertical" ):
                 x, y = 320, 400
-        self.SetPosition( (x+dx,y+dy) )
+        self.SetPosition( x+dx, y+dy )
 
-    def OnUpdate( self, dt ):
-        dx = self.speedX*dt
-        dy = self.speedY*dt
-
-        x, y = self.GetPosition()
-        self.SetPosition( (x+dx,y+dy) )
 
 
 # ----

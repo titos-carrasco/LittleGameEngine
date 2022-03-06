@@ -3,43 +3,37 @@ from lge.Rectangle import Rectangle
 
 class GameObject():
     def __init__( self, position, size, name=None ):
-        self.rect = Rectangle( position, size )
-        self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
-        self.tag = ""
-        self.visible = True
-        self.use_colliders = False
+        self._rect = Rectangle( position, size )
+        self._name = "__noname__-" + uuid.uuid4().hex if name is None else name
+        self._tag = ""
+        self._use_colliders = False
 
     def GetRectangle( self ):
-        return self.rect.Copy()
+        return self._rect.Copy()
 
     def GetPosition( self ):
-        return self.rect.GetOrigin()
+        x1, y1, x2, y2 = self._rect.GetPoints()
+        return x1, y1
 
     def GetSize( self ):
-        return self.rect.GetSize()
+        return self._rect.GetSize()
 
     def GetName( self ):
-        return self.name
+        return self._name
 
     def GetTag( self ):
-        return self.tag
+        return self._tag
 
-    def IsVisible( self ):
-        return self.visible
-
-    def SetPosition( self, position, bounds=None ):
-        self.rect.SetOrigin( position )
+    def SetPosition( self, x, y, bounds=None ):
+        self._rect.SetOrigin( x, y )
         if( bounds ):
-            self.rect.KeepInsideRectangle( bounds )
+            self._rect.KeepInsideRectangle( bounds )
 
-    def SetSize( self, size ):
-        self.rect.SetSize( size )
+    def SetSize( self, w, h ):
+        self._rect.SetSize( w, h )
 
     def SetTag( self, tag ):
-        self.tag = tag
-
-    def SetVisible( self, visible ):
-        self.visible = visible
+        self._tag = tag
 
     def SetColliders( self, enabled=True ):
-        self.use_colliders = enabled
+        self._use_colliders = enabled

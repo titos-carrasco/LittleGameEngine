@@ -8,6 +8,7 @@ from lge.Rectangle import Rectangle
 class Engine():
     CONSTANTS    = pygame.constants
     VLIMIT       = 0xFFFFFFFF
+    GUI_LAYER    = 0xFFFF
 
     def Init( camSize, title, bgColor=(0,0,0) ):
         Engine.title = title
@@ -22,12 +23,11 @@ class Engine():
         Engine.gObjectsToAdd = []
         Engine.gObjectsToDel = []
 
-        Engine.camera = Camera( (0,0), camSize)
+        Engine.camera = Camera( ( 0, 0 ), camSize )
         Engine.cameraTarget = None, False
 
-        Engine.keysUp = []
-        Engine.keysPressed = []
-        Engine.keysDown = []
+        Engine.events = []
+        Engine.keys_pressed = []
         Engine.onUpdate = None
         Engine.running = False
 
@@ -40,11 +40,63 @@ class Engine():
         Engine.clock = pygame.time.Clock()
 
 
+    # gobjects
+    def AddGObject( gobj, layer ):
+        assert not hasattr( gobj, "_layer" ), "'gobj' ya fue agregado"
+        assert layer >= 0 and layer <= Engine.GUI_LAYER, "'layer' invalido"
+        gobj._layer = layer
+        Engine.gObjectsToAdd.append( gobj )
+
+    def AddGObjectGUI( gobj ):
+        Engine.AddGObject( gobj, Engine.GUI_LAYER )
+
+    def GetGObject( name ):
+        if( name == "*" ):
+            return [ gobj for layer, gobjs in Engine.gObjects.items() for gobj in gobjs ]
+        elif( name[-1] == "*" ):
+            s = name[:-1]
+            return [ gobj for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if gobj._name.startswith( s ) ]
+        else:
+            gobjs = [ gobj for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if gobj._name == name ]
+            if( not gobjs ): return None
+            else: return gobjs[0]
+
+    def DelGObject( gobj ):
+        assert hasattr( gobj, "_layer" ), "'gobj' no ha sido agregado"
+        Engine.gObjectsToDel.append( gobj )
+
+    def DelGObjectByName( name ):
+        if( name == "*" ):
+            gobjs = Engine.GetGObject( name )
+            Engine.gObjectsToDel.extend( gobjs )
+        elif( name[-1] == "*" ):
+            gobjs = Engine.GetGObject( name )
+            Engine.gObjectsToDel.extend( gobjs )
+        else:
+            gobj = Engine.GetGObject( name )
+            assert not gobj is None, "gobj no existe"
+            Engine.DelGObject( gobj )
+
+    def ShowColliders( color=None ):
+        Engine.collidersColor = color
+
+    def GetCollisions( gobj ):
+        return [ o
+                    for o in Engine.gObjects[gobj._layer]
+                        if o != gobj and \
+                           o._use_colliders and \
+                           gobj._rect.CollideRectangle( o._rect )
+                ]
+
+
     # camera
     def GetCamera():
         return Engine.camera
 
     def SetCameraTarget( gobj=None, center=False ):
+        assert hasattr( gobj, "_layer" ), "'gobj' no ha sido agregado"
+        assert gobj._layer != Engine.GUI_LAYER, "'gobj' invalido"
+
         Engine.cameraTarget = gobj, center
 
     def _CameraFollowTarget():
@@ -52,10 +104,6 @@ class Engine():
 
         # nadie a quien seguir
         if( not gobj ): return
-
-        # no debe ser GUI
-        _, layer = Engine.gObjects[gobj.name]
-        assert layer >= 0, "SetCameraTarget: 'gobj' invalido"
 
         # el centro de la camara en el centro del gobj
         x, y = gobj.GetPosition()
@@ -65,77 +113,48 @@ class Engine():
             y = y + h/2
 
         cw, ch = Engine.camera.GetSize()
-        Engine.camera.SetPosition( (x-cw/2, y-ch/2) )
+        Engine.camera.SetPosition( x-cw/2, y-ch/2 )
 
-
-    # gobjects
-    def AddGObject( gobj, layer ):
-        assert layer >= 0, "'layer' invalido"
-        Engine.gObjectsToAdd.append( (gobj,layer) )
-
-    def AddGObjectGUI( gobj ):
-        Engine.gObjectsToAdd.append( (gobj,-1) )
-
-    def DelGObject( name ):
-        if( name == "*" ):
-            for name in Engine.gObjects:
-                Engine.gObjectsToDel.append( name )
-        elif( name[-1] == "*" ):
-            s = name[:-1]
-            for name in Engine.gObjects:
-                if( name.startswith( s ) ):
-                    Engine.gObjectsToDel.append( name )
-        else:
-            Engine.gObjectsToDel.append( name )
-
-    def GetGObject( name ):
-        if( name == "*" ):
-            gobjs = [ Engine.gObjects[name][0] for name in Engine.gObjects ]
-            return gobjs
-        elif( name[-1] == "*" ):
-            s = name[:-1]
-            gobjs = [ Engine.gObjects[name][0] for name in Engine.gObjects if name.startswith( s ) ]
-            return gobjs
-        elif( name in Engine.gObjects ):
-            gobj, layer = Engine.gObjects[name]
-            return gobj
-        else:
-            return None
-
-    def ShowColliders( color=None ):
-        Engine.collidersColor = color
-
-    def GetCollisions( name ):
-        gobj, layer = Engine.gObjects[name]
-        collisions = []
-
-        if( gobj.use_colliders ):
-            gobjs = [ o
-                      for oname, ( o, olayer ) in Engine.gObjects.items()
-                        if olayer == layer and o!= gobj and  o.use_colliders and o.IsVisible()
-                    ]
-            collisions = [ o for o in gobjs if gobj.rect.CollideRectangle( o.rect ) ]
-
-        return collisions
 
     # events
-    def IsKeyDown( key ):
-        return key in Engine.keysDown
+    def KeyDown( key ):
+        return key in [ e.key for e in Engine.events if e.type == pygame.KEYDOWN ]
 
-    def IsKeyUp( key ):
-        return key in Engine.keysUp
+    def KeyUp( key ):
+        return key in [ e.key for e in Engine.events if e.type == pygame.KEYUP ]
 
     def IsKeyPressed( key ):
-        return Engine.keysPressed[ key ]
+        return Engine.keys_pressed[ key ]
 
-    def GetMousePos():
+    def GetMousePosition():
         x, y = pygame.mouse.get_pos()
         ww, wh = Engine.camera.GetSize()
         return x, wh - y
 
-    def GetMousePressed():
+    def GetMouseButtons():
         return pygame.mouse.get_pressed()
 
+    def GetMousePressed( button ):
+        events = [ e for e in Engine.events if e.type == pygame.MOUSEBUTTONDOWN ]
+        if( not events ): return None
+
+        e = events[0]
+        if( e.button != button ): return None
+
+        x, y = e.pos
+        ww, wh = Engine.camera.GetSize()
+        return x, wh - y
+
+    def GetMouseReleased( button ):
+        events = [ e for e in Engine.events if e.type == pygame.MOUSEBUTTONUP ]
+        if( not events ): return None
+
+        e = events[0]
+        if( e.button != button ): return None
+
+        x, y = e.pos
+        ww, wh = Engine.camera.GetSize()
+        return x, wh - y
 
     # game
     def SetOnUpdate( func=None ):
@@ -159,82 +178,96 @@ class Engine():
             dt = Engine.clock.tick( fps )/1000.0
 
             # system events
-            Engine.keysUp = []
-            Engine.keysDown = []
-            for event in pygame.event.get():
+            Engine.events = pygame.event.get()
+            for event in Engine.events:
                 if( event.type == pygame.QUIT ): Engine.running = False
-                elif( event.type == pygame.KEYUP ): Engine.keysUp.append( event.key )
-                elif( event.type == pygame.KEYDOWN ): Engine.keysDown.append( event.key )
-            Engine.keysPressed = pygame.key.get_pressed()
+            Engine.keys_pressed = pygame.key.get_pressed()
 
-            reorder = False
-            # --- gobj.OnStart
-            onstart = []
-            for t in Engine.gObjectsToAdd:
-                gobj, layer = t
-                assert not gobj.name in Engine.gObjects, "AddGObject: 'gobj' ya existe"
-                Engine.gObjects[gobj.name] = t
-                if( hasattr( gobj, "OnStart" ) ): onstart.append( gobj )
-                reorder = True
-            Engine.gObjectsToAdd = []
-            for gobj in onstart:
-                gobj.OnStart()
-
-            # --- gobj.OnDelete
+           # --- Del gobj and gobj.OnDelete
             ondelete = []
-            for name in Engine.gObjectsToDel:
-                assert name in Engine.gObjects, "DelGObject: 'gobj' no existe"
-                gobj, layer = Engine.gObjects[name]
-                del Engine.gObjects[name]
-                if( Engine.cameraTarget[0] == gobj ): Engine.cameraTarget = None, False
+            for gobj in Engine.gObjectsToDel:
+                Engine.gObjects[gobj._layer].remove( gobj )
+                del gobj._layer
+                if( Engine.cameraTarget == gobj ):
+                    Engine.cameraTarget = None, False
                 if( hasattr( gobj, "OnDelete" ) ): ondelete.append( gobj )
-                reorder = True
             Engine.gObjectsToDel = []
-            for gobj in ondelete:
-                gobj.OnDelete()
+            for gobj in ondelete: gobj.OnDelete()
+
+            # --- Add Gobj and gobj.OnStart
+            reorder = False
+            onstart = []
+            for gobj in Engine.gObjectsToAdd:
+                if( not gobj._layer in Engine.gObjects ):
+                    Engine.gObjects[gobj._layer] = []
+                    reorder = True
+                Engine.gObjects[gobj._layer].append( gobj )
+                if( hasattr( gobj, "OnStart" ) ): onstart.append( gobj )
+            Engine.gObjectsToAdd = []
+            for gobj in onstart: gobj.OnStart()
 
             # ---
             if( reorder ):
-                Engine.gObjects = dict( sorted( Engine.gObjects.items(), key=lambda item: item[1][1] ) )
+                Engine.gObjects = dict( sorted( Engine.gObjects.items() ) )
                 reorder = False
             # --
 
             # --- gobj.OnPreUpdate
-            list( gobj.OnPreUpdate( dt ) for name, ( gobj, layer ) in Engine.gObjects.items() if hasattr( gobj, "OnPreUpdate" ) )
+            list( gobj.OnPreUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnPreUpdate" ) )
 
             # --- gobj.OnUpdate
-            list( gobj.OnUpdate( dt ) for name, ( gobj, layer ) in Engine.gObjects.items() if hasattr( gobj, "OnUpdate" ) )
+            list( gobj.OnUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnUpdate" ) )
 
             # --- gobj.OnPostUpdate
-            list ( gobj.OnPostUpdate( dt ) for name, ( gobj, layer ) in Engine.gObjects.items() if hasattr( gobj, "OnPostUpdate" ) )
+            list( gobj.OnPostUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnPostUpdate" ) )
 
             # --- game.OnUpdate
-            if( Engine.onUpdate ):
-                Engine.onUpdate( dt )
+            if( Engine.onUpdate ): Engine.onUpdate( dt )
 
             # --- Camera Tracking
             Engine._CameraFollowTarget()
 
-            # -- Layer Rendering
+            # --- gobj.OnCollision
+            oncollisions = []
+            for layer, gobjs in Engine.gObjects.items():
+                if( layer == Engine.GUI_LAYER ): continue
+                with_use_colliders = list( ( gobj, gobj.GetRectangle() ) for gobj in gobjs if gobj._use_colliders )
+                with_on_collision = list( ( gobj, rect ) for gobj, rect in with_use_colliders if hasattr( gobj, "OnCollision" ) )
+
+                for o1, r1 in with_on_collision:
+                    o1_collisions = []
+                    for o2, r2 in with_use_colliders:
+                        if o1 != o2:
+                            if r1.CollideRectangle( r2 ):
+                                o1_collisions.append( ( o2, r2 ) )
+                    oncollisions.append( ( o1, o1_collisions ) )
+            list( gobj.OnCollision( dt, collisions ) for gobj, collisions in oncollisions if collisions )
+
+            # -- Rendering
             Engine.screen.fill( Engine.bgColor )
-            for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( layer >= 0 and gobj.IsVisible() and gobj.GetRectangle().CollideRectangle( Engine.camera.GetRectangle() ) ):
-                    w, h = gobj.GetSize()
-                    x, y = Engine._Fix_XY( gobj.GetPosition(), (w,h) )
 
-                    if( hasattr( gobj, "surface" ) ):
-                        Engine.screen.blit( gobj.surface, (x,y) )
+            vw, vh = Engine.camera.GetSize()
+            rect_camera = Engine.camera.GetRectangle()
+            for layer, gobjs in Engine.gObjects.items():
+                # -- Layer Rendering
+                if( layer != Engine.GUI_LAYER ):
+                    for gobj in [ gobj for gobj in gobjs if( gobj.GetRectangle().CollideRectangle( rect_camera ) ) ]:
+                        w, h = gobj.GetSize()
+                        x, y = Engine._Fix_XY( gobj.GetPosition(), (w,h) )
 
-                    if( Engine.collidersColor and gobj.use_colliders ):
-                        pygame.draw.rect( Engine.screen, Engine.collidersColor, pygame.Rect( (x,y), (w,h) ), 1 )
+                        if( hasattr( gobj, "_surface" ) ):
+                            Engine.screen.blit( gobj._surface, (x,y) )
 
-            # --- GUI rendering
-            for name, ( gobj, layer ) in Engine.gObjects.items():
-                if( layer < 0 and  gobj.IsVisible() and hasattr( gobj, "surface" ) ):
-                    x, y = gobj.GetPosition()
-                    w, h = gobj.GetSize()
-                    vw, vh = Engine.camera.GetSize()
-                    Engine.screen.blit( gobj.surface, (x,vh-y-h) )
+                        if( Engine.collidersColor and gobj._use_colliders ):
+                            pygame.draw.rect( Engine.screen, Engine.collidersColor, pygame.Rect( (x,y), (w,h) ), 1 )
+
+                # --- GUI rendering
+                else:
+                    for gobj in gobjs:
+                        if hasattr( gobj, "_surface" ):
+                            x, y = gobj.GetPosition()
+                            w, h = gobj.GetSize()
+                            Engine.screen.blit( gobj._surface, (x,vh-y-h) )
 
             # ---
             pygame.display.update()
@@ -247,8 +280,8 @@ class Engine():
         xo, yo = pos
         wo, ho = size
         wh = Engine.VLIMIT
-        vx, vy  = Engine.camera.rect.x, Engine.camera.rect.y
-        vw, vh = Engine.camera.rect.w, Engine.camera.rect.h
+        vx, vy  = Engine.camera._rect._x1, Engine.camera._rect._y1
+        vw, vh = Engine.camera._rect._w, Engine.camera._rect._h
         dy = wh - (vy + vh)
         x = xo - vx
         y = wh - (yo + ho) - dy

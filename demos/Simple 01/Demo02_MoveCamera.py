@@ -8,7 +8,7 @@ def MainUpdate( dt ):
     global key_pressed
 
     # abortamos con la tecla Escape
-    if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
+    if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
         Engine.Quit()
 
     # mostramos info
@@ -18,8 +18,8 @@ def MainUpdate( dt ):
     ngobjs = len( Engine.GetGObject( "*") )
     ngobjs = "gObjs: %03d" % ngobjs
 
-    mx, my = Engine.GetMousePos()
-    mb1, mb2, mb3 = Engine.GetMousePressed()
+    mx, my = Engine.GetMousePosition()
+    mb1, mb2, mb3 = Engine.GetMouseButtons()
     minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
     infobar = Engine.GetGObject( "infobar" )
@@ -36,12 +36,12 @@ def MainUpdate( dt ):
 
     # la tecla presionada
     if( key_pressed == -1 ):
-        if( Engine.IsKeyDown( Engine.CONSTANTS.K_RIGHT ) ): key_pressed = Engine.CONSTANTS.K_RIGHT
-        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_LEFT ) ): key_pressed = Engine.CONSTANTS.K_LEFT
-        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_DOWN ) ): key_pressed = Engine.CONSTANTS.K_DOWN
-        elif( Engine.IsKeyDown( Engine.CONSTANTS.K_UP ) ): key_pressed = Engine.CONSTANTS.K_UP
+        if( Engine.KeyDown( Engine.CONSTANTS.K_RIGHT ) ): key_pressed = Engine.CONSTANTS.K_RIGHT
+        elif( Engine.KeyDown( Engine.CONSTANTS.K_LEFT ) ): key_pressed = Engine.CONSTANTS.K_LEFT
+        elif( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): key_pressed = Engine.CONSTANTS.K_DOWN
+        elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): key_pressed = Engine.CONSTANTS.K_UP
     else:
-        if( Engine.IsKeyUp( key_pressed ) ):
+        if( Engine.KeyUp( key_pressed ) ):
             key_pressed = -1
 
     # cambiamos sus coordenadas segun la tecla presionada
@@ -55,7 +55,7 @@ def MainUpdate( dt ):
         y = y + pixels
 
     # posicionamos la camara
-    camera.SetPosition( (x,y) )
+    camera.SetPosition( x, y )
 
 
 def main():
@@ -94,7 +94,7 @@ def main():
     x, y = heroe.GetPosition()
     w, h = heroe.GetSize()
     cw, ch = camera.GetSize()
-    camera.SetPosition( (x+w/2-cw/2,y+h/2-ch/2) )
+    camera.SetPosition( x+w/2-cw/2, y+h/2-ch/2 )
 
     # main loop
     key_pressed = -1

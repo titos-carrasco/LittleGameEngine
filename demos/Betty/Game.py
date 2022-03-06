@@ -53,14 +53,14 @@ class MiJuego():
 
         # agregamos a Betty
         betty = Betty( "Betty" )
-        betty.SetPosition( (32*9, 32*13) )
+        betty.SetPosition( 32*9, 32*13 )
         betty.SetColliders()
         Engine.AddGObject( betty, 1 )
 
         # agregamos 3 zombies
         for i in range(3):
             zombie = Zombie( "Zombie-" + uuid.uuid4().hex )
-            zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
+            zombie.SetPosition( 32 + 32*4 + 32*(i*4), 32*1 )
             zombie.SetColliders()
             Engine.AddGObject( zombie, 1 )
 
@@ -69,12 +69,12 @@ class MiJuego():
         Engine.AddGObjectGUI( infobar )
 
         # agregamos el mensaje de la barra espaciadora
-        pressbar = Canvas( (120,340), (400, 30), "pressbar" )
-        pressbar.DrawText( "Presiona la Barra Espaciadora", (0,0), "cool", (255,255,255) )
-        Engine.AddGObjectGUI( pressbar )
+        self.pressbar = Canvas( (120,340), (400, 30), "pressbar" )
+        self.pressbar.DrawText( "Presiona la Barra Espaciadora", (0,0), "cool", (255,255,255) )
+        Engine.AddGObjectGUI( self.pressbar )
 
         # posicionamos la camara
-        Engine.GetCamera().SetPosition( (0,0) )
+        Engine.GetCamera().SetPosition( 0, 0 )
 
         # agregamos el control
         Engine.SetOnUpdate( self.IntroControl )
@@ -82,7 +82,7 @@ class MiJuego():
     # la barra de info y chequeo de fin del juego
     def _InfoBar( self ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyPressed( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info
@@ -92,8 +92,8 @@ class MiJuego():
         ngobjs = len( Engine.GetGObject( "*") )
         ngobjs = "gObjs: %03d" % ngobjs
 
-        mx, my = Engine.GetMousePos()
-        mb1, mb2, mb3 = Engine.GetMousePressed()
+        mx, my = Engine.GetMousePosition()
+        mb1, mb2, mb3 = Engine.GetMouseButtons()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         infobar = Engine.GetGObject( "infobar" )
@@ -105,11 +105,10 @@ class MiJuego():
         self._InfoBar()
 
         # esperamos que presionen la barra espaciadora
-        if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
+        if( not Engine.KeyDown( Engine.CONSTANTS.K_SPACE ) ): return
 
         # ocultamos mensaje
-        pressbar = Engine.GetGObject( "pressbar" )
-        pressbar.SetVisible( False )
+        self.pressbar.SetPosition( -120,-340 )
 
         # cambiamos el control
         Engine.SetOnUpdate( self.GameControl )
@@ -131,21 +130,19 @@ class MiJuego():
         if( betty.IsAlive() ): return
 
         # activamos el mensaje
-        pressbar = Engine.GetGObject( "pressbar" )
-        if( not pressbar.IsVisible() ):
-            pressbar.SetVisible( True )
+        self.pressbar.SetPosition( 120,340 )
 
         # esperamos por la barra espaciadora para continuar
-        if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
+        if( not Engine.KeyDown( Engine.CONSTANTS.K_SPACE ) ): return
 
         # reinicializamos
-        pressbar.SetVisible( False )
         betty.SetAlive()
-        betty.SetPosition( (32*9, 32*13) )
+        betty.SetPosition( 32*9, 32*13 )
         zombies = Engine.GetGObject( "Zombie-*" )
         for i in range( len(zombies) ):
             zombie = zombies[i]
-            zombie.SetPosition( (32 + 32*4 + 32*(i*4), 32*1) )
+            zombie.SetPosition( 32 + 32*4 + 32*(i*4), 32*1 )
+        self.pressbar.SetPosition( -120, -340 )
 
     # main loop
     def Run( self ):

@@ -2,63 +2,58 @@ class Rectangle():
     def __init__( self, origin, size ):
         w, h = size
         assert w > 0 and h > 0, "'size' invalido"
+        self._w, self._h = size
+        self._x1, self._y1 = origin
+        self._x2, self._y2 = self._x1 + w - 1, self._y1 + h - 1
 
-        self.x, self.y = origin
-        self.w, self.h = size
-
-    def __repl__( self ):
-        return "Rect( ( %f, %f ), ( %f, %f ) )" % ( self.x, self.y, self.w, self.h )
+    def __repr__( self ):
+        return "Rectangle( ( %f, %f ), ( %f, %f ), ( %f, %f ) )" % ( self._x1, self._y1, self._x2, self._y2, self._w, self._h )
 
     def Copy( self ):
-        return Rectangle( ( self.x, self.y ), ( self.w, self.h ) )
+        return Rectangle( ( self._x1, self._y1 ), ( self._w, self._h ) )
 
-    def GetOrigin( self ):
-        return self.x, self.y
+    def GetPoints( self ):
+        return self._x1, self._y1, self._x2, self._y2
 
     def GetSize( self ):
-        return self.w, self.h
+        return self._w, self._h
 
-    def SetOrigin( self, origin ):
-        self.x, self.y = origin
+    def SetOrigin( self, x, y ):
+        self._x1, self._y1 = x, y
+        self._x2, self._y2 = self._x1 + self._w - 1, self._y1 + self._h - 1
 
-    def SetSize( self, size ):
-        w, h = size
+    def SetSize( self, w, h ):
         assert w > 0 and h > 0, "'size' invalido"
-        self.w, self.h = size
+        self._w, self._h = w, h
+        self._x2, self._y2 = self._x1 + self._w - 1, self._y1 + self._h - 1
 
     def KeepInsideRectangle( self, rect ):
-        x, y = self.x, self.y
-        w, h = self.w, self.h
-        rx, ry = rect.x, rect.y
-        rw, rh = rect.w, rect.h
+        if( self._w <= rect._w and self._h <= rect._h ):
+            if( self._x1 < rect._x1 ): self._x1 = rect._x1
+            elif( self._x2 > rect._x2): self._x1 = rect._x2 - self._w + 1
 
-        if( w <= rw and h <= rh ):
-            if( x < rx ): x = rx
-            elif( x + w > rx + rw ): x = rx + rw - w
-            if( y < ry ): y = ry
-            elif( y + h > ry + rh ): y = ry + rh - h
+            if( self._y1 < rect._y1 ): self._y1 = rect._y1
+            elif( self._y2 > rect._y2 ): self._y1 = rect._y2 - self._h + 1
 
-        self.x, self.y =  x, y
+            self._x2, self._y2 = self._x1 + self._w - 1, self._y1 + self._h - 1
 
-    def CollidePoint( self, point ):
-        x, y = self.origin
-        w, h = self.w, self.h
-        px, py = point
-        return px >= x and px < x+w and py >= y and py < y+h
+    def CollidePoint( self, px, py ):
+        return px >= self._x1 and \
+               px <= self._x2 and \
+               py >= self._y1 and \
+               py <= self._y2
 
     def CollideRectangle( self, rect ):
-        x1, y1 = self.x, self.y
-        w1, h1 = self.w, self.h
-        x2, y2 = rect.x, rect.y
-        w2, h2 = rect.w, rect.h
-
-        return not ( x2 >= x1 + w1 or x1 >= x2 + w2 or y2 >= y1 + h1 or y1 >= y2 + h2 )
+        return rect._x1 <= self._x2 and \
+               self._x1 <= rect._x2 and \
+               rect._y1 <= self._y2 and \
+               self._y1 <= rect._y2
 
     def GetCollideRectangle( self, rect ):
-        x1, y1 = self.x, self.y
-        w1, h1 = self.w, self.h
-        x2, y2 = rect.x, rect.y
-        w2, h2 = rect.w, rect.h
+        x1, y1 = self._x1, self._y1
+        w1, h1 = self._w, self._h
+        x2, y2 = rect._x1, rect._y1
+        w2, h2 = rect._w, rect._h
 
         if( x1 > x2 ):
             x = x1

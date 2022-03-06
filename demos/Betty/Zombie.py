@@ -81,22 +81,22 @@ class Zombie( Sprite ):
             elif( c == "L" ): x = x - pixels
             elif( c == "U" ): y = y + pixels
             elif( c == "D" ): y = y - pixels
-            self.SetPosition( (x,y) )
+            self.SetPosition( x, y )
 
-            collisions = Engine.GetCollisions( self.name )
+            collisions = Engine.GetCollisions( self  )
             bloqueos = [ gobj for gobj in collisions if gobj.GetTag() == "muro" or gobj.GetTag() == "zombie" ]
             if( len( bloqueos ) == 0 ):
                 self.dir = c
                 break
             x, y = xori, yori
-            self.SetPosition( (x,y) )
+            self.SetPosition( x, y )
 
         # tunel?
         x, y = self.GetPosition()
         w, h = Engine.GetCamera().GetSize()
         if( x < -16 ): x = w - 16
         elif( x > w - 16 ): x = -16
-        self.SetPosition( (x,y) )
+        self.SetPosition( x, y )
 
         # siguiente imagen de la secuencia
         self.NextShape( dt, 0.100 )

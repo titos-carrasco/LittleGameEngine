@@ -12,7 +12,7 @@ class MiJuego():
         Engine.Init( (800,600), "Vulcano" )
         camera = Engine.GetCamera()
         camera.SetBounds( Rectangle( (0,0), (2560,704) ) )
-        camera.SetPosition( (0,0) )
+        camera.SetPosition( 0, 0 )
 
         # cargamos algunos recursos
         Engine.LoadImage( "fondo", "../images/Platform/Platform.png" )
@@ -26,7 +26,7 @@ class MiJuego():
         Engine.AddGObject( fondo, 0 )
 
         # agregamos la barra de info
-        infobar = Canvas( (0,684), (800,20), "infobar" )
+        infobar = Canvas( (0,580), (800,20), "infobar" )
         Engine.AddGObjectGUI( infobar )
 
         # agregamos el ninja
@@ -35,7 +35,7 @@ class MiJuego():
         Engine.AddGObjectGUI( ninja )
 
         # agregamos el bloque que se mueve vertical
-        bloque = BlockHorizontal( (13*64, 1*64) )
+        bloque = BlockHorizontal( 13*64, 1*64 )
         Engine.AddGObject( bloque, 1 )
 
         # agregamos el mensaje
@@ -61,16 +61,16 @@ class MiJuego():
 
         if( self.camRight ): x = x + pixels
         else: x = x - pixels
-        camera.SetPosition( (x,y) )
+        camera.SetPosition( x, y )
 
         xn, yn = camera.GetPosition()
         if( xn != x ): self.camRight = not self.camRight
 
         # verificamos si se ha presionada la barra espaciadora
-        if( not Engine.IsKeyDown( Engine.CONSTANTS.K_SPACE ) ): return
+        if( not Engine.KeyDown( Engine.CONSTANTS.K_SPACE ) ): return
 
         # reposicionamos la camara
-        camera.SetPosition( (0,0) )
+        camera.SetPosition( 0,0 )
 
     def NinjaUpdate( self, dt ):
         ninja = Engine.GetGObject( "ninja" )
@@ -79,7 +79,7 @@ class MiJuego():
     # barra de info
     def CheckEscape( self ):
         # abortamos con la tecla Escape
-        if( Engine.IsKeyDown( Engine.CONSTANTS.K_ESCAPE ) ):
+        if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
             Engine.Quit()
 
         # mostramos info
@@ -89,13 +89,14 @@ class MiJuego():
         ngobjs = len( Engine.GetGObject( "*") )
         ngobjs = "gObjs: %03d" % ngobjs
 
-        mx, my = Engine.GetMousePos()
-        mb1, mb2, mb3 = Engine.GetMousePressed()
+        mx, my = Engine.GetMousePosition()
+        mb1, mb2, mb3 = Engine.GetMouseButtons()
         minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
 
         infobar = Engine.GetGObject( "infobar" )
         infobar.Fill( (0,0,0,50) )
         infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (120,0), "monospace", (255,255,255) )
+
     # main loop
     def Run( self ):
         Engine.Run( 60 )
