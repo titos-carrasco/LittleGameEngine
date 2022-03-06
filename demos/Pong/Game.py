@@ -63,7 +63,6 @@ class Game():
         Engine.AddGObject( paddle, 1 )
 
         self.paddle_speed = 240
-        self.key_pressed = -1
 
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
@@ -93,16 +92,9 @@ class Game():
         speed = self.paddle_speed*dt
         x, y = user_paddle.GetPosition()
 
-        if( self.key_pressed == -1 ):
-            if( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): self.key_pressed = Engine.CONSTANTS.K_DOWN
-            elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): self.key_pressed = Engine.CONSTANTS.K_UP
-        else:
-            if( Engine.KeyUp( self.key_pressed ) ):
-                self.key_pressed = -1
-
-        if( self.key_pressed == Engine.CONSTANTS.K_UP ):
+        if( Engine.KeyPressed( Engine.CONSTANTS.K_UP ) ):
             user_paddle.SetPosition( x, y+speed, field )
-        elif( self.key_pressed == Engine.CONSTANTS.K_DOWN ):
+        elif( Engine.KeyPressed( Engine.CONSTANTS.K_DOWN ) ):
             user_paddle.SetPosition( x, y-speed , field )
 
         # system paddle
@@ -115,9 +107,9 @@ class Game():
         elif( py + ph/2 > by ): py = py - speed
         system_paddle.SetPosition( px, py, field )
 
-
     # main loop
     def Run( self ):
+        Engine.EnableOnEvent( Engine.E_ON_COLLISION )
         Engine.Run( 60 )
 
 
@@ -149,7 +141,6 @@ class Ball( Canvas ):
             if( gobj.GetTag() == "wall-vertical" ):
                 x, y = 320, 400
         self.SetPosition( x+dx, y+dy )
-
 
 
 # ----

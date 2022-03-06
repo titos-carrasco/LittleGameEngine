@@ -17,6 +17,13 @@ from lge.Rect import rect
 Engine.CONSTANTS
 Engine.VLIMIT
 Engine.GUI_LAYER
+E_ON_DELETE
+E_ON_START
+E_ON_PRE_UPDATE
+E_ON_UPDATE
+E_ON_POST_UPDATE
+E_ON_COLLISION
+E_ON_PRE_RENDER
 ```
 
 ---
@@ -48,6 +55,17 @@ GetFPS()
 ```
 GetRequestedFPS()
 ```
+
+---
+```
+EnableOnEvent( *events )
+```
+
+---
+```
+DisableOnEvent( *events )
+```
+
 
 #### Game Objects
 ```

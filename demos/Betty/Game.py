@@ -146,6 +146,7 @@ class MiJuego():
 
     # main loop
     def Run( self ):
+        Engine.EnableOnEvent( Engine.E_ON_COLLISION )
         Engine.Run( 60 )
 
 

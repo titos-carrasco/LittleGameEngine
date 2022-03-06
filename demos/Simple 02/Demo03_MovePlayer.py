@@ -87,7 +87,6 @@ class MiHeroe( Sprite ):
         super().__init__( ["heroe_right","heroe_left"], (550,346), "Heroe" )
         self.SetShape( "heroe_right", 0 )
         self.heading = 1
-        self.key_pressed = -1
         Engine.AddGObject( self, 1 )
 
     def OnUpdate( self, dt ):
@@ -98,31 +97,21 @@ class MiHeroe( Sprite ):
         # la posiciona actual del heroe
         x, y = self.GetPosition()
 
-        # la tecla presionada
-        if( self.key_pressed == -1 ):
-            if( Engine.KeyDown( Engine.CONSTANTS.K_RIGHT ) ): self.key_pressed = Engine.CONSTANTS.K_RIGHT
-            elif( Engine.KeyDown( Engine.CONSTANTS.K_LEFT ) ): self.key_pressed = Engine.CONSTANTS.K_LEFT
-            elif( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): self.key_pressed = Engine.CONSTANTS.K_DOWN
-            elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): self.key_pressed = Engine.CONSTANTS.K_UP
-        else:
-            if( Engine.KeyUp( self.key_pressed ) ):
-                self.key_pressed = -1
-
         # cambiamos sus coordenadas y orientacion segun la tecla presionada
-        if( self.key_pressed ==  Engine.CONSTANTS.K_RIGHT ):
+        if( Engine.KeyPressed(  Engine.CONSTANTS.K_RIGHT ) ):
             x = x + pixels
             if( self.heading != 1 ):
                 self.SetShape( "heroe_right", 0 )
                 self.heading = 1
-        elif( self.key_pressed ==  Engine.CONSTANTS.K_LEFT ):
+        elif( Engine.KeyPressed( Engine.CONSTANTS.K_LEFT ) ):
             x = x - pixels
             if( self.heading != -1 ):
                 self.SetShape( "heroe_left", 0 )
                 self.heading = -1
-        if( self.key_pressed ==  Engine.CONSTANTS.K_DOWN ):
-            y = y - pixels
-        elif( self.key_pressed ==  Engine.CONSTANTS.K_UP ):
+        if( Engine.KeyPressed(  Engine.CONSTANTS.K_UP ) ):
             y = y + pixels
+        elif( Engine.KeyPressed(  Engine.CONSTANTS.K_DOWN ) ):
+            y = y - pixels
 
         # lo posicionamos asegurando que se encuentre dentro de los limites
         camera = Engine.GetCamera()

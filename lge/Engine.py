@@ -6,9 +6,17 @@ from lge.Rectangle import Rectangle
 
 
 class Engine():
-    CONSTANTS    = pygame.constants
-    VLIMIT       = 0xFFFFFFFF
-    GUI_LAYER    = 0xFFFF
+    CONSTANTS        = pygame.constants
+    VLIMIT           = 0xFFFFFFFF
+    GUI_LAYER        = 0xFFFF
+
+    E_ON_DELETE      = 0x00000001
+    E_ON_START       = 0x00000010
+    E_ON_PRE_UPDATE  = 0x00000100
+    E_ON_UPDATE      = 0x00001000
+    E_ON_POST_UPDATE = 0x00010000
+    E_ON_COLLISION   = 0x00100000
+    E_ON_PRE_RENDER  = 0x01000000
 
     def Init( camSize, title, bgColor=(0,0,0) ):
         Engine.title = title
@@ -30,6 +38,7 @@ class Engine():
         Engine.keys_pressed = []
         Engine.onUpdate = None
         Engine.running = False
+        Engine.on_events_enabled = Engine.E_ON_UPDATE
 
         pygame.init()
         pygame.font.init()
@@ -123,7 +132,7 @@ class Engine():
     def KeyUp( key ):
         return key in [ e.key for e in Engine.events if e.type == pygame.KEYUP ]
 
-    def IsKeyPressed( key ):
+    def KeyPressed( key ):
         return Engine.keys_pressed[ key ]
 
     def GetMousePosition():
@@ -169,6 +178,14 @@ class Engine():
     def Quit():
         Engine.running = False
 
+    def EnableOnEvent( *events ):
+        for e in events:
+            Engine.on_events_enabled |= e
+
+    def DisableOnEvent( *events ):
+        for e in events:
+            Engine.on_events_enabled &= ~e
+
     # main loop
     def Run( fps ):
         Engine.fps = 1.0/fps
@@ -192,7 +209,8 @@ class Engine():
                     Engine.cameraTarget = None, False
                 if( hasattr( gobj, "OnDelete" ) ): ondelete.append( gobj )
             Engine.gObjectsToDel = []
-            for gobj in ondelete: gobj.OnDelete()
+            if( Engine.on_events_enabled & Engine.E_ON_DELETE ):
+                for gobj in ondelete: gobj.OnDelete()
 
             # --- Add Gobj and gobj.OnStart
             reorder = False
@@ -204,7 +222,8 @@ class Engine():
                 Engine.gObjects[gobj._layer].append( gobj )
                 if( hasattr( gobj, "OnStart" ) ): onstart.append( gobj )
             Engine.gObjectsToAdd = []
-            for gobj in onstart: gobj.OnStart()
+            if( Engine.on_events_enabled & Engine.E_ON_START ):
+                for gobj in onstart: gobj.OnStart()
 
             # ---
             if( reorder ):
@@ -213,13 +232,16 @@ class Engine():
             # --
 
             # --- gobj.OnPreUpdate
-            list( gobj.OnPreUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnPreUpdate" ) )
+            if( Engine.on_events_enabled & Engine.E_ON_PRE_UPDATE ):
+                list( gobj.OnPreUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnPreUpdate" ) )
 
             # --- gobj.OnUpdate
-            list( gobj.OnUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnUpdate" ) )
+            if( Engine.on_events_enabled & Engine.E_ON_UPDATE ):
+                list( gobj.OnUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnUpdate" ) )
 
+            if( Engine.on_events_enabled & Engine.E_ON_POST_UPDATE ):
             # --- gobj.OnPostUpdate
-            list( gobj.OnPostUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnPostUpdate" ) )
+                list( gobj.OnPostUpdate( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnPostUpdate" ) )
 
             # --- game.OnUpdate
             if( Engine.onUpdate ): Engine.onUpdate( dt )
@@ -228,20 +250,25 @@ class Engine():
             Engine._CameraFollowTarget()
 
             # --- gobj.OnCollision
-            oncollisions = []
-            for layer, gobjs in Engine.gObjects.items():
-                if( layer == Engine.GUI_LAYER ): continue
-                with_use_colliders = list( ( gobj, gobj.GetRectangle() ) for gobj in gobjs if gobj._use_colliders )
-                with_on_collision = list( ( gobj, rect ) for gobj, rect in with_use_colliders if hasattr( gobj, "OnCollision" ) )
+            if( Engine.on_events_enabled & Engine.E_ON_COLLISION ):
+                oncollisions = []
+                for layer, gobjs in Engine.gObjects.items():
+                    if( layer == Engine.GUI_LAYER ): continue
+                    with_use_colliders = list( ( gobj, gobj.GetRectangle() ) for gobj in gobjs if gobj._use_colliders )
+                    with_on_collision = list( ( gobj, rect ) for gobj, rect in with_use_colliders if hasattr( gobj, "OnCollision" ) )
 
-                for o1, r1 in with_on_collision:
-                    o1_collisions = []
-                    for o2, r2 in with_use_colliders:
-                        if o1 != o2:
-                            if r1.CollideRectangle( r2 ):
-                                o1_collisions.append( ( o2, r2 ) )
-                    oncollisions.append( ( o1, o1_collisions ) )
-            list( gobj.OnCollision( dt, collisions ) for gobj, collisions in oncollisions if collisions )
+                    for o1, r1 in with_on_collision:
+                        o1_collisions = []
+                        for o2, r2 in with_use_colliders:
+                            if o1 != o2:
+                                if r1.CollideRectangle( r2 ):
+                                    o1_collisions.append( ( o2, r2 ) )
+                        oncollisions.append( ( o1, o1_collisions ) )
+                list( gobj.OnCollision( dt, collisions ) for gobj, collisions in oncollisions if collisions )
+
+            # --- gobj.OnPreRender
+            if( Engine.on_events_enabled & Engine.E_ON_PRE_RENDER ):
+                list( gobj.OnPreRender( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnPreRender" ) )
 
             # -- Rendering
             Engine.screen.fill( Engine.bgColor )

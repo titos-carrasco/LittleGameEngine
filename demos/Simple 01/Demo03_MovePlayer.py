@@ -5,8 +5,6 @@ from lge.Rectangle import Rectangle
 
 
 def HeroeUpdate( dt ):
-    global key_pressed
-
     # el heroe
     heroe = Engine.GetGObject( "Heroe" )
 
@@ -17,31 +15,15 @@ def HeroeUpdate( dt ):
     # la posiciona actual del heroe
     x, y = heroe.GetPosition()
 
-    # la tecla presionada
-    if( key_pressed == -1 ):
-        if( Engine.KeyDown( Engine.CONSTANTS.K_RIGHT ) ): key_pressed = Engine.CONSTANTS.K_RIGHT
-        elif( Engine.KeyDown( Engine.CONSTANTS.K_LEFT ) ): key_pressed = Engine.CONSTANTS.K_LEFT
-        elif( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): key_pressed = Engine.CONSTANTS.K_DOWN
-        elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): key_pressed = Engine.CONSTANTS.K_UP
-    else:
-        if( Engine.KeyUp( key_pressed ) ):
-            key_pressed = -1
-
     # cambiamos sus coordenadas y orientacion segun la tecla presionada
-    if( key_pressed ==  Engine.CONSTANTS.K_RIGHT ):
+    if( Engine.KeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
         x = x + pixels
-        if( heroe.heading != 1 ):
-            heroe.SetShape( "heroe_right", 0 )
-            heroe.heading = 1
-    elif( key_pressed ==  Engine.CONSTANTS.K_LEFT ):
+    elif( Engine.KeyPressed( Engine.CONSTANTS.K_LEFT  ) ):
         x = x - pixels
-        if( heroe.heading != -1 ):
-            heroe.SetShape( "heroe_left", 0 )
-            heroe.heading = -1
-    elif( key_pressed ==  Engine.CONSTANTS.K_DOWN ):
-        y = y - pixels
-    elif( key_pressed ==  Engine.CONSTANTS.K_UP ):
+    if( Engine.KeyPressed( Engine.CONSTANTS.K_UP  ) ):
         y = y + pixels
+    elif( Engine.KeyPressed( Engine.CONSTANTS.K_DOWN  ) ):
+        y = y - pixels
 
     # lo posicionamos asegurando que se encuentre dentro de los limites
     camera = Engine.GetCamera()
@@ -71,8 +53,6 @@ def MainUpdate( dt ):
 
 
 def main():
-    global key_pressed
-
     # creamos el juego
     Engine.Init( (640,480), "Move Player" )
     Engine.SetOnUpdate( MainUpdate )
@@ -110,7 +90,6 @@ def main():
     Engine.SetCameraTarget( heroe, True )
 
     # main loop
-    key_pressed = -1
     Engine.Run( 60 )
 
 

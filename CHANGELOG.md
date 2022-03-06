@@ -1,5 +1,10 @@
 # ChangeLog
 
+## @v0.4.1 2022-03-06
+- Agrega método para activar/desactivar eventos en el loop
+- Ordena demos/Benchmark
+- Ajusta demos acorde al cambio en el loop
+
 ## @v0.4.0 2022-03-05
 - Optimizaciones en la clase Rectangle
 - Optimización en el manejo de colisiones

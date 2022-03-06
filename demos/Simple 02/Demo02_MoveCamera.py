@@ -47,8 +47,6 @@ class MiJuego():
         cw, ch = camera.GetSize()
         camera.SetPosition( x+w/2-cw/2, y+h/2-ch/2 )
 
-        self.key_pressed = -1
-
     def MainUpdate( self, dt ):
         # abortamos con la tecla Escape
         if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
@@ -90,25 +88,15 @@ class MiJuego():
         camera = Engine.GetCamera()
         x, y = camera.GetPosition()
 
-        # la tecla presionada
-        if( self.key_pressed == -1 ):
-            if( Engine.KeyDown( Engine.CONSTANTS.K_RIGHT ) ): self.key_pressed = Engine.CONSTANTS.K_RIGHT
-            elif( Engine.KeyDown( Engine.CONSTANTS.K_LEFT ) ): self.key_pressed = Engine.CONSTANTS.K_LEFT
-            elif( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): self.key_pressed = Engine.CONSTANTS.K_DOWN
-            elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): self.key_pressed = Engine.CONSTANTS.K_UP
-        else:
-            if( Engine.KeyUp( self.key_pressed ) ):
-                self.key_pressed = -1
-
         # cambiamos sus coordenadas segun la tecla presionada
-        if( self.key_pressed == Engine.CONSTANTS.K_RIGHT ):
+        if( Engine.KeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
             x = x + pixels
-        elif( self.key_pressed == Engine.CONSTANTS.K_LEFT  ):
+        elif( Engine.KeyPressed( Engine.CONSTANTS.K_LEFT ) ):
             x = x - pixels
-        elif( self.key_pressed == Engine.CONSTANTS.K_DOWN  ):
-            y = y - pixels
-        elif( self.key_pressed == Engine.CONSTANTS.K_UP  ):
+        if( Engine.KeyPressed( Engine.CONSTANTS.K_UP ) ):
             y = y + pixels
+        elif( Engine.KeyPressed( Engine.CONSTANTS.K_DOWN ) ):
+            y = y - pixels
 
         # posicionamos la camara
         camera.SetPosition( x, y )

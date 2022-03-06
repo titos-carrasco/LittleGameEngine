@@ -5,8 +5,6 @@ from lge.Rectangle import Rectangle
 
 
 def MainUpdate( dt ):
-    global key_pressed
-
     # abortamos con la tecla Escape
     if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
         Engine.Quit()
@@ -34,33 +32,21 @@ def MainUpdate( dt ):
     camera = Engine.GetCamera()
     x, y = camera.GetPosition()
 
-    # la tecla presionada
-    if( key_pressed == -1 ):
-        if( Engine.KeyDown( Engine.CONSTANTS.K_RIGHT ) ): key_pressed = Engine.CONSTANTS.K_RIGHT
-        elif( Engine.KeyDown( Engine.CONSTANTS.K_LEFT ) ): key_pressed = Engine.CONSTANTS.K_LEFT
-        elif( Engine.KeyDown( Engine.CONSTANTS.K_DOWN ) ): key_pressed = Engine.CONSTANTS.K_DOWN
-        elif( Engine.KeyDown( Engine.CONSTANTS.K_UP ) ): key_pressed = Engine.CONSTANTS.K_UP
-    else:
-        if( Engine.KeyUp( key_pressed ) ):
-            key_pressed = -1
-
     # cambiamos sus coordenadas segun la tecla presionada
-    if( key_pressed == Engine.CONSTANTS.K_RIGHT ):
+    if( Engine.KeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
         x = x + pixels
-    elif( key_pressed == Engine.CONSTANTS.K_LEFT  ):
+    elif( Engine.KeyPressed( Engine.CONSTANTS.K_LEFT  ) ):
         x = x - pixels
-    elif( key_pressed == Engine.CONSTANTS.K_DOWN  ):
-        y = y - pixels
-    elif( key_pressed == Engine.CONSTANTS.K_UP  ):
+    if( Engine.KeyPressed( Engine.CONSTANTS.K_UP  ) ):
         y = y + pixels
+    elif( Engine.KeyPressed( Engine.CONSTANTS.K_DOWN  ) ):
+        y = y - pixels
 
     # posicionamos la camara
     camera.SetPosition( x, y )
 
 
 def main():
-    global key_pressed
-
     # creamos el juego
     Engine.Init( (640,480), "Move Camera" )
     Engine.SetOnUpdate( MainUpdate )
@@ -97,7 +83,6 @@ def main():
     camera.SetPosition( x+w/2-cw/2, y+h/2-ch/2 )
 
     # main loop
-    key_pressed = -1
     Engine.Run( 60 )
 
 
