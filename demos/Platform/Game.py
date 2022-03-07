@@ -44,7 +44,7 @@ class MiJuego():
         Engine.AddGObjectGUI( pressbar )
 
         # agregamos el control del juego
-        self.camRight = True
+        self.direction = 1
         Engine.SetOnUpdate( self.MainUpdate )
 
     def MainUpdate( self, dt ):
@@ -59,17 +59,19 @@ class MiJuego():
         camera = Engine.GetCamera()
         x, y = camera.GetPosition()
 
-        if( self.camRight ): x = x + pixels
-        else: x = x - pixels
-        camera.SetPosition( x, y )
+        if( self.direction == 1 and x > 1700 ):
+            self.direction = -1
+        elif( self.direction == -1 and x <= 0 ):
+            self.direction = 1
 
-        xn, yn = camera.GetPosition()
-        if( xn != x ): self.camRight = not self.camRight
+        x = x + pixels*self.direction
+        camera.SetPosition( x, y )
 
         # verificamos si se ha presionada la barra espaciadora
         if( not Engine.KeyDown( Engine.CONSTANTS.K_SPACE ) ): return
 
         # reposicionamos la camara
+        self.direction = 1
         camera.SetPosition( 0,0 )
 
     def NinjaUpdate( self, dt ):

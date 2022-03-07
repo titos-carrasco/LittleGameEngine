@@ -122,7 +122,7 @@ class Engine():
             y = y + h/2
 
         cw, ch = Engine.camera.GetSize()
-        Engine.camera.SetPosition( x-cw/2, y-ch/2 )
+        Engine.camera.SetPosition( int(x-cw/2), int(y-ch/2) )
 
 
     # events
@@ -246,9 +246,6 @@ class Engine():
             # --- game.OnUpdate
             if( Engine.onUpdate ): Engine.onUpdate( dt )
 
-            # --- Camera Tracking
-            Engine._CameraFollowTarget()
-
             # --- gobj.OnCollision
             if( Engine.on_events_enabled & Engine.E_ON_COLLISION ):
                 oncollisions = []
@@ -269,6 +266,9 @@ class Engine():
             # --- gobj.OnPreRender
             if( Engine.on_events_enabled & Engine.E_ON_PRE_RENDER ):
                 list( gobj.OnPreRender( dt ) for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnPreRender" ) )
+
+            # --- Camera Tracking
+            Engine._CameraFollowTarget()
 
             # -- Rendering
             Engine.screen.fill( Engine.bgColor )

@@ -1,5 +1,11 @@
 # ChangeLog
 
+## @v0.4.1 2022-03-07
+- Ajusta todas las posiciones y tamaños a int()
+- Modifica Engine para que el target de la cámara se ajuste después de todos los eventos y justo antes del rendering
+- Agrega plantilla base para generar juegso tipo plataforma
+- Cambia todos los archivos de CRLF a LF
+
 ## @v0.4.1 2022-03-06
 - Agrega método para activar/desactivar eventos en el loop
 - Ordena demos/Benchmark

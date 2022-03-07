@@ -2,8 +2,8 @@ class Rectangle():
     def __init__( self, origin, size ):
         w, h = size
         assert w > 0 and h > 0, "'size' invalido"
-        self._w, self._h = size
-        self._x1, self._y1 = origin
+        self._w, self._h = int(size[0]), int(size[1])
+        self._x1, self._y1 = int(origin[0]), int(origin[1])
         self._x2, self._y2 = self._x1 + w - 1, self._y1 + h - 1
 
     def __repr__( self ):
@@ -19,12 +19,12 @@ class Rectangle():
         return self._w, self._h
 
     def SetOrigin( self, x, y ):
-        self._x1, self._y1 = x, y
+        self._x1, self._y1 = int(x), int(y)
         self._x2, self._y2 = self._x1 + self._w - 1, self._y1 + self._h - 1
 
     def SetSize( self, w, h ):
         assert w > 0 and h > 0, "'size' invalido"
-        self._w, self._h = w, h
+        self._w, self._h = int(w), int(h)
         self._x2, self._y2 = self._x1 + self._w - 1, self._y1 + self._h - 1
 
     def KeepInsideRectangle( self, rect ):
