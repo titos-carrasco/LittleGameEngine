@@ -17,6 +17,7 @@ class Engine():
     E_ON_POST_UPDATE = 0x00010000
     E_ON_COLLISION   = 0x00100000
     E_ON_PRE_RENDER  = 0x01000000
+    E_ON_QUIT        = 0x01000000
 
     def Init( camSize, title, bgColor=(0,0,0) ):
         Engine.title = title
@@ -298,6 +299,10 @@ class Engine():
 
             # ---
             pygame.display.update()
+
+        # --- gobj.OnPreRender
+        if( Engine.on_events_enabled & Engine.E_ON_QUIT):
+            list( gobj.OnQuit() for layer, gobjs in Engine.gObjects.items() for gobj in gobjs if hasattr( gobj, "OnQuit" ) )
 
         # eso es todo
         pygame.quit()

@@ -1,6 +1,12 @@
 # ChangeLog
 
-## @v0.4.1 2022-03-07
+## 2022-03-08
+- Agrega eventos OnQuit() a ser ejecutados justo antes de pygame.quit()
+- En Canvas elimina método DrawImage() y agrega DrawSurface()
+- Agrega demo para mostrar imágenes capturadas con opencv dentro de un Canvas
+
+## @v0.4.2 2022-03-07
+- Modifica orde de invocación de los OnCollision()
 - Ajusta todas las posiciones y tamaños a int()
 - Modifica Engine para que el target de la cámara se ajuste después de todos los eventos y justo antes del rendering
 - Agrega plantilla base para generar juegso tipo plataforma

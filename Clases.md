@@ -337,7 +337,7 @@ canvas.DrawRectangle( position, size, color, thickness=False  )
 
 ---
 ```
-canvas.DrawImage( position, image_id )
+canvas.DrawSurface( position, surface )
 ```
 
 

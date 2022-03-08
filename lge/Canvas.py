@@ -41,11 +41,7 @@ class Canvas( GameObject ):
         y = self._rect.GetSize()[1] - h - y
         pygame.draw.rect( self._surface, color, pygame.Rect( (x,y), (w,h) ), thickness )
 
-    def DrawImage( self, position, image_id ):
+    def DrawSurface( self, position, surface ):
         x, y = position
         w, h = self.GetSize()
-        surface = Engine.GetImages( image_id )[0]
         self._surface.blit( surface, (x, h - surface.get_height() - y) )
-
-    #def DrawLines( self, lines, fgColor, bgColor=None ):
-    #    pass
