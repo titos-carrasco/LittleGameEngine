@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 2022-03-08
+## @v0.4.3 2022-03-08
 - Agrega eventos OnQuit() a ser ejecutados justo antes de pygame.quit()
 - En Canvas elimina método DrawImage() y agrega DrawSurface()
 - Agrega demo para mostrar imágenes capturadas con opencv dentro de un Canvas
