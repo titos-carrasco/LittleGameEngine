@@ -1,90 +1,98 @@
-from lge.Engine import Engine
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
 from lge.Rectangle import Rectangle
 
 
-def MainUpdate( dt ):
+def main():
+    global lge
+
+    # creamos el juego
+    win_size = (640, 480)
+    lge = LittleGameEngine(win_size, "Move Camera", 0xFFFF00)
+    lge.ShowColliders((255, 0, 0))
+    lge.SetOnMainUpdate(MainUpdate)
+
+    # cargamos los recursos que usaremos
+    resource_dir = "../resources"
+
+    lge.LoadImage("fondo", resource_dir + "/images/Backgrounds/FreeTileset/Fondo.png")
+    lge.LoadImage("heroe", resource_dir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+    lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
+    lge.LoadSound("fondo", resource_dir + "/sounds/happy-and-sad.wav")
+
+    # activamos la musica de fondo
+    lge.PlaySound("fondo", loop=-1)
+
+    # agregamos el fondo
+    fondo = Sprite("fondo", (0, 0), "fondo")
+    lge.AddGObject(fondo, 0)
+
+    # agregamos la barra de info
+    infobar = Canvas((0, 460), (640, 20), "infobar")
+    lge.AddGObjectGUI(infobar)
+
+    # agregamos al heroe
+    heroe = Sprite("heroe", (550, 346), "Heroe")
+    heroe.UseColliders(True)
+    lge.AddGObject(heroe, 1)
+
+    # configuramos la camara
+    lge.SetCameraBounds(Rectangle((0, 0), (1920, 1056)))
+
+    # posicionamos la camara
+    x, y = heroe.GetPosition()
+    w, h = heroe.GetSize()
+    cw, ch = lge.GetCameraSize()
+    lge.SetCameraPosition(x + w / 2 - cw / 2, y + h / 2 - ch / 2)
+
+    # main loop
+    lge.Run(60)
+
+
+def MainUpdate(dt):
+    global lge
+
     # abortamos con la tecla Escape
-    if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
-        Engine.Quit()
+    if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+        lge.Quit()
 
     # mostramos info
-    fps = Engine.GetFPS()
+    fps = lge.GetFPS()
     fps = "FPS: %07.2f" % fps
 
-    ngobjs = len( Engine.GetGObject( "*") )
-    ngobjs = "gObjs: %03d" % ngobjs
+    mx, my = lge.GetMousePosition()
+    mb1, mb2, mb3 = lge.GetMouseButtons()
 
-    mx, my = Engine.GetMousePosition()
-    mb1, mb2, mb3 = Engine.GetMouseButtons()
-    minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
-
-    infobar = Engine.GetGObject( "infobar" )
-    infobar.Fill( (0,0,0,20) )
-    infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (50,0), "monospace", (0,0,0) )
+    info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
+        lge.GetFPS(),
+        lge.GetCountGObjects(), mx, my,
+        mb1, mb2, mb3
+    )
+    infobar = lge.GetGObject("infobar")
+    infobar.Fill((20, 20, 20, 10))
+    infobar.DrawText(info, (50, 0), "monospace.16", (0, 0, 0))
 
     # velocity = pixeles por segundo
     velocity = 240
     pixels = velocity*dt
 
     # la posiciona actual de la camara
-    camera = Engine.GetCamera()
-    x, y = camera.GetPosition()
+    x, y = lge.GetCameraPosition()
 
     # cambiamos sus coordenadas segun la tecla presionada
-    if( Engine.KeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
+    if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
         x = x + pixels
-    elif( Engine.KeyPressed( Engine.CONSTANTS.K_LEFT  ) ):
+    elif(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
         x = x - pixels
-    if( Engine.KeyPressed( Engine.CONSTANTS.K_UP  ) ):
+    if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_UP)):
         y = y + pixels
-    elif( Engine.KeyPressed( Engine.CONSTANTS.K_DOWN  ) ):
+    elif(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
         y = y - pixels
 
     # posicionamos la camara
-    camera.SetPosition( x, y )
+    lge.SetCameraPosition(x, y)
 
 
-def main():
-    # creamos el juego
-    Engine.Init( (640,480), "Move Camera" )
-    Engine.SetOnUpdate( MainUpdate )
-
-    # activamos la musica de fondo
-    Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-    Engine.PlaySound( "fondo", loop=-1 )
-
-    # cargamos los recursos que usaremos
-    Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-    Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png", 0.16 )
-    Engine.LoadTTFFont( "monospace", 16, "../fonts/FreeMono.ttf" )
-
-    # agregamos el fondo
-    fondo = Sprite( "fondo", (0,0) )
-    Engine.AddGObject( fondo, 0 )
-
-    # agregamos un Sprite
-    heroe = Sprite( "heroe", (550,346), "Heroe" )
-    Engine.AddGObject( heroe, 1 )
-
-    # agregamos la barra de info
-    infobar = Canvas( (0,460), (640,20), "infobar" )
-    Engine.AddGObjectGUI( infobar )
-
-    # configuramos la camara
-    camera = Engine.GetCamera()
-    camera.SetBounds( Rectangle( (0,0), (1920,1056) ) )
-
-    # posicionamos la camara
-    x, y = heroe.GetPosition()
-    w, h = heroe.GetSize()
-    cw, ch = camera.GetSize()
-    camera.SetPosition( x+w/2-cw/2, y+h/2-ch/2 )
-
-    # main loop
-    Engine.Run( 60 )
-
-
-#--- show time
+# --- show time
 main()

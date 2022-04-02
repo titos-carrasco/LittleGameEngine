@@ -1,47 +1,48 @@
 import pygame
-from lge.Engine import Engine
+from lge.LittleGameEngine import LittleGameEngine
 from lge.GameObject import GameObject
 
-class Canvas( GameObject ):
-    def __init__( self, position, size, name=None ):
-        super().__init__( position, size, name )
-        self._surface = pygame.Surface( size, pygame.SRCALPHA )
 
-    def SetSize( self, w, h ):
-        pass
+class Canvas(GameObject):
+    def __init__(self, position, size, name=None):
+        super().__init__(position, size, name)
+        self.lge = LittleGameEngine.GetLGE()
+        width, height = size
+        self.surface = self.lge.CreateTranslucentImage(width, height)
 
-    def Fill( self, bgColor ):
-        self._surface.fill( bgColor )
+    def Fill(self, color):
+        self.surface.fill(color)
 
-    def DrawText( self, text, position, fontName, color ):
+    def DrawText(self, text, position, fname, fcolor):
         x, y = position
-        s  = Engine.fonts[fontName].render( text, True, color )
-        self._surface.blit( s, ( x, self._rect.GetSize()[1] - s.get_height() - y ) )
 
-    def DrawPoint( self, position, color ):
-        x, y = position
-        y = self._rect.GetSize()[1] - y
-        pygame.draw.circle( self._surface, color, ( x, y ), 0, 0 )
+        s = self.lge.fonts[fname].render(text, True, fcolor)
+        self.surface.blit(s, (x, self.rect.height - s.get_height() - y))
 
-    def DrawCircle( self, position, radius, color, thickness=False ):
+    def DrawPoint(self, position, color):
         x, y = position
-        if( radius <= 0 ): radius = 1
+        y = self.rect.height - y
+
+        pygame.draw.circle(self.surface, color, (x, y), 0, 0)
+
+    def DrawCircle(self, position, radius, color, thickness=False):
+        x, y = position
+        y = self.rect.height - y
         thickness = 1 if thickness else 0
 
-        y = self._rect.GetSize()[1] - y
-        pygame.draw.circle( self._surface, color, ( x, y ), radius, thickness )
+        pygame.draw.circle(self._surface, color, (x, y), radius, thickness)
 
-    def DrawRectangle( self, position, size, color, thickness=False ):
+    def DrawRectangle(self, position, size, color, thickness=False):
         x, y = position
         w, h = size
-        if( w <= 0 ): w = 1
-        if( h <= 0 ): h = 1
+        y = self.rect.height - h - y
         thickness = 1 if thickness else 0
 
-        y = self._rect.GetSize()[1] - h - y
-        pygame.draw.rect( self._surface, color, pygame.Rect( (x,y), (w,h) ), thickness )
+        pygame.draw.rect(self.surface, color, pygame.Rect((x, y), (w, h)), thickness)
 
-    def DrawSurface( self, position, surface ):
+    def DrawSurface(self, position, surface):
         x, y = position
-        w, h = self.GetSize()
-        self._surface.blit( surface, (x, h - surface.get_height() - y) )
+        w, h = surface.get_size()
+        y = self.rect.height - h - y
+
+        self._surface.blit(surface, (x, y))

@@ -1,46 +1,50 @@
 from lge.GameObject import GameObject
-from lge.Engine import Engine
+from lge.LittleGameEngine import LittleGameEngine
 
 
-class Sprite( GameObject ):
-    def __init__( self, inames, position, name=None ):
-        super().__init__( position, ( 1, 1 ), name )
+class Sprite(GameObject):
+    def __init__(self, inames, position, name=None):
+        super().__init__(position, (1, 1), name)
 
-        self._elapsed= 0
-        self._surfaces = {}
-
-        if( not isinstance( inames, list ) ): inames = [ inames ]
+        self.surfaces = {}
+        if(not isinstance(inames, list)):
+            inames = [inames]
         for iname in inames:
-            self._surfaces[iname] = Engine.GetImages( iname )
+            self.surfaces[iname] = LittleGameEngine.GetLGE().GetImages(iname)
 
-        iname = list( self._surfaces.keys() )[0]
-        self._shape = [ iname, 0 ]
-        self._surface = self._surfaces[iname][0]
-        size = self._surface.get_rect().size
-        self._rect.SetSize( size[0], size[1] )
+        self.iname = list(self.surfaces.keys())[0]
+        self.idx = 0
+        self.elapsed = 0
 
-    def SetSize( self, w, h ):
-        pass
+        self.surface = self.surfaces[iname][0]
+        width, height = self.surface.get_rect().size
+        self.rect.SetSize(width, height)
 
-    def GetCurrentShape( self ):
-        iname, idx = self._shape
-        return iname, idx
+    def GetCurrentIName(self):
+        return self.iname
 
-    def NextShape( self, dt, segs=0 ):
-        self._elapsed= self._elapsed+ dt
-        if( self._elapsed< segs ): return
-        self._elapsed= 0
-        iname, idx = self._shape
-        idx = idx + 1
-        if( idx >= len( self._surfaces[iname] ) ): idx = 0
-        self._shape = iname, idx
-        self._surface = self._surfaces[iname][idx]
-        size = self._surface.get_rect().size
-        self._rect.SetSize( size[0], size[1] )
+    def GetCurrentIdx(self):
+        return self.idx
 
-    def SetShape( self, iname, idx ):
-        self._elapsed= 0
-        self._shape = iname, idx
-        self._surface = self._surfaces[iname][idx]
-        size = self._surface.get_rect().size
-        self._rect.SetSize( size[0], size[1] )
+    def NextShape(self, dt, delay=0):
+        self.elapsed = self.elapsed + dt
+        if(self.elapsed < delay):
+            return
+
+        self.elapsed = 0
+        self.idx = self.idx + 1
+        if(self.idx >= len(self.surfaces[self.iname])):
+            self.idx = 0
+
+        self.surface = self.surfaces[self.iname][self.idx]
+        width, height = self.surface.get_rect().size
+        self.rect.SetSize(width, height)
+
+    def SetShape(self, iname, idx):
+        self.iname = iname
+        if(idx >= len(self.surfaces[iname])):
+            idx = 0
+        self.idx = 0
+        self.surface = self.surfaces[iname][idx]
+        width, height = self.surface.get_rect().size
+        self.rect.SetSize(width, height)

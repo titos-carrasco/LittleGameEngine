@@ -1,30 +1,24 @@
-from lge.Rectangle import Rectangle
+from lge.GameObject import GameObject
 
 
-class Camera():
-    def __init__( self, position, size ):
-        self._rect = Rectangle( position, size )
-        self._bounds = None
+class Camera(GameObject):
+    def __init__(self, position, size):
+        super().__init__(position, size, "__LGE_CAMERA__")
+        self.target = None
+        self.target_center = True
 
-    def GetRectangle( self ):
-        return self._rect.Copy()
+    def FollowTarget(self):
+        # nadie a quien seguir
+        if(self.target == None):
+            return
 
-    def GetPosition( self ):
-        x1, y1, x2, y2 = self._rect.GetPoints()
-        return x1, y1
+        # la posicion del que seguimos
+        x = self.target.rect.x
+        y = self.target.rect.y
 
-    def GetSize( self ):
-        return self._rect.GetSize()
+        # el centro de la camara en el centro del gobj
+        if (self.target_center):
+            x = x + self.target.rect.width / 2
+            y = y + self.target.rect.height / 2
 
-    def GetBounds( self ):
-        if( self._bounds  ): return self._bounds.Copy()
-        else: return None
-
-    def SetPosition( self, x, y ):
-        self._rect.SetOrigin( x, y )
-        if( self._bounds ):
-            self._rect.KeepInsideRectangle( self._bounds )
-
-    def SetBounds( self, bounds=None) :
-        if( bounds ): self._bounds = bounds.Copy()
-        else: self._bounds = None
+        self.SetPosition(x - self.rect.width / 2, y - self.rect.height / 2)

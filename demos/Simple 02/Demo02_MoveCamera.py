@@ -5,80 +5,80 @@ from lge.Rectangle import Rectangle
 
 
 class MiJuego():
-    def __init__( self ):
+    def __init__(self):
         # creamos el juego
-        Engine.Init( (640,480), "Move Camera" )
-        Engine.SetOnUpdate( self.MainUpdate )
+        Engine.Init((640, 480), "Move Camera")
+        Engine.SetOnUpdate(self.MainUpdate)
 
-        # activamos la musica de fondo
-        Engine.LoadSound( "fondo", "../sounds/happy-and-sad.wav" )
-        Engine.SetSoundVolume( "fondo", 0.5 )
-        Engine.PlaySound( "fondo", loop=-1 )
+        # activamos la musica de fondo550, 346
+        Engine.LoadSound("fondo", "../sounds/happy-and-sad.wav")
+        Engine.SetSoundVolume("fondo", 0.5)
+        Engine.PlaySound("fondo", loop=-1)
 
         # cargamos los recursos que usaremos
-        Engine.LoadImage( "fondo", "../images/Backgrounds/FreeTileset/Fondo.png" )
-        Engine.LoadImage( "heroe", "../images/Swordsman/Idle/Idle_000.png", 0.16 )
-        Engine.LoadImage( "mute", "../images/icons/sound-*.png" )
-        Engine.LoadTTFFont( "monospace", 16, "../fonts/FreeMono.ttf" )
+        Engine.LoadImage("fondo", "../images/Backgrounds/FreeTileset/Fondo.png")
+        Engine.LoadImage("heroe", "../images/Swordsman/Idle/Idle_000.png", 0.16)
+        Engine.LoadImage("mute", "../images/icons/sound-*.png")
+        Engine.LoadTTFFont("monospace", 16, "../fonts/FreeMono.ttf")
 
         # agregamos el fondo
-        fondo = Sprite( "fondo", (0,0) )
-        Engine.AddGObject( fondo, 0 )
+        fondo = Sprite("fondo", (0, 0))
+        Engine.AddGObject(fondo, 0)
 
         # agregamos un Sprite
-        heroe = Sprite( "heroe", (550,346), "Heroe" )
-        Engine.AddGObject( heroe, 1 )
+        heroe = Sprite("heroe", (550, 346), "Heroe")
+        Engine.AddGObject(heroe, 1)
 
         # agregamos la barra de info
-        infobar = Canvas( (0,460), (640,20), "infobar" )
-        Engine.AddGObjectGUI( infobar )
+        infobar = Canvas((0, 460), (640, 20), "infobar")
+        Engine.AddGObjectGUI(infobar)
 
-        mute = Sprite( "mute", (8,463), "mute" )
-        mute.SetShape( "mute", 1 )
-        Engine.AddGObjectGUI( mute )
+        mute = Sprite("mute", (8, 463), "mute")
+        mute.SetShape("mute", 1)
+        Engine.AddGObjectGUI(mute)
 
         # configuramos la camara
         camera = Engine.GetCamera()
-        camera.SetBounds( Rectangle( (0,0), (1920,1056) ) )
+        camera.SetBounds(Rectangle((0, 0), (1920, 1056)))
 
         # posicionamos la camara
         x, y = heroe.GetPosition()
         w, h = heroe.GetSize()
         cw, ch = camera.GetSize()
-        camera.SetPosition( x+w/2-cw/2, y+h/2-ch/2 )
+        camera.SetPosition(x+w/2-cw/2, y+h/2-ch/2)
 
-    def MainUpdate( self, dt ):
+    def MainUpdate(self, dt):
         # abortamos con la tecla Escape
-        if( Engine.KeyUp( Engine.CONSTANTS.K_ESCAPE ) ):
+        if(Engine.KeyUp(Engine.CONSTANTS.K_ESCAPE)):
             Engine.Quit()
 
         # mostramos info
         fps = Engine.GetFPS()
         fps = "FPS: %07.2f" % fps
 
-        ngobjs = len( Engine.GetGObject( "*") )
+        ngobjs = len(Engine.GetGObject("*"))
         ngobjs = "gObjs: %03d" % ngobjs
 
         mx, my = Engine.GetMousePosition()
         mb1, mb2, mb3 = Engine.GetMouseButtons()
-        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % ( mx, my, mb1, mb2, mb3 )
+        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % (mx, my, mb1, mb2, mb3)
 
-        infobar = Engine.GetGObject( "infobar" )
-        infobar.Fill( (0,0,0,20) )
-        infobar.DrawText( fps + " - " + ngobjs + " - " + minfo, (70,0), "monospace", (0,0,0) )
+        infobar = Engine.GetGObject("infobar")
+        infobar.Fill((0, 0, 0, 20))
+        infobar.DrawText(fps + " - " + ngobjs + " - " + minfo, (70, 0), "monospace", (0, 0, 0))
 
-        mp = Engine.GetMousePressed( 1 )
-        if( mp ):
+        mp = Engine.GetMousePressed(1)
+        if(mp):
             mx, my = mp
 
-            mute = Engine.GetGObject( "mute")
+            mute = Engine.GetGObject("mute")
             iname, idx = mute.GetCurrentShape()
-            if( idx ):
-                Engine.SetSoundVolume( "fondo", 0 )
-                mute.SetShape( iname, 0 )
+            if(idx):
+                Engine.SetSoundVolume("fondo", 0)
+                mute.SetShape(iname, 0)
             else:
-                Engine.SetSoundVolume( "fondo", 0.5 )
-                mute.SetShape( iname, 1 )
+                Engine.SetSoundVolume("fondo", 0.5)
+                mute.SetShape(iname, 1)
 
         # velocity = pixeles por segundo
         velocity = 240
@@ -89,23 +89,23 @@ class MiJuego():
         x, y = camera.GetPosition()
 
         # cambiamos sus coordenadas segun la tecla presionada
-        if( Engine.KeyPressed( Engine.CONSTANTS.K_RIGHT ) ):
+        if(Engine.KeyPressed(Engine.CONSTANTS.K_RIGHT)):
             x = x + pixels
-        elif( Engine.KeyPressed( Engine.CONSTANTS.K_LEFT ) ):
+        elif(Engine.KeyPressed(Engine.CONSTANTS.K_LEFT)):
             x = x - pixels
-        if( Engine.KeyPressed( Engine.CONSTANTS.K_UP ) ):
+        if(Engine.KeyPressed(Engine.CONSTANTS.K_UP)):
             y = y + pixels
-        elif( Engine.KeyPressed( Engine.CONSTANTS.K_DOWN ) ):
+        elif(Engine.KeyPressed(Engine.CONSTANTS.K_DOWN)):
             y = y - pixels
 
         # posicionamos la camara
-        camera.SetPosition( x, y )
+        camera.SetPosition(x, y)
 
     # main loop
-    def Run( self ):
-        Engine.Run( 60 )
+    def Run(self):
+        Engine.Run(60)
 
 
-#--- show time
+# --- show time
 game = MiJuego()
 game.Run()
