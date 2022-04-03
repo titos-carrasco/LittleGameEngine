@@ -5,11 +5,9 @@ from lge.Rectangle import Rectangle
 
 
 def main():
-    global lge
-
     # creamos el juego
     win_size = (640, 480)
-    lge = LittleGameEngine(win_size, "Animated Player", 0xFFFF00)
+    lge = LittleGameEngine(win_size, "Animated Player", (255, 255, 0))
     lge.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
     lge.SetOnMainUpdate(MainUpdate)
 
@@ -25,10 +23,10 @@ def main():
     lge.LoadSound("fondo", resource_dir + "/sounds/happy-and-sad.wav")
 
     # activamos la musica de fondo
-    lge.PlaySound("fondo", loop=-1)
+    lge.PlaySound("fondo", True, 50)
 
     # agregamos el fondo
-    fondo = Sprite("fondo", (0, 0), "fondo")
+    fondo = Sprite("fondo", (0, 0))
     lge.AddGObject(fondo, 0)
 
     # agregamos la barra de info
@@ -38,8 +36,7 @@ def main():
     # agregamos al heroe
     heroe = Sprite(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 346), "Heroe")
     heroe.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-    heroe.SetShape("heroe_idle_right", 0)
-    heroe.heading = 1
+    heroe.SetShape("heroe_idle_right")
     heroe.SetBounds(Rectangle((0, 0), (1920, 1056)))
     heroe.UseColliders(True)
     heroe.OnUpdate = HeroeUpdate
@@ -50,14 +47,15 @@ def main():
     lge.SetCameraBounds(Rectangle((0, 0), (1920, 1056)))
 
     # establecemos que la camara siga al heroe
-    lge.SetCameraTarget(heroe, True)
+    lge.SetCameraTarget(heroe, False)
 
     # main loop
     lge.Run(60)
 
 
 def MainUpdate(dt):
-    global lge
+    # acceso al motor de juegos
+    lge = LittleGameEngine.GetLGE()
 
     # abortamos con la tecla Escape
     if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
@@ -81,7 +79,8 @@ def MainUpdate(dt):
 
 
 def HeroeUpdate(dt):
-    global lge
+    # acceso al motor de juegos
+    lge = LittleGameEngine.GetLGE()
 
     # el heroe
     heroe = lge.GetGObject("Heroe")
@@ -89,6 +88,8 @@ def HeroeUpdate(dt):
     # velocity = pixeles por segundo
     velocity = 240
     pixels = velocity * dt
+    if(pixels < 1):
+        pixels = 1
 
     # la posiciona actual del heroe
     x, y = heroe.GetPosition()
@@ -97,20 +98,20 @@ def HeroeUpdate(dt):
     if (lge.KeyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
         x = x + pixels
         if (heroe.state != 2):
-            heroe.SetShape("heroe_run_right", 0)
+            heroe.SetShape("heroe_run_right")
             heroe.state = 2
     elif (lge.KeyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
-        x = (int)(x - pixels)
+        x = x - pixels
         if (heroe.state != -2):
-            heroe.SetShape("heroe_run_left", 0)
+            heroe.SetShape("heroe_run_left")
             heroe.state = -2
     elif (heroe.state == 2):
         if (heroe.state != 1):
-            heroe.SetShape("heroe_idle_right", 0)
+            heroe.SetShape("heroe_idle_right")
             heroe.state = 1
     elif (heroe.state == -2):
         if (heroe.state != -1):
-            heroe.SetShape("heroe_idle_left", 0)
+            heroe.SetShape("heroe_idle_left")
             heroe.state = -1
 
     if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_UP)):

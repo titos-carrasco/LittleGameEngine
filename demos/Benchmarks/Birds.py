@@ -1,83 +1,92 @@
+import cProfile
 import random
-from lge.Engine import Engine
+
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
+from lge.Rectangle import Rectangle
 
 
-class Test():
+class Birds():
     def __init__(self):
         # creamos el juego
-        Engine.Init((800, 440), "The World")
-        Engine.SetOnUpdate(self.MainUpdate)
+        win_size = (800, 440)
 
-        # activamos la musica de fondo
-        Engine.LoadSound("fondo", "../sounds/happy-and-sad.wav")
-        Engine.PlaySound("fondo", loop=-1)
+        self.lge = LittleGameEngine(win_size, "Birds", (255, 255, 0))
+        self.lge.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.lge.SetOnMainUpdate(self.MainUpdate)
+        self.lge.ShowColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
-        Engine.LoadImage("fondo", "../images/Backgrounds/FreeTileset/Fondo.png", (800, 440))
-        Engine.LoadImage("heroe", "../images/Swordsman/Idle/Idle_00*.png", 0.08)
-        Engine.LoadImage("bird", "../images/BlueBird/frame-*.png", 0.04)
-        Engine.LoadTTFFont("monospace", 20, "../fonts/FreeMono.ttf")
+        resource_dir = "../resources"
+
+        self.lge.LoadImage("fondo", resource_dir + "/images/Backgrounds/FreeTileset/Fondo.png", win_size)
+        self.lge.LoadImage("heroe", resource_dir + "/images/Swordsman/Idle/Idle_00*.png", 0.08)
+        self.lge.LoadImage("bird", resource_dir + "/images/BlueBird/frame-*.png", 0.04)
+        self.lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
-        Engine.AddGObject(fondo, 0)
+        self.lge.AddGObject(fondo, 0)
 
         # agregamos la barra de info
         infobar = Canvas((0, 420), (800, 20), "infobar")
-        Engine.AddGObjectGUI(infobar)
+        self.lge.AddGObjectGUI(infobar)
 
         # agregamos al heroe
-        heroe = Sprite("heroe", (226, 142), "Heroe")
-        heroe.OnUpdate = lambda dt: heroe.NextShape(dt, 0.060)
-        Engine.AddGObject(heroe, 2)
+        heroe = Sprite("heroe", (226, 142))
+        heroe.UseColliders(True)
+        self.lge.AddGObject(heroe, 1)
 
         # agregamos pajaros
-        ww, wh = Engine.GetCamera().GetSize()
+        ww, wh = self.lge.GetCameraSize()
         for i in range(500):
-            x = int(random.random()*ww)
-            y = int(random.random()*(wh - 40))
+            x = random.random()*ww
+            y = random.random()*(wh - 40)
             bird = Bird("bird", (x, y))
-            bird.SetColliders()
-            Engine.AddGObject(bird, 1)
-
-        Engine.ShowColliders((0xFF, 0x00, 0x00))
+            bird.UseColliders(True)
+            self.lge.AddGObject(bird, 1)
 
     def MainUpdate(self, dt):
         # abortamos con la tecla Escape
-        if(Engine.KeyUp(Engine.CONSTANTS.K_ESCAPE)):
-            Engine.Quit()
+        if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+            self.lge.Quit()
 
         # mostramos info
-        fps = Engine.GetFPS()
+        fps = self.lge.GetFPS()
         fps = "FPS: %07.2f" % fps
 
-        ngobjs = len(Engine.GetGObject("*"))
-        ngobjs = "gObjs: %03d" % ngobjs
+        mx, my = self.lge.GetMousePosition()
+        mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
-        mx, my = Engine.GetMousePosition()
-        mb1, mb2, mb3 = Engine.GetMouseButtons()
-        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % (mx, my, mb1, mb2, mb3)
-
-        infobar = Engine.GetGObject("infobar")
-        infobar.Fill((0, 0, 0, 20))
-        infobar.DrawText(fps + "    -    " + ngobjs + "    -    " + minfo, (0, 0), "monospace", (0, 0, 0))
+        info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
+            self.lge.GetFPS(),
+            self.lge.GetCountGObjects(), mx, my,
+            mb1, mb2, mb3
+        )
+        infobar = self.lge.GetGObject("infobar")
+        infobar.Fill((20, 20, 20, 10))
+        infobar.DrawText(info, (140, 0), "monospace.16", (0, 0, 0))
 
     # main loop
     def Run(self):
-        import cProfile
-        cProfile.run("Engine.Run( 60 )")
+        self.lge.Run(60)
 
 
 class Bird(Sprite):
     def __init__(self, inames, position):
         super().__init__(inames, position)
 
+        # acceso al motor de juegos
+        self.lge = LittleGameEngine.GetLGE()
+
+        # sus atributos
+        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
+
     def OnUpdate(self, dt):
-        self.NextShape(dt, 0.060)
+        self.NextShape(dt, 0.1)
 
 
 # ----
-test = Test()
-test.Run()
+bird = Birds()
+cProfile.run("bird.Run()")

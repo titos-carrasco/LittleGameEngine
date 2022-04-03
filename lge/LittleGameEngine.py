@@ -47,9 +47,6 @@ class LittleGameEngine():
 
         self.camera = Camera((0, 0), camSize)
 
-        self.keys_pressed = {}
-        self.mouse_events = []
-
         pygame.init()
         pygame.font.init()
         pygame.mixer.init()
@@ -57,6 +54,11 @@ class LittleGameEngine():
         pygame.display.set_caption(title)
 
         self.screen = pygame.display.set_mode(camSize)
+
+        self.mouse_buttons = pygame.mouse.get_pressed()
+        self.mouse_position = pygame.mouse.get_pos()
+        self.mouse_clicked = [0]*len(self.mouse_buttons)
+        self.keys_pressed = pygame.key.get_pressed()
 
     def GetLGE():
         return LittleGameEngine.lge
@@ -88,6 +90,23 @@ class LittleGameEngine():
             for event in pygame.event.get():
                 if(event.type == pygame.QUIT):
                     self.running = False
+                elif(event.type == pygame.MOUSEMOTION):
+                    self.mouse_buttons = pygame.mouse.get_pressed()
+                    self.mouse_position = pygame.mouse.get_pos()
+                elif(event.type == pygame.MOUSEBUTTONDOWN):
+                    self.mouse_buttons = pygame.mouse.get_pressed()
+                    self.mouse_position = pygame.mouse.get_pos()
+                    self.mouse_clicked[event.button - 1] = self.mouse_position
+                elif(event.type == pygame.MOUSEBUTTONUP):
+                    self.mouse_buttons = pygame.mouse.get_pressed()
+                    self.mouse_position = pygame.mouse.get_pos()
+                    pos = self.mouse_clicked[event.button - 1]
+                    if(isinstance(pos, tuple)):
+                        if(pos[0] == self.mouse_position[0] and pos[1] == self.mouse_position[1]):
+                            self.mouse_clicked[event.button - 1] = 1
+                        else:
+                            self.mouse_clicked[event.button - 1] = 0
+
             self.keys_pressed = pygame.key.get_pressed()
 
             # --- tiempo en ms desde el ciclo anterior
@@ -103,12 +122,11 @@ class LittleGameEngine():
                 gLayers[gobj.layer].remove(gobj)
                 if(self.camera.target == gobj):
                     self.camera.target = None
-                if(gobj.on_events_enabled & LittleGameEngine.E_ON_DELETE):
+                if((self.on_events_enabled & LittleGameEngine.E_ON_DELETE) and (gobj.on_events_enabled & LittleGameEngine.E_ON_DELETE)):
                     self.ondelete.append(gobj)
             self.gObjectsToDel = []
-            if(self.on_events_enabled & LittleGameEngine.E_ON_DELETE):
-                for gobj in ondelete:
-                    gobj.OnDelete()
+            for gobj in ondelete:
+                gobj.OnDelete()
             del ondelete
 
             # --- Add Gobj and gobj.OnStart
@@ -122,43 +140,41 @@ class LittleGameEngine():
                 gobjs = self.gLayers[layer]
                 if(not gobj in gobjs):
                     self.gLayers[gobj.layer].append(gobj)
-                    if(gobj.on_events_enabled & LittleGameEngine.E_ON_START):
+                    if((self.on_events_enabled & LittleGameEngine.E_ON_START) and (gobj.on_events_enabled & LittleGameEngine.E_ON_START)):
                         onstart.append(gobj)
             self.gObjectsToAdd = []
-            if(self.on_events_enabled & LittleGameEngine.E_ON_START):
-                for gobj in onstart:
-                    gobj.OnStart()
+            for gobj in onstart:
+                gobj.OnStart()
             del onstart
 
             # ---
             if(reorder):
-                self.gObjects = dict(
-                    sorted(self.gObjects.items()))
+                self.gObjects = dict(sorted(self.gObjects.items()))
                 reorder = False
             # --
 
             # --- gobj.OnPreUpdate
             if(self.on_events_enabled & LittleGameEngine.E_ON_PRE_UPDATE):
                 list(gobj.OnPreUpdate(dt)
-                     for layer, gobjs in self.gLayers.items()
-                     for gobj in gobjs
-                     if gobj.on_events_enabled & LittleGameEngine.E_ON_PRE_UPDATE
+                        for layer, gobjs in self.gLayers.items()
+                            for gobj in gobjs
+                                if gobj.on_events_enabled & LittleGameEngine.E_ON_PRE_UPDATE
                      )
 
             # --- gobj.OnUpdate
             if(self.on_events_enabled & LittleGameEngine.E_ON_UPDATE):
                 list(gobj.OnUpdate(dt)
-                     for layer, gobjs in self.gLayers.items()
-                     for gobj in gobjs
-                     if gobj.on_events_enabled & LittleGameEngine.E_ON_UPDATE
+                        for layer, gobjs in self.gLayers.items()
+                            for gobj in gobjs
+                                if gobj.on_events_enabled & LittleGameEngine.E_ON_UPDATE
                      )
 
             # --- gobj.OnPostUpdate
             if(self.on_events_enabled & LittleGameEngine.E_ON_POST_UPDATE):
                 list(gobj.OnPostUpdate(dt)
-                     for layer, gobjs in self.gLayers.items()
-                     for gobj in gobjs
-                     if gobj.on_events_enabled & LittleGameEngine.E_ON_POST_UPDATE
+                        for layer, gobjs in self.gLayers.items()
+                            for gobj in gobjs
+                                if gobj.on_events_enabled & LittleGameEngine.E_ON_POST_UPDATE
                      )
 
             # --- game.OnUpdate
@@ -166,34 +182,33 @@ class LittleGameEngine():
                 self.on_main_update(dt)
 
             # --- gobj.OnCollision
-            """
             if(self.on_events_enabled & LittleGameEngine.E_ON_COLLISION):
                 oncollisions = []
-                for layer, gobjs in LittleGameEngine.gObjects.items():
+                for layer, gobjs in self.gLayers.items():
                     if(layer == LittleGameEngine.GUI_LAYER):
                         continue
-                    with_use_colliders = list(
-                        (gobj, gobj.GetRectangle()) for gobj in gobjs if gobj._use_colliders)
-                    with_on_collision = list(
-                        (gobj, rect) for gobj, rect in with_use_colliders if hasattr(gobj, "OnCollision"))
+                    with_use_colliders = list( [gobj for gobj in gobjs if gobj.use_colliders ] )
+                    with_on_collision  = list( [gobj for gobj in with_use_colliders if gobj.on_events_enabled & LittleGameEngine.E_ON_COLLISION ] )
 
-                    for o1, r1 in with_on_collision:
-                        o1_collisions = []
-                        for o2, r2 in with_use_colliders:
+                    for o1 in with_on_collision:
+                        colliders = []
+                        for o2 in with_use_colliders:
                             if o1 != o2:
-                                if r1.CollideRectangle(r2):
-                                    o1_collisions.append((o2, r2))
-                        oncollisions.append((o1, o1_collisions))
-                list(gobj.OnCollision(dt, collisions)
-                     for gobj, collisions in oncollisions if collisions)
-            """
+                                if o1.rect.Intersects( o2.rect ):
+                                    colliders.append(o2)
+                        oncollisions.append((o1, colliders))
+                list(gobj.OnCollision(dt, colliders)
+                        for gobj, colliders in oncollisions
+                            if colliders
+                    )
+                del oncollisions
 
             # --- gobj.OnPreRender
             if(self.on_events_enabled & LittleGameEngine.E_ON_PRE_RENDER):
                 list(gobj.OnPreRender(dt)
-                     for layer, gobjs in self.gLayers.items()
-                     for gobj in gobjs
-                     if gobj.on_events_enabled & LittleGameEngine.E_ON_PRE_RENDER
+                        for layer, gobjs in self.gLayers.items()
+                            for gobj in gobjs
+                                if gobj.on_events_enabled & LittleGameEngine.E_ON_PRE_RENDER
                      )
 
             # --- Camera Tracking
@@ -228,9 +243,9 @@ class LittleGameEngine():
         # --- gobj.OnQuit
         if(self.on_events_enabled & LittleGameEngine.E_ON_QUIT):
             list(gobj.OnQuit()
-                 for layer, gobjs in self.gLayers.items()
-                 for gobj in gobjs
-                 if gobj.on_events_enabled & LittleGameEngine.E_ON_QUIT
+                    for layer, gobjs in self.gLayers.items()
+                        for gobj in gobjs
+                            if gobj.on_events_enabled & LittleGameEngine.E_ON_QUIT
                  )
 
         # eso es todo
@@ -322,15 +337,20 @@ class LittleGameEngine():
 
     # ------ mouse ------
     def GetMouseButtons(self):
-        return pygame.mouse.get_pressed()
+        return self.mouse_buttons
 
     def GetMousePosition(self):
-        x, y = pygame.mouse.get_pos()
+        x, y = self.mouse_position
         wh = self.camera.rect.height
         return x, wh - y - 1
 
     def GetMouseClicked(self, button):
-        return None
+        r = self.mouse_clicked[button]
+        if(r == 1):
+            self.mouse_clicked[button] = 0
+            return True
+        else:
+            return False
 
     # ------ fonts ------
 
@@ -354,17 +374,22 @@ class LittleGameEngine():
     def LoadSound(self, name, fname):
         self.sounds[name] = pygame.mixer.Sound(fname)
 
-    def PlaySound(self, name, loop=0):
+    def PlaySound(self, name, loop, level):
+        if(loop):
+            loop = -1
+        else:
+            loop = 0
+        self.sounds[name].set_volume(level/100)
         self.sounds[name].play(loop)
 
     def StopSound(self, name):
         self.sounds[name].stop()
 
-    def SetSoundVolume(self, name, volume):
-        self.sounds[name].set_volume(volume)
+    def SetSoundVolume(self, name, level):
+        self.sounds[name].set_volume(level/100)
 
     def GetSoundVolume(self, name):
-        return self.sounds[name].get_volume()
+        return self.sounds[name].get_volume()*100
 
     #  ------ images ------
     def CreateOpaqueImage(self, width, height):

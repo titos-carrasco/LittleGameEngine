@@ -5,12 +5,9 @@ from lge.Rectangle import Rectangle
 
 
 def main():
-    global lge
-
     # creamos el juego
     win_size = (640, 480)
-    lge = LittleGameEngine(win_size, "Move Camera", 0xFFFF00)
-    lge.ShowColliders((255, 0, 0))
+    lge = LittleGameEngine(win_size, "Move Camera", (255, 255, 0))
     lge.SetOnMainUpdate(MainUpdate)
 
     # cargamos los recursos que usaremos
@@ -22,10 +19,10 @@ def main():
     lge.LoadSound("fondo", resource_dir + "/sounds/happy-and-sad.wav")
 
     # activamos la musica de fondo
-    lge.PlaySound("fondo", loop=-1)
+    lge.PlaySound("fondo", True, 50)
 
     # agregamos el fondo
-    fondo = Sprite("fondo", (0, 0), "fondo")
+    fondo = Sprite("fondo", (0, 0))
     lge.AddGObject(fondo, 0)
 
     # agregamos la barra de info
@@ -33,8 +30,7 @@ def main():
     lge.AddGObjectGUI(infobar)
 
     # agregamos al heroe
-    heroe = Sprite("heroe", (550, 346), "Heroe")
-    heroe.UseColliders(True)
+    heroe = Sprite("heroe", (550, 346))
     lge.AddGObject(heroe, 1)
 
     # configuramos la camara
@@ -51,7 +47,8 @@ def main():
 
 
 def MainUpdate(dt):
-    global lge
+    # acceso al motor de juegos
+    lge = LittleGameEngine.GetLGE()
 
     # abortamos con la tecla Escape
     if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
@@ -76,6 +73,8 @@ def MainUpdate(dt):
     # velocity = pixeles por segundo
     velocity = 240
     pixels = velocity*dt
+    if(pixels < 1):
+        pixels = 1
 
     # la posiciona actual de la camara
     x, y = lge.GetCameraPosition()

@@ -5,11 +5,9 @@ from lge.Rectangle import Rectangle
 
 
 def main():
-    global lge
-
     # creamos el juego
     win_size = (640, 480)
-    lge = LittleGameEngine(win_size, "Move Player", 0xFFFF00)
+    lge = LittleGameEngine(win_size, "Move Player", (255, 255, 0))
     lge.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
     lge.SetOnMainUpdate(MainUpdate)
 
@@ -23,10 +21,10 @@ def main():
     lge.LoadSound("fondo", resource_dir + "/sounds/happy-and-sad.wav")
 
     # activamos la musica de fondo
-    lge.PlaySound("fondo", loop=-1)
+    lge.PlaySound("fondo", True, 50)
 
     # agregamos el fondo
-    fondo = Sprite("fondo", (0, 0), "fondo")
+    fondo = Sprite("fondo", (0, 0))
     lge.AddGObject(fondo, 0)
 
     # agregamos la barra de info
@@ -36,10 +34,8 @@ def main():
     # agregamos al heroe
     heroe = Sprite(["heroe_right", "heroe_left"], (550, 346), "Heroe")
     heroe.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-    heroe.SetShape("heroe_right", 0)
-    heroe.heading = 1
+    heroe.SetShape("heroe_right")
     heroe.SetBounds(Rectangle((0, 0), (1920, 1056)))
-    heroe.UseColliders(True)
     heroe.OnUpdate = HeroeUpdate
     lge.AddGObject(heroe, 1)
 
@@ -54,7 +50,8 @@ def main():
 
 
 def MainUpdate(dt):
-    global lge
+    # acceso al motor de juegos
+    lge = LittleGameEngine.GetLGE()
 
     # abortamos con la tecla Escape
     if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
@@ -78,7 +75,8 @@ def MainUpdate(dt):
 
 
 def HeroeUpdate(dt):
-    global lge
+    # acceso al motor de juegos
+    lge = LittleGameEngine.GetLGE()
 
     # el heroe
     heroe = lge.GetGObject("Heroe")
@@ -86,6 +84,8 @@ def HeroeUpdate(dt):
     # velocity = pixeles por segundo
     velocity = 240
     pixels = velocity*dt
+    if(pixels < 1):
+        pixels = 1
 
     # la posiciona actual del heroe
     x, y = heroe.GetPosition()
@@ -93,8 +93,11 @@ def HeroeUpdate(dt):
     # cambiamos sus coordenadas y orientacion segun la tecla presionada
     if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
         x = x + pixels
+        heroe.SetShape("heroe_right")
     elif(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
         x = x - pixels
+        heroe.SetShape("heroe_left")
+
     if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_UP)):
         y = y + pixels
     elif(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):

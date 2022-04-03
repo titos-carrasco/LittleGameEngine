@@ -1,5 +1,5 @@
-from random import random
-from lge.Engine import Engine
+import random
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
 from lge.Rectangle import Rectangle
@@ -8,200 +8,162 @@ from lge.Rectangle import Rectangle
 class MiJuego():
     def __init__(self):
         # creamos el juego
-        Engine.Init((640, 480), "Colliders")
-        Engine.SetOnUpdate(self.MainUpdate)
+        win_size = (640, 480)
 
-        # activamos la musica de fondo
-        Engine.LoadSound("fondo", "../sounds/happy-and-sad.wav")
-        Engine.SetSoundVolume("fondo", 0.5)
-        Engine.PlaySound("fondo", loop=-1)
+        self.lge = LittleGameEngine(win_size, "Colliders", (255, 255, 0))
+        self.lge.SetOnEvents(LittleGameEngine.E_ON_UPDATE | LittleGameEngine.E_ON_COLLISION)
+        self.lge.ShowColliders((255, 0, 0))
+        self.lge.SetOnMainUpdate(self.MainUpdate)
 
         # cargamos los recursos que usaremos
-        Engine.LoadImage("fondo", "../images/Backgrounds/FreeTileset/Fondo.png")
-        Engine.LoadImage("heroe_idle_right", "../images/Swordsman/Idle/Idle_0*.png", 0.16)
-        Engine.LoadImage("heroe_idle_left", "../images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
-        Engine.LoadImage("heroe_run_right", "../images/Swordsman/Run/Run_0*.png", 0.16)
-        Engine.LoadImage("heroe_run_left", "../images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
-        Engine.LoadImage("ninja", "../images/Swordsman/Idle/Idle_000.png", 0.16)
-        Engine.LoadImage("mute", "../images/icons/sound-*.png")
-        Engine.LoadTTFFont("monospace", 16, "../fonts/FreeMono.ttf")
-        Engine.LoadSound("aves", "../sounds/bird-thrush-nightingale.wav")
-        Engine.LoadSound("poing", "../sounds/cartoon-poing.wav")
-        Engine.SetSoundVolume("poing", 0.03)
+        resource_dir = "../resources"
+
+        self.lge.LoadImage("fondo", resource_dir + "/images/Backgrounds/FreeTileset/Fondo.png")
+        self.lge.LoadImage("heroe_idle_right", resource_dir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+        self.lge.LoadImage("heroe_idle_left", resource_dir + "/images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
+        self.lge.LoadImage("heroe_run_right", resource_dir + "/images/Swordsman/Run/Run_0*.png", 0.16)
+        self.lge.LoadImage("heroe_run_left", resource_dir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
+        self.lge.LoadImage("ninja", resource_dir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
+        self.lge.LoadImage("mute", resource_dir + "/images/icons/sound-*.png")
+        self.lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
+        self.lge.LoadSound("fondo", resource_dir + "/sounds/happy-and-sad.wav")
+        self.lge.LoadSound("aves", resource_dir + "/sounds/bird-thrush-nightingale.wav")
+        self.lge.LoadSound("poing", resource_dir + "/sounds/cartoon-poing.wav")
+
+        # activamos la musica de fondo
+        self.lge.PlaySound("fondo", True, 50)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
-        Engine.AddGObject(fondo, 0)
-
-        # agregamos al heroe
-        heroe = MiHeroe()
-        heroe.SetColliders()
-        Engine.AddGObject(heroe, 1)
-
-        # agregamos otro ninja
-        ninja = Sprite("ninja", (350, 250), "ninja")
-        ninja.SetColliders()
-        Engine.AddGObject(ninja, 1)
+        self.lge.AddGObject(fondo, 0)
 
         # agregamos la barra de info
         infobar = Canvas((0, 460), (640, 20), "infobar")
-        Engine.AddGObjectGUI(infobar)
+        self.lge.AddGObjectGUI(infobar)
 
+        # agregamos el icono del sonido
         mute = Sprite("mute", (8, 463), "mute")
         mute.SetShape("mute", 1)
-        Engine.AddGObjectGUI(mute)
+        self.lge.AddGObjectGUI(mute)
+
+        # agregamos un ninja
+        ninja = Sprite("ninja", (350, 250), "ninja")
+        ninja.UseColliders(True)
+        self.lge.AddGObject(ninja, 1)
+
+        # agregamos al heroe
+        heroe = MiHeroe()
+        self.lge.AddGObject(heroe, 1)
 
         # configuramos la camara
-        camera = Engine.GetCamera()
-        camera.SetBounds(Rectangle((0, 0), (1920, 1056)))
+        self.lge.SetCameraBounds(Rectangle((0, 0), (1920, 1056)))
 
         # establecemos que la camara siga al heroe
-        Engine.SetCameraTarget(heroe)
-
-        # para visualizar el despliegue de los contornos de los objetos
-        Engine.ShowColliders((0xFF, 0x00, 0x00))
-        self.showColliders = True
+        self.lge.SetCameraTarget(heroe, False)
 
     def MainUpdate(self, dt):
         # abortamos con la tecla Escape
-        if(Engine.KeyUp(Engine.CONSTANTS.K_ESCAPE)):
-            Engine.Quit()
+        if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+            self.lge.Quit()
 
         # mostramos info
-        fps = Engine.GetFPS()
+        fps = self.lge.GetFPS()
         fps = "FPS: %07.2f" % fps
 
-        ngobjs = len(Engine.GetGObject("*"))
-        ngobjs = "gObjs: %03d" % ngobjs
+        mx, my = self.lge.GetMousePosition()
+        mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
-        mx, my = Engine.GetMousePosition()
-        mb1, mb2, mb3 = Engine.GetMouseButtons()
-        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % (mx, my, mb1, mb2, mb3)
+        info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
+            self.lge.GetFPS(),
+            self.lge.GetCountGObjects(), mx, my,
+            mb1, mb2, mb3
+        )
+        infobar = self.lge.GetGObject("infobar")
+        infobar.Fill((20, 20, 20, 10))
+        infobar.DrawText(info, (50, 0), "monospace.16", (0, 0, 0))
 
-        infobar = Engine.GetGObject("infobar")
-        infobar.Fill((0, 0, 0, 20))
-        infobar.DrawText(fps + " - " + ngobjs + " - " + minfo, (70, 0), "monospace", (0, 0, 0))
-
-        mp = Engine.GetMousePressed(1)
-        if(mp):
-            mx, my = mp
-
-            mute = Engine.GetGObject("mute")
-            iname, idx = mute.GetCurrentShape()
-            if(idx):
-                Engine.SetSoundVolume("fondo", 0)
-                mute.SetShape(iname, 0)
+        # mute on/off
+        mute = self.lge.GetGObject("mute")
+        r = mute.GetRectangle()
+        if(self.lge.GetMouseClicked(0) and r.Contains(mx, my)):
+            idx = mute.GetCurrentIdx()
+            if(idx == 1):
+                self.lge.SetSoundVolume("fondo", 0)
             else:
-                Engine.SetSoundVolume("fondo", 0.5)
-                mute.SetShape(iname, 1)
-
-        # mostramos los bordes
-        if(Engine.KeyUp(Engine.CONSTANTS.K_c)):
-            self.showColliders = not self.showColliders
-            if(self.showColliders):
-                Engine.ShowColliders((0xFF, 0x00, 0x00))
-            else:
-                Engine.ShowColliders()
+                self.lge.SetSoundVolume("fondo", 50)
+            mute.NextShape()
 
         # de manera aleatorio activamos sonido de aves
-        n = int(random()*1000)
+        n = random.random()*1000
         if(n < 3):
-            Engine.PlaySound("aves", 0)
+            self.lge.PlaySound("aves", False, 50)
 
     # main loop
     def Run(self):
-        Engine.EnableOnEvent(Engine.E_ON_COLLISION)
-        Engine.Run(60)
+        self.lge.Run(60)
 
 
 class MiHeroe(Sprite):
     def __init__(self):
         # agregamos el heroe con diferentes imagenes
         super().__init__(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 346), "Heroe")
-        self.SetShape("heroe_idle_right", 0)
-        self.heading = 1
-        self.direction = ""
-        self.key_pressed = -1
+
+        # acceso al motor de juegos
+        self.lge = LittleGameEngine.GetLGE()
+
+        # sus atributos
+        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE | LittleGameEngine.E_ON_COLLISION)
+        self.SetShape("heroe_idle_left")
+        self.UseColliders(True)
+        self.state = -1
+        self.SetBounds(Rectangle((0, 0), (1920, 1056)))
 
     def OnUpdate(self, dt):
         # velocity = pixeles por segundo
         velocity = 240
         pixels = velocity*dt
+        if(pixels < 1):
+            pixels = 1
 
         # la posiciona actual del heroe
         x, y = self.GetPosition()
-
-        # la tecla presionada
-        if(self.key_pressed == -1):
-            if(Engine.KeyDown(Engine.CONSTANTS.K_RIGHT)):
-                self.key_pressed = Engine.CONSTANTS.K_RIGHT
-            elif(Engine.KeyDown(Engine.CONSTANTS.K_LEFT)):
-                self.key_pressed = Engine.CONSTANTS.K_LEFT
-            elif(Engine.KeyDown(Engine.CONSTANTS.K_DOWN)):
-                self.key_pressed = Engine.CONSTANTS.K_DOWN
-            elif(Engine.KeyDown(Engine.CONSTANTS.K_UP)):
-                self.key_pressed = Engine.CONSTANTS.K_UP
-        else:
-            if(Engine.KeyUp(self.key_pressed)):
-                self.key_pressed = -1
+        self.last = x, y
 
         # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
-        name, idx = self.GetCurrentShape()
-        if(self.key_pressed == Engine.CONSTANTS.K_RIGHT):
+        if (self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
             x = x + pixels
-            if(self.heading != 1):
-                self.heading = 1
-            if(name[:9] != "heroe_run"):
+            if (self.state != 2):
                 self.SetShape("heroe_run_right", 0)
-            self.direction = "R"
-        elif(self.key_pressed == Engine.CONSTANTS.K_LEFT):
+                self.state = 2
+        elif(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
             x = x - pixels
-            if(self.heading != -1):
-                self.heading = -1
-            if(name[:9] != "heroe_run"):
+            if (self.state != -2):
                 self.SetShape("heroe_run_left", 0)
-            self.direction = "L"
-        elif(self.key_pressed == Engine.CONSTANTS.K_DOWN):
-            y = y - pixels
-            self.direction = "D"
-        elif(self.key_pressed == Engine.CONSTANTS.K_UP):
-            y = y + pixels
-            self.direction = "U"
-
-        if(self.key_pressed == -1 and name[:10] != "heroe_idle"):
-            if(self.heading == 1):
+                self.state = -2
+        elif(self.state == 2):
+            if (self.state != 1):
                 self.SetShape("heroe_idle_right", 0)
-            else:
+                self.state = 1
+        elif(self.state == -2):
+            if (self.state != -1):
                 self.SetShape("heroe_idle_left", 0)
-            self.direction = ""
+                self.state = -1
+
+        if (self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_UP)):
+            y = y + pixels
+        elif (self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+            y = y - pixels
 
         # siguiente imagen de la secuencia
         self.NextShape(dt, 0.050)
 
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
-        camera = Engine.GetCamera()
-        bounds = camera.GetBounds()
-        self.SetPosition(x, y, bounds)
-
-    def OnCollision(self, dt, collisions):
-        Engine.PlaySound("poing", 0)
-        o, r = collisions[0]
-
-        x, y = self.GetPosition()
-        w, h = self.GetSize()
-
-        x1, y1, x2, y2 = r.GetPoints()
-
-        if(self.direction == "U"):
-            y = y1 - h
-        elif(self.direction == "D"):
-            y = y2 + 1
-        elif(self.direction == "L"):
-            x = x2 + 1
-        elif(self.direction == "R"):
-            x = x1 - w
-
         self.SetPosition(x, y)
+
+    def OnCollision(self, dt, gobjs):
+        x, y = self.last
+        self.lge.PlaySound("poing", False, 10)
+        self.SetPosition(x,y)
 
 
 # --- show time

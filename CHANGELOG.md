@@ -1,12 +1,22 @@
 # ChangeLog
 
-## 20220401
+## 2022-04-01
+- Elimina archivo Clases.md dado que se documentará todo con pdoc3
+- Elimina directorio plantilla
+- Inicia documentación del código utilizando docstrings
+- Corrige método Intersect de la clase Rectangle
+- Mejora captura de eventos
+- Mejora detección de colisiones
+- Corrige seteo de volumen en clips de audio
+- AJusta varios demos
+
+
+## 2022-04-01
 - Mueve directorios fonts, images y sounds a subdirectorio resources
 - Cambia de nombre archivo Engine.py a LittleGameEngine, reordena su código y cambia invocación inicial a LGE
 - Formatea código acorde a pep8
 - Modifica código para alinearlo acorde al avance de la versión java JLittleGameMachine
 - Ajusta demos acorde a los cambos
-
 
 ## @v0.4.3 2022-03-08
 - Agrega eventos OnQuit() a ser ejecutados justo antes de pygame.quit()

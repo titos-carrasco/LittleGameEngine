@@ -3,11 +3,19 @@ from lge.GameObject import GameObject
 
 class Camera(GameObject):
     def __init__(self, position, size):
+        """
+        Crea la camara en la posicion(x, y) y dimensiones (width, height) especificados
+
+        Esta clase es privada
+        """
         super().__init__(position, size, "__LGE_CAMERA__")
         self.target = None
         self.target_center = True
 
     def FollowTarget(self):
+        """
+        Mueve la camara para tener visible al objeto configurado
+        """
         # nadie a quien seguir
         if(self.target == None):
             return
