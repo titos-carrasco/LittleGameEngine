@@ -1,61 +1,64 @@
-from lge.Engine import Engine
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 
 
 class Betty(Sprite):
     def __init__(self, x, y):
-        Engine.LoadImage("idle", "../images/Betty/idle-001.png")
-        Engine.LoadImage("left", "../images/Betty/left-0*.png")
-        Engine.LoadImage("right", "../images/Betty/right-0*.png")
-
-        images = ["idle", "left", "right"]
+        images = ["betty_idle", "betty_left", "betty_right"]
 
         super().__init__(images, (x, y), "Betty")
+
+        # acceso al motor de juegos
+        self.lge = LittleGameEngine.GetLGE()
+
+        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.SetOnEvents(LittleGameEngine.E_ON_COLLISION)
+        self.UseColliders(True)
+
         self.vx = 240           # velocidad en x
         self.vy = 0             # velocidad en y
-        self.vs = 240           # velocidad en y en el salto
+        self.vs = 360           # velocidad en y en el salto
         self.ay = 480           # aceleracion en y
-        self.SetColliders(True)
+        self.jumping = False
 
     def OnUpdate(self, dt):
         # los datos actuales
         x, y = self.GetPosition()
-        action, idx = self.GetCurrentShape()
+        action = self.GetCurrentIName()
+        idx = self.GetCurrentIdx()
 
         # cambiamos sus coordenadas y orientacion segun la tecla presionada
-        if(Engine.KeyUp(Engine.CONSTANTS.K_SPACE)):
+        if(not self.jumping and self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_SPACE)):
             self.vy = self.vs
+            self.jumping = True
 
-        if(Engine.KeyPressed(Engine.CONSTANTS.K_RIGHT)):
+        if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
             x = x + self.vx*dt
-            if(action != "right"):
-                self.SetShape("right", 0)
-        elif(Engine.KeyPressed(Engine.CONSTANTS.K_LEFT)):
+            if(action != "betty_right"):
+                self.SetShape("betty_right", 0)
+        elif(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
             x = x - self.vx*dt
-            if(action != "left"):
-                self.SetShape("left", 0)
+            if(action != "betty_left"):
+                self.SetShape("betty_left", 0)
         else:
-            if(action != "idle"):
-                self.SetShape("idle", 0)
+            if(action != "betty_idle"):
+                self.SetShape("betty_idle", 0)
         self.NextShape(dt, 0.050)
 
         # caida por gravedad
         y = y + self.vy*dt
         self.vy = self.vy - self.ay*dt
 
-        # lo posicionamos asegurando que se encuentre dentro de los limites
-        camera = Engine.GetCamera()
-        bounds = camera.GetBounds()
-        self.SetPosition(x, y, bounds)
+        # nueva posicion
+        self.SetPosition(x, y)
 
-    def OnCollision(self, dt, collisions):
-        x1, y1, x2, y2 = self.GetRectangle().GetPoints()
-        for o, r in collisions:
-            rx1, ry1, rx2, ry2 = r.GetPoints()
-            tag = o.GetTag()
+    def OnCollision(self, dt, gobjs):
+        for gobj in gobjs:
+            tag = gobj.GetTag()
             if(tag == "suelo"):
-                if(y1 > ry1):
-                    self.vy = 0
-                    self.SetPosition(x1, ry2 + 1)
+                self.jumping = False
+                self.vy = 0
+                self.SetPosition(self.GetX(), gobj.GetY() + gobj.GetHeight())
             elif(tag == "muerte"):
+                self.lge.DelGObject(self)
                 print("he muerto")

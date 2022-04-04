@@ -1,10 +1,7 @@
-import uuid
-
-from lge.Engine import Engine
+from lge.LittleGameEngine import LittleGameEngine
 from lge.GameObject import GameObject
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
-from lge.Rectangle import Rectangle
 
 from Betty import Betty
 from Zombie import Zombie
@@ -13,145 +10,89 @@ from Zombie import Zombie
 class MiJuego():
     def __init__(self):
         # creamos el juego
-        Engine.Init((608, 736), "Betty")
-        Engine.GetCamera().SetBounds(Rectangle((0, 0), (608, 736)))
+        win_size = (608, 736)
+
+        self.lge = LittleGameEngine(win_size, "Betty", (255, 255, 0))
+        self.lge.SetOnMainUpdate(self.OnMainUpdate)
+        #self.lge.ShowColliders((255, 0, 0))
 
         # cargamos algunos recursos
-        Engine.LoadImage("fondo", "../images/Betty/Fondo.png")
-        Engine.LoadImage("betty_idle", "../images/Betty/idle-0*.png")
-        Engine.LoadImage("betty_down", "../images/Betty/down-0*.png")
-        Engine.LoadImage("betty_up", "../images/Betty/up-0*.png")
-        Engine.LoadImage("betty_left", "../images/Betty/left-0*.png")
-        Engine.LoadImage("betty_right", "../images/Betty/right-0*.png")
-        Engine.LoadImage("zombie", "../images/Kenny/Zombie/zombie_walk*.png")
-        Engine.LoadTTFFont("monospace", 16, "../fonts/LiberationMono-Regular.ttf")
-        Engine.LoadTTFFont("cool", 30, "../fonts/backlash.ttf")
+        resource_dir = "../resources"
+
+        self.lge.LoadImage("fondo", resource_dir + "/images/Betty/Fondo.png")
+        self.lge.LoadImage("betty_idle", resource_dir + "/images/Betty/idle-0*.png")
+        self.lge.LoadImage("betty_down", resource_dir + "/images/Betty/down-0*.png")
+        self.lge.LoadImage("betty_up", resource_dir + "/images/Betty/up-0*.png")
+        self.lge.LoadImage("betty_left", resource_dir + "/images/Betty/left-0*.png")
+        self.lge.LoadImage("betty_right", resource_dir + "/images/Betty/right-0*.png")
+        self.lge.LoadImage("zombie", resource_dir + "/images/Kenny/Zombie/zombie_walk*.png")
+        self.lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos el fondo
-        fondo = Sprite("fondo", (0, 0), "fondo")
-        Engine.AddGObject(fondo, 0)
+        fondo = Sprite("fondo", (0, 0))
+        self.lge.AddGObject(fondo, 0)
 
-        # agregamos los muros para las colisiones
-        # 1. fue creado con Tiled
-        # 2  exportado desde Tiled como .png y editado para dejar sus contornos
-        # 2. exportaddo desde Tiled como .csv para conocer las coordenadas de los muros
-        f = open("../images/Betty/Fondo.csv", "r")
-        data = list(f)
+        # agregamos la barra de info
+        infobar = Canvas((0, 714), (640, 20), "infobar")
+        self.lge.AddGObjectGUI(infobar)
+
+        # cargamos el mapa en memoria
+        mapa = []
+        fname = resource_dir + "/images/Betty/Mapa.txt"
+        f = open(fname)
+        for line in f:
+            line = [int(c) for c in line if c == '0' or c == '1']
+            mapa.append(line)
         f.close()
-        mapa = [e.strip("\n").strip("\n").split(",") for e in data]
-        w, h = Engine.GetCamera().GetSize()
-        y = h - 32
-        for r in mapa:
-            x = 0
-            for tid in r:
-                if(tid == "muro"):
-                    gobj = GameObject((x, y), (32, 32), "Bloque-" + uuid.uuid4().hex)
-                    gobj.SetTag("muro")
-                    gobj.SetColliders()
-                    Engine.AddGObject(gobj, 1)
-                x = x + 32
-            y = y - 32
 
         # agregamos a Betty
-        betty = Betty("Betty")
+        betty = Betty("Betty", win_size)
         betty.SetPosition(32*9, 32*13)
-        betty.SetColliders()
-        Engine.AddGObject(betty, 1)
+        self.lge.AddGObject(betty, 1)
 
         # agregamos 3 zombies
         for i in range(3):
-            zombie = Zombie("Zombie-" + uuid.uuid4().hex)
+            zombie = Zombie("Zombie-%03d" % i, win_size)
             zombie.SetPosition(32 + 32*4 + 32*(i*4), 32*1)
-            zombie.SetColliders()
-            Engine.AddGObject(zombie, 1)
+            self.lge.AddGObject(zombie, 1)
 
-        # agregamos la barra de info
-        infobar = Canvas((0, 710), (640, 20), "infobar")
-        Engine.AddGObjectGUI(infobar)
+        # agregamos los muros para las colisiones (segun el mapa)
+        y = 21
+        for row in mapa:
+            x = 0
+            for v in row:
+                if(v == 1):
+                    muro = GameObject((x*32, y*32), (32, 32))
+                    muro.UseColliders(True)
+                    muro.SetTag("muro")
+                    self.lge.AddGObject(muro, 1)
+                x = x + 1
+            y = y - 1
 
-        # agregamos el mensaje de la barra espaciadora
-        self.pressbar = Canvas((120, 340), (400, 30), "pressbar")
-        self.pressbar.DrawText("Presiona la Barra Espaciadora", (0, 0), "cool", (255, 255, 255))
-        Engine.AddGObjectGUI(self.pressbar)
-
-        # posicionamos la camara
-        Engine.GetCamera().SetPosition(0, 0)
-
-        # agregamos el control
-        Engine.SetOnUpdate(self.IntroControl)
-
-    # la barra de info y chequeo de fin del juego
-    def _InfoBar(self):
+    def OnMainUpdate(self, dt):
         # abortamos con la tecla Escape
-        if(Engine.KeyUp(Engine.CONSTANTS.K_ESCAPE)):
-            Engine.Quit()
+        if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+            self.lge.Quit()
 
         # mostramos info
-        fps = Engine.GetFPS()
+        fps = self.lge.GetFPS()
         fps = "FPS: %07.2f" % fps
 
-        ngobjs = len(Engine.GetGObject("*"))
-        ngobjs = "gObjs: %03d" % ngobjs
+        mx, my = self.lge.GetMousePosition()
+        mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
-        mx, my = Engine.GetMousePosition()
-        mb1, mb2, mb3 = Engine.GetMouseButtons()
-        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % (mx, my, mb1, mb2, mb3)
-
-        infobar = Engine.GetGObject("infobar")
-        infobar.Fill((0, 0, 0, 0))
-        infobar.DrawText(fps + " - " + ngobjs + " - " + minfo, (50, 0), "monospace", (255, 255, 255))
-
-    def IntroControl(self, dt):
-        # infobar
-        self._InfoBar()
-
-        # esperamos que presionen la barra espaciadora
-        if(not Engine.KeyDown(Engine.CONSTANTS.K_SPACE)):
-            return
-
-        # ocultamos mensaje
-        self.pressbar.SetPosition(-120, -340)
-
-        # cambiamos el control
-        Engine.SetOnUpdate(self.GameControl)
-
-        # activamos los actores
-        Engine.GetGObject("Betty").SetAlive()
-        for zombie in Engine.GetGObject("Zombie-*"):
-            zombie.SetActive(True)
-
-        # mostramos los bordes
-        Engine.ShowColliders((255, 0, 0))
-
-    def GameControl(self, dt):
-        # infobar
-        self._InfoBar()
-
-        # finaliza cuando Betty muere
-        betty = Engine.GetGObject("Betty")
-        if(betty.IsAlive()):
-            return
-
-        # activamos el mensaje
-        self.pressbar.SetPosition(120, 340)
-
-        # esperamos por la barra espaciadora para continuar
-        if(not Engine.KeyDown(Engine.CONSTANTS.K_SPACE)):
-            return
-
-        # reinicializamos
-        betty.SetAlive()
-        betty.SetPosition(32*9, 32*13)
-        zombies = Engine.GetGObject("Zombie-*")
-        for i in range(len(zombies)):
-            zombie = zombies[i]
-            zombie.SetPosition(32 + 32*4 + 32*(i*4), 32*1)
-        self.pressbar.SetPosition(-120, -340)
+        info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
+            self.lge.GetFPS(),
+            self.lge.GetCountGObjects(), mx, my,
+            mb1, mb2, mb3
+        )
+        infobar = self.lge.GetGObject("infobar")
+        infobar.Fill((80, 80, 80, 80))
+        infobar.DrawText(info, (50, 0), "monospace.16", (255, 255, 255))
 
     # main loop
     def Run(self):
-        Engine.EnableOnEvent(Engine.E_ON_COLLISION)
-        Engine.Run(60)
+        self.lge.Run(60)
 
 
 # -- show time

@@ -1,14 +1,24 @@
+import random
+
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
-from lge.Engine import Engine
 
 
 class Zombie(Sprite):
-    def __init__(self, name):
+    def __init__(self, name, win_size):
         super().__init__("zombie", (0, 0), name)
-        self.SetShape("zombie", 0)
+        self.lge = LittleGameEngine.GetLGE()
+
+        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.SetShape("zombie")
         self.SetTag("zombie")
+        self.UseColliders(True)
+        self.active = True
         self.dir = "R"
-        self.active = False
+        self.win_size = win_size
+
+        # direccion inicial - Right, Down, Left, Up
+        self.dir = "RDLU"[int(random.random() * 4)]
 
     def SetActive(self, state):
         self.active = state
@@ -18,124 +28,131 @@ class Zombie(Sprite):
             return
 
         # velocity = pixeles por segundo
-        velocity = 120
+        #velocity = 120
         #pixels = velocity*dt
         pixels = 2
 
         # las coordenadas de Betty
-        betty = Engine.GetGObject("Betty")
+        betty = self.lge.GetGObject("Betty")
         bx, by = betty.GetPosition()
 
         # nuestra posicion actual
         x, y = self.GetPosition()
-        xori, yori = x, y
 
-        # nuevas coordenadas
-        orden = ""
-        dx = abs(x - bx)
-        dy = abs(y - by)
-
-        primeroY = dy > dx
+        # posicion respecto a Betty
         abajo = y < by
         arriba = y > by
         izquierda = x < bx
         derecha = x > bx
-        if(self.dir == "R"):
-            if(abajo and izquierda):
-                orden = "URDL"
-            elif(abajo and derecha):
-                orden = "UDRL"
-            elif(arriba and izquierda):
-                orden = "DRUL"
-            elif(arriba and derecha):
-                orden = "DURL"
-            elif(arriba):
-                orden = "DRUL"
-            elif(abajo):
-                orden = "URDL"
-            elif(izquierda):
-                orden = "RUDL"
-            elif(derecha):
-                orden = "UDRL"
-        elif(self.dir == "L"):
-            if(abajo and izquierda):
-                orden = "UDLR"
-            elif(abajo and derecha):
-                orden = "LUDR"
-            elif(arriba and izquierda):
-                orden = "DULR"
-            elif(arriba and derecha):
-                orden = "DLUR"
-            elif(arriba):
-                orden = "DLUR"
-            elif(abajo):
-                orden = "ULDR"
-            elif(izquierda):
-                orden = "LUDR"
-            elif(derecha):
-                orden = "UDLR"
-        elif(self.dir == "U"):
-            if(abajo and izquierda):
-                orden = "URLD"
-            elif(abajo and derecha):
-                orden = "ULRD"
-            elif(arriba and izquierda):
-                orden = "RLUD"
-            elif(arriba and derecha):
-                orden = "LRUD"
-            elif(arriba):
-                orden = "LRUD"
-            elif(abajo):
-                orden = "ULRD"
-            elif(izquierda):
-                orden = "RULD"
-            elif(derecha):
-                orden = "LURD"
-        elif(self.dir == "D"):
-            if(abajo and izquierda):
-                orden = "RLDU"
-            elif(abajo and derecha):
-                orden = "LRDU"
-            elif(arriba and izquierda):
-                orden = "RDLU"
-            elif(arriba and derecha):
-                orden = "LDRU"
-            elif(arriba):
-                orden = "DLRU"
-            elif(abajo):
-                orden = "LRDU"
-            elif(izquierda):
-                orden = "RDLU"
-            elif(derecha):
-                orden = "LDRU"
 
-        for c in orden:
-            if(c == "R"):
-                x = x + pixels
-            elif(c == "L"):
-                x = x - pixels
-            elif(c == "U"):
-                y = y + pixels
-            elif(c == "D"):
-                y = y - pixels
-            self.SetPosition(x, y)
+        # estrategia de movimiento
+        estrategia = ""
 
-            collisions = Engine.GetCollisions(self)
-            bloqueos = [gobj for gobj in collisions if gobj.GetTag() == "muro" or gobj.GetTag() == "zombie"]
-            if(len(bloqueos) == 0):
+        if (self.dir == 'R'):
+            if (abajo and izquierda):
+                estrategia = "URDL"
+            elif (abajo and derecha):
+                estrategia = "UDRL"
+            elif (arriba and izquierda):
+                estrategia = "DRUL"
+            elif (arriba and derecha):
+                estrategia = "DURL"
+            elif (arriba):
+                estrategia = "DRUL"
+            elif (abajo):
+                estrategia = "URDL"
+            elif (izquierda):
+                estrategia = "RUDL"
+            elif (derecha):
+                estrategia = "UDRL"
+        elif (self.dir == 'L'):
+            if (abajo and izquierda):
+                estrategia = "UDLR"
+            elif (abajo and derecha):
+                estrategia = "LUDR"
+            elif (arriba and izquierda):
+                estrategia = "DULR"
+            elif (arriba and derecha):
+                estrategia = "DLUR"
+            elif (arriba):
+                estrategia = "DLUR"
+            elif (abajo):
+                estrategia = "ULDR"
+            elif (izquierda):
+                estrategia = "LUDR"
+            elif (derecha):
+                estrategia = "UDLR"
+        elif (self.dir == 'U'):
+            if (abajo and izquierda):
+                estrategia = "URLD"
+            elif (abajo and derecha):
+                estrategia = "ULRD"
+            elif (arriba and izquierda):
+                estrategia = "RLUD"
+            elif (arriba and derecha):
+                estrategia = "LRUD"
+            elif (arriba):
+                estrategia = "LRUD"
+            elif (abajo):
+                estrategia = "ULRD"
+            elif (izquierda):
+                estrategia = "RULD"
+            elif (derecha):
+                estrategia = "LURD"
+        elif (self.dir == 'D'):
+            if (abajo and izquierda):
+                estrategia = "RLDU"
+            elif (abajo and derecha):
+                estrategia = "LRDU"
+            elif (arriba and izquierda):
+                estrategia = "RDLU"
+            elif (arriba and derecha):
+                estrategia = "LDRU"
+            elif (arriba):
+                estrategia = "DLRU"
+            elif (abajo):
+                estrategia = "LRDU"
+            elif (izquierda):
+                estrategia = "RDLU"
+            elif (derecha):
+                estrategia = "LDRU"
+
+        # probamos cada movimiento de la estrategia
+        for c in estrategia:
+            nx, ny = x, y
+
+            if (c == 'R'):
+                nx += pixels
+            elif (c == 'L'):
+                nx -= pixels
+            elif (c == 'U'):
+                ny += pixels
+            elif (c == 'D'):
+                ny -= pixels
+
+            # verificamos que no colisionemos con un muro u otro zombie
+            self.SetPosition(nx, ny)
+            gobjs = self.lge.IntersectGObjects(self)
+            collision = False
+            for gobj in gobjs:
+                tag = gobj.GetTag()
+                if(tag == "zombie" or tag == "muro"):
+                    collision = True
+                    break
+
+            if(not collision):
                 self.dir = c
-                break
-            x, y = xori, yori
-            self.SetPosition(x, y)
 
-        # tunel?
-        x, y = self.GetPosition()
-        w, h = Engine.GetCamera().GetSize()
-        if(x < -16):
-            x = w - 16
-        elif(x > w - 16):
-            x = -16
-        self.SetPosition(x, y)
+                # tunel?
+                if (nx < -16):
+                    nx = self.win_size[0] - 16
+                elif (nx > self.win_size[0] - 16):
+                    nx = -16
+                self.SetPosition(nx, ny)
+                break
+
+            # otro intento
+            self.SetPosition(x, y)
 
         # siguiente imagen de la secuencia
         self.NextShape(dt, 0.100)

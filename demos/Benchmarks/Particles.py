@@ -1,29 +1,35 @@
+import cProfile
 import random
-import math
+import time
 
-from lge.Engine import Engine
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Canvas import Canvas
 
 
-class MiJuego():
+class Particles():
     def __init__(self):
-        self.niters = 60*20
-        self.nobjs = 0
+        # instante de inicio
+        self.t_ini = time.time()
 
         # creamos el juego
-        Engine.Init((800, 600), "Particles", (255, 255, 255))
+        win_size = (800, 440)
+
+        self.lge = LittleGameEngine(win_size, "Particles", (255, 255, 0))
+        self.lge.SetOnMainUpdate(self.OnMainUpdate)
 
         # cargamos los recursos que usaremos
-        Engine.LoadTTFFont("monospace", 16, "../fonts/FreeMono.ttf")
+        resource_dir = "../resources"
+
+        self.lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 580), (800, 20), "infobar")
-        Engine.AddGObjectGUI(infobar)
+        infobar = Canvas((0, 420), (800, 20), "infobar")
+        self.lge.AddGObjectGUI(infobar)
 
         # un canvas para plotear
         panel = Canvas((0, 0), (800, 600), "Panel")
         panel.Fill((255, 255, 255))
-        Engine.AddGObject(panel, 1)
+        self.lge.AddGObject(panel, 1)
 
         # las particulas
         self.num_particles = 500
@@ -32,52 +38,54 @@ class MiJuego():
             x = 100 + random.random()*600
             y = 300 + random.random()*200
             vx = -60 + random.random()*120
-            vy = -60 + random.random()*240
+            vy = -120 + random.random()*240
             m = 0.1 + random.random()
             self.particles[i] = Particle(x, y, vx, vy, m)
 
-        # el control central del juego
-        Engine.SetOnUpdate(self.MainControl)
+    def OnMainUpdate(self, dt):
+        # limite de ejecucion
+        if(time.time() - self.t_ini > 10):
+            self.lge.Quit()
+            return
 
-    def MainControl(self, dt):
         # abortamos con la tecla Escape
-        if(Engine.KeyUp(Engine.CONSTANTS.K_ESCAPE)):
-            Engine.Quit()
+        if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+            self.lge.Quit()
 
         # mostramos info
-        fps = Engine.GetFPS()
+        fps = self.lge.GetFPS()
         fps = "FPS: %07.2f" % fps
 
-        ngobjs = len(Engine.GetGObject("*"))
-        ngobjs = "gObjs: %05d" % ngobjs
+        mx, my = self.lge.GetMousePosition()
+        mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
-        mx, my = Engine.GetMousePosition()
-        mb1, mb2, mb3 = Engine.GetMouseButtons()
-        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % (mx, my, mb1, mb2, mb3)
-
-        infobar = Engine.GetGObject("infobar")
-        infobar.Fill((0, 0, 0, 20))
-        infobar.DrawText(fps + " - " + ngobjs + " - " + minfo, (140, 0), "monospace", (0, 0, 0))
+        info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
+            self.lge.GetFPS(),
+            self.lge.GetCountGObjects(), mx, my,
+            mb1, mb2, mb3
+        )
+        infobar = self.lge.GetGObject("infobar")
+        infobar.Fill((20, 20, 20, 10))
+        infobar.DrawText(info, (140, 0), "monospace.16", (0, 0, 0))
 
         # las particulas
         for i in range(self.num_particles):
             particle = self.particles[i]
             particle.OnUpdate(dt)
 
-        panel = Engine.GetGObject("Panel")
+        panel = self.lge.GetGObject("Panel")
         panel.Fill((255, 255, 255))
         for i in range(self.num_particles):
             particle = self.particles[i]
             x = round(particle.x)
             y = round(particle.y)
-            r = round(particle.m*10)
+            r = round(particle.m*5)
             #panel.DrawPoint( (x,y), (0,0,0) )
             #panel.DrawCircle( (x,y), r, (0,0,0) )
             panel.DrawRectangle((x, y), (r, r), (0, 0, 0))
 
     def Run(self):
-        import cProfile
-        cProfile.run("Engine.Run( 60 )")
+        self.lge.Run(60)
 
 
 class Particle():
@@ -102,5 +110,5 @@ class Particle():
 
 
 # -- show time
-game = MiJuego()
-game.Run()
+game = Particles()
+cProfile.run("game.Run()")

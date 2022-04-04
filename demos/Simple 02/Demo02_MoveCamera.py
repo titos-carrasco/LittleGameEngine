@@ -4,13 +4,13 @@ from lge.Canvas import Canvas
 from lge.Rectangle import Rectangle
 
 
-class MiJuego():
+class MoveCamera():
     def __init__(self):
         # creamos el juego
         win_size = (640, 480)
 
         self.lge = LittleGameEngine(win_size, "Move Camera", (255, 255, 0))
-        self.lge.SetOnMainUpdate(self.MainUpdate)
+        self.lge.SetOnMainUpdate(self.OnMainUpdate)
 
         # cargamos los recursos que usaremos
         resource_dir = "../resources"
@@ -50,7 +50,7 @@ class MiJuego():
         cw, ch = self.lge.GetCameraSize()
         self.lge.SetCameraPosition(x + w / 2 - cw / 2, y + h / 2 - ch / 2)
 
-    def MainUpdate(self, dt):
+    def OnMainUpdate(self, dt):
         # abortamos con la tecla Escape
         if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
             self.lge.Quit()
@@ -110,5 +110,5 @@ class MiJuego():
 
 
 # --- show time
-game = MiJuego()
+game = MoveCamera()
 game.Run()

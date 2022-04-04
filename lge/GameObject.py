@@ -115,7 +115,7 @@ class GameObject():
         """
         Establece los eventos que recibira este objeto
         """
-        self.on_events_enabled = on_events_enabled
+        self.on_events_enabled |= on_events_enabled
 
     def OnDelete(self):
         """
@@ -153,13 +153,13 @@ class GameObject():
         """
         pass
 
-    def OnPreRender(dt):
+    def OnPreRender(self, dt):
         """
         Redefinir si es que se procesara este evento
         """
         pass
 
-    def OnQuit():
+    def OnQuit(self):
         """
         Redefinir si es que se procesara este evento
         """

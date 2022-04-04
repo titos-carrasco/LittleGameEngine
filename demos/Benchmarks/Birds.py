@@ -1,21 +1,23 @@
 import cProfile
 import random
+import time
 
 from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
-from lge.Rectangle import Rectangle
 
 
 class Birds():
     def __init__(self):
+        # instante de inicio
+        self.t_ini = time.time()
+
         # creamos el juego
         win_size = (800, 440)
 
         self.lge = LittleGameEngine(win_size, "Birds", (255, 255, 0))
-        self.lge.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.lge.SetOnMainUpdate(self.MainUpdate)
-        self.lge.ShowColliders((255, 0, 0))
+        self.lge.SetOnMainUpdate(self.OnMainUpdate)
+        #self.lge.ShowColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resource_dir = "../resources"
@@ -47,7 +49,12 @@ class Birds():
             bird.UseColliders(True)
             self.lge.AddGObject(bird, 1)
 
-    def MainUpdate(self, dt):
+    def OnMainUpdate(self, dt):
+        # limite de ejecucion
+        if(time.time() - self.t_ini > 10):
+            self.lge.Quit()
+            return
+
         # abortamos con la tecla Escape
         if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
             self.lge.Quit()

@@ -1,69 +1,76 @@
+import cProfile
 import random
 import time
 
-from lge.Engine import Engine
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Canvas import Canvas
 
 
-class MiJuego():
+class Bouncing():
     def __init__(self):
-        self.niters = 60*20
-        self.nobjs = 0
+        # instante de inicio
+        self.t_ini = time.time()
 
         # creamos el juego
-        Engine.Init((800, 600), "Bouncing", (255, 255, 255))
+        win_size = (800, 440)
+
+        self.lge = LittleGameEngine(win_size, "Bouncing Balls", (255, 255, 255))
+        self.lge.SetOnMainUpdate(self.OnMainUpdate)
+        #self.lge.ShowColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
-        Engine.LoadTTFFont("monospace", 16, "../fonts/FreeMono.ttf")
+        resource_dir = "../resources"
+
+        self.lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 580), (800, 20), "infobar")
-        Engine.AddGObjectGUI(infobar)
+        infobar = Canvas((0, 420), (800, 20), "infobar")
+        self.lge.AddGObjectGUI(infobar)
 
         # agregamos el suelo
         ground = Canvas((0, 0), (800, 100), "ground")
         ground.Fill((200, 200, 200))
         ground.SetTag("ground")
-        ground.SetColliders()
-        Engine.AddGObject(ground, 1)
+        ground.UseColliders(True)
+        self.lge.AddGObject(ground, 1)
 
         # los objetos a rebotar
-        for i in range(50):
+        for i in range(100):
             x = 50 + random.random()*700
-            y = 200 + random.random()*350
-            vx = -20 + random.random()*20
+            y = 200 + random.random()*200
+            vx = -50 + random.random()*100
             vy = 0
             gobj = Objeto(x, y, vx, vy)
-            Engine.AddGObject(gobj, 1)
+            self.lge.AddGObject(gobj, 1)
 
-        # el control central del juego
-        Engine.SetOnUpdate(self.MainControl)
+    def OnMainUpdate(self, dt):
+        # limite de ejecucion
+        if(time.time() - self.t_ini > 10):
+            self.lge.Quit()
+            return
 
-    def MainControl(self, dt):
         # abortamos con la tecla Escape
-        if(Engine.KeyUp(Engine.CONSTANTS.K_ESCAPE)):
-            Engine.Quit()
+        if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+            self.lge.Quit()
 
         # mostramos info
-        fps = Engine.GetFPS()
+        fps = self.lge.GetFPS()
         fps = "FPS: %07.2f" % fps
 
-        ngobjs = len(Engine.GetGObject("*"))
-        ngobjs = "gObjs: %05d" % ngobjs
+        mx, my = self.lge.GetMousePosition()
+        mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
-        mx, my = Engine.GetMousePosition()
-        mb1, mb2, mb3 = Engine.GetMouseButtons()
-        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % (mx, my, mb1, mb2, mb3)
-
-        infobar = Engine.GetGObject("infobar")
-        infobar.Fill((0, 0, 0, 20))
-        infobar.DrawText(fps + " - " + ngobjs + " - " + minfo, (140, 0), "monospace", (0, 0, 0))
+        info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
+            self.lge.GetFPS(),
+            self.lge.GetCountGObjects(), mx, my,
+            mb1, mb2, mb3
+        )
+        infobar = self.lge.GetGObject("infobar")
+        infobar.Fill((20, 20, 20, 10))
+        infobar.DrawText(info, (140, 0), "monospace.16", (0, 0, 0))
 
     def Run(self):
-        #Engine.ShowColliders( (255,0,0) )
-        Engine.EnableOnEvent(Engine.E_ON_COLLISION)
-        import cProfile
-        cProfile.run("Engine.Run( 60 )")
+        self.lge.Run(60)
 
 
 class Objeto(Canvas):
@@ -72,37 +79,38 @@ class Objeto(Canvas):
         self.vx = vx
         self.vy = vy
         self.g = 240
-        self.e = 0.5
-        self.SetColliders()
+        self.e = 0.8
+        self.Fill((0, 128, 0, 200))
+        self.UseColliders(True)
+        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.SetOnEvents(LittleGameEngine.E_ON_COLLISION)
 
     def OnUpdate(self, dt):
         x, y = self.GetPosition()
 
         x = x + self.vx*dt
         y = y + self.vy*dt
+
+        if(x < 0):
+            self.lge.DelGObject(self)
+            return
+
         self.vy = self.vy - self.g*dt
-
         self.SetPosition(x, y)
-        self.Fill((0, 255, 0, 64))
 
-    def OnCollision(self, dt, collisions):
-        x, y = self.GetPosition()
+    def OnCollision(self, dt, gobjs):
+        for gobj in gobjs:
+            if(gobj.GetTag() == "ground"):
+                self.SetPosition(self.GetX(), gobj.GetY() + gobj.GetHeight())
 
-        for gobj, rect in collisions:
-            if(gobj.GetTag() != "ground"):
-                continue
-
-            x1, y1, x2, y2 = rect.GetPoints()
-            self.SetPosition(x, y2 + 1)
-
-            self.vy = -self.vy*self.e
-            if(abs(self.vy) < 30):
-                self.vy = 0
-                self.vx = 0
-                self.g = 0
-            break
+                self.vy = -self.vy*self.e
+                if(abs(self.vy) < 30):
+                    self.vy = 0
+                    self.vx = 0
+                    self.g = 0
+                break
 
 
 # -- show time
-game = MiJuego()
-game.Run()
+game = Bouncing()
+cProfile.run("game.Run()")

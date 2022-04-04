@@ -5,15 +5,14 @@ from lge.Canvas import Canvas
 from lge.Rectangle import Rectangle
 
 
-class MiJuego():
+class Colliders():
     def __init__(self):
         # creamos el juego
         win_size = (640, 480)
 
         self.lge = LittleGameEngine(win_size, "Colliders", (255, 255, 0))
-        self.lge.SetOnEvents(LittleGameEngine.E_ON_UPDATE | LittleGameEngine.E_ON_COLLISION)
         self.lge.ShowColliders((255, 0, 0))
-        self.lge.SetOnMainUpdate(self.MainUpdate)
+        self.lge.SetOnMainUpdate(self.OnMainUpdate)
 
         # cargamos los recursos que usaremos
         resource_dir = "../resources"
@@ -61,7 +60,7 @@ class MiJuego():
         # establecemos que la camara siga al heroe
         self.lge.SetCameraTarget(heroe, False)
 
-    def MainUpdate(self, dt):
+    def OnMainUpdate(self, dt):
         # abortamos con la tecla Escape
         if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
             self.lge.Quit()
@@ -112,7 +111,8 @@ class MiHeroe(Sprite):
         self.lge = LittleGameEngine.GetLGE()
 
         # sus atributos
-        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE | LittleGameEngine.E_ON_COLLISION)
+        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.SetOnEvents(LittleGameEngine.E_ON_COLLISION)
         self.SetShape("heroe_idle_left")
         self.UseColliders(True)
         self.state = -1
@@ -163,9 +163,9 @@ class MiHeroe(Sprite):
     def OnCollision(self, dt, gobjs):
         x, y = self.last
         self.lge.PlaySound("poing", False, 10)
-        self.SetPosition(x,y)
+        self.SetPosition(x, y)
 
 
 # --- show time
-game = MiJuego()
+game = Colliders()
 game.Run()

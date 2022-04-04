@@ -4,14 +4,13 @@ from lge.Canvas import Canvas
 from lge.Rectangle import Rectangle
 
 
-class MiJuego():
+class MovePlayer():
     def __init__(self):
         # creamos el juego
         win_size = (640, 480)
 
         self.lge = LittleGameEngine(win_size, "Move Player", (255, 255, 0))
-        self.lge.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.lge.SetOnMainUpdate(self.MainUpdate)
+        self.lge.SetOnMainUpdate(self.OnMainUpdate)
 
         # cargamos los recursos que usaremos
         resource_dir = "../resources"
@@ -49,7 +48,7 @@ class MiJuego():
         # establecemos que la camara siga al heroe
         self.lge.SetCameraTarget(heroe, True)
 
-    def MainUpdate(self, dt):
+    def OnMainUpdate(self, dt):
         # abortamos con la tecla Escape
         if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
             self.lge.Quit()
@@ -126,5 +125,5 @@ class MiHeroe(Sprite):
 
 
 # --- show time
-game = MiJuego()
+game = MovePlayer()
 game.Run()

@@ -8,7 +8,7 @@ def main():
     # creamos el juego
     win_size = (640, 480)
     lge = LittleGameEngine(win_size, "Move Camera", (255, 255, 0))
-    lge.SetOnMainUpdate(MainUpdate)
+    lge.SetOnMainUpdate(OnMainUpdate)
 
     # cargamos los recursos que usaremos
     resource_dir = "../resources"
@@ -46,7 +46,7 @@ def main():
     lge.Run(60)
 
 
-def MainUpdate(dt):
+def OnMainUpdate(dt):
     # acceso al motor de juegos
     lge = LittleGameEngine.GetLGE()
 

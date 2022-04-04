@@ -1,150 +1,131 @@
-from lge.Engine import Engine
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Canvas import Canvas
 
+from Ball import Ball
 
-class Game():
+
+class Pong():
     def __init__(self):
         # creamos el juego
-        Engine.Init((640, 640), "Pong")
-        Engine.SetOnUpdate(self.MainUpdate)
+        win_size = (640, 640)
 
-        field = Canvas((5, 35), (630, 524), "field")
-        field.Fill((0, 0, 100))
-        Engine.AddGObject(field, 0)
+        self.lge = LittleGameEngine(win_size, "Pong", (0, 0, 0))
+        self.lge.SetOnMainUpdate(self.OnMainUpdate)
 
         # cargamos los recursos que usaremos
-        Engine.LoadTTFFont("monospace", 16, "../fonts/FreeMono.ttf")
+        resource_dir = "../resources"
+
+        self.lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos la barra de info
         infobar = Canvas((0, 620), (640, 20), "infobar")
-        Engine.AddGObjectGUI(infobar)
+        self.lge.AddGObjectGUI(infobar)
+
+        # el campo de juego
+        field = Canvas((24, 34), (592, 526), "field")
+        field.Fill((0, 0, 100))
+        self.lge.AddGObject(field, 0)
 
         # los bordes
-        wall = Canvas((0, 560), (640, 4))
+        wall = Canvas((0, 560),  (640, 4))
         wall.Fill((255, 255, 255))
         wall.SetTag("wall-horizontal")
-        wall.SetColliders()
-        Engine.AddGObject(wall, 1)
+        wall.UseColliders(True)
+        self.lge.AddGObject(wall, 1)
 
-        wall = Canvas((0, 30), (640, 4))
+        wall = Canvas((0, 30),  (640, 4))
         wall.Fill((255, 255, 255))
         wall.SetTag("wall-horizontal")
-        wall.SetColliders()
-        Engine.AddGObject(wall, 1)
+        wall.UseColliders(True)
+        self.lge.AddGObject(wall, 1)
 
-        wall = Canvas((20, 34), (4, 526))
+        wall = Canvas((20, 34),  (4, 526))
         wall.Fill((255, 255, 255))
         wall.SetTag("wall-vertical")
-        wall.SetColliders()
-        Engine.AddGObject(wall, 1)
+        wall.UseColliders(True)
+        self.lge.AddGObject(wall, 1)
 
-        wall = Canvas((616, 34), (4, 526))
+        wall = Canvas((616, 34),  (4, 526))
         wall.Fill((255, 255, 255))
         wall.SetTag("wall-vertical")
-        wall.SetColliders()
-        Engine.AddGObject(wall, 1)
+        wall.UseColliders(True)
+        self.lge.AddGObject(wall, 1)
 
         # los actores
-        ball = Ball((320, 400), (8, 8), "ball")
-        ball.Fill((255, 255, 255))
-        ball.SetColliders()
-        Engine.AddGObject(ball, 1)
+        ball = Ball((320, 400),  (8, 8), "ball")
+        self.lge.AddGObject(ball, 1)
 
-        paddle = Canvas((90, 270), (8, 60), "user-paddle")
+        paddle = Canvas((90, 270),  (8, 60), "user-paddle")
         paddle.Fill((255, 255, 255))
         paddle.SetTag("paddle")
-        paddle.SetColliders()
-        Engine.AddGObject(paddle, 1)
+        paddle.UseColliders(True)
+        paddle.SetBounds(field.GetRectangle())
+        self.lge.AddGObject(paddle, 1)
 
-        paddle = Canvas((540, 270), (8, 60), "system-paddle")
+        paddle = Canvas((540, 270),  (8, 60), "system-paddle")
         paddle.Fill((255, 255, 255))
         paddle.SetTag("paddle")
-        paddle.SetColliders()
-        Engine.AddGObject(paddle, 1)
+        paddle.UseColliders(True)
+        paddle.SetBounds(field.GetRectangle())
+        self.lge.AddGObject(paddle, 1)
 
         self.paddle_speed = 240
 
-    def MainUpdate(self, dt):
+    def OnMainUpdate(self, dt):
         # abortamos con la tecla Escape
-        if(Engine.KeyUp(Engine.CONSTANTS.K_ESCAPE)):
-            Engine.Quit()
+        if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+            self.lge.Quit()
 
         # mostramos info
-        fps = Engine.GetFPS()
+        fps = self.lge.GetFPS()
         fps = "FPS: %07.2f" % fps
 
-        ngobjs = len(Engine.GetGObject("*"))
-        ngobjs = "gObjs: %03d" % ngobjs
+        mx, my = self.lge.GetMousePosition()
+        mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
-        mx, my = Engine.GetMousePosition()
-        mb1, mb2, mb3 = Engine.GetMouseButtons()
-        minfo = "Mouse: (%3d,%3d) (%d,%d,%d)" % (mx, my, mb1, mb2, mb3)
-
-        infobar = Engine.GetGObject("infobar")
-        infobar.Fill((255, 255, 255, 20))
-        infobar.DrawText(fps + " - " + ngobjs + " - " + minfo, (50, 0), "monospace", (255, 255, 255))
-
-        # el campo de juego
-        field = Engine.GetGObject("field").GetRectangle()
+        info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
+            self.lge.GetFPS(),
+            self.lge.GetCountGObjects(), mx, my,
+            mb1, mb2, mb3
+        )
+        infobar = self.lge.GetGObject("infobar")
+        infobar.Fill((80, 80, 80, 200))
+        infobar.DrawText(info, (50, 0), "monospace.16", (255, 255, 255))
 
         # user paddle
-        user_paddle = Engine.GetGObject("user-paddle")
-        speed = self.paddle_speed*dt
-        x, y = user_paddle.GetPosition()
+        user_paddle = self.lge.GetGObject("user-paddle")
+        speed = self.paddle_speed * dt
+        x = user_paddle.GetX()
+        y = user_paddle.GetY()
 
-        if(Engine.KeyPressed(Engine.CONSTANTS.K_UP)):
-            user_paddle.SetPosition(x, y+speed, field)
-        elif(Engine.KeyPressed(Engine.CONSTANTS.K_DOWN)):
-            user_paddle.SetPosition(x, y-speed, field)
+        if (self.lge.KeyPressed(self.lge.CONSTANTS.K_UP)):
+            user_paddle.SetPosition(x, y + speed)
+        elif (self.lge.KeyPressed(self.lge.CONSTANTS.K_DOWN)):
+            user_paddle.SetPosition(x, y - speed)
+
+        # la pelota
+        ball = self.lge.GetGObject("ball")
+        #bx = ball.GetX()
+        by = ball.GetY()
 
         # system paddle
-        system_paddle = Engine.GetGObject("system-paddle")
-        pw, ph = system_paddle.GetSize()
-        px, py = system_paddle.GetPosition()
-        bx, by = Engine.GetGObject("ball").GetPosition()
+        system_paddle = self.lge.GetGObject("system-paddle")
+        px = system_paddle.GetX()
+        py = system_paddle.GetY()
+        #pw = system_paddle.GetWidth()
+        ph = system_paddle.GetHeight()
 
-        if(py + ph/2 < by):
+        if (py + ph / 2 < by):
             py = py + speed
-        elif(py + ph/2 > by):
+        elif (py + ph / 2 > by):
             py = py - speed
-        system_paddle.SetPosition(px, py, field)
+        system_paddle.SetPosition(px, py)
 
     # main loop
     def Run(self):
-        Engine.EnableOnEvent(Engine.E_ON_COLLISION)
-        Engine.Run(60)
-
-
-class Ball(Canvas):
-    def __init__(self, position, size, name):
-        super().__init__(position, size, name)
-        self.speedX = 180
-        self.speedY = -180
-
-    def OnUpdate(self, dt):
-        dx = self.speedX*dt
-        dy = self.speedY*dt
-
-        x, y = self.GetPosition()
-        self.SetPosition(x+dx, y+dy)
-
-    def OnCollision(self, dt, collisions):
-        x, y = self.GetPosition()
-        dx = self.speedX*dt
-        dy = self.speedY*dt
-
-        for gobj, r in collisions:
-            if(gobj.GetTag() == "wall-horizontal"):
-                self.speedY = -self.speedY
-                dy = -dy
-            if(gobj.GetTag() == "paddle"):
-                self.speedX = -self.speedX
-                dx = -dx
-            if(gobj.GetTag() == "wall-vertical"):
-                x, y = 320, 400
-        self.SetPosition(x+dx, y+dy)
+        self.lge.Run(60)
 
 
 # ----
-game = Game()
+game = Pong()
 game.Run()

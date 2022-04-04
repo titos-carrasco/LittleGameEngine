@@ -47,7 +47,7 @@ class Canvas(GameObject):
         y = self.rect.height - y
         thickness = 1 if thickness else 0
 
-        pygame.draw.circle(self._surface, color, (x, y), radius, thickness)
+        pygame.draw.circle(self.surface, color, (x, y), radius, thickness)
 
     def DrawRectangle(self, position, size, color, thickness=False):
         """
@@ -70,4 +70,4 @@ class Canvas(GameObject):
         w, h = surface.get_size()
         y = self.rect.height - h - y
 
-        self._surface.blit(surface, (x, y))
+        self.surface.blit(surface, (x, y))

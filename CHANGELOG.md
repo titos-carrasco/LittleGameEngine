@@ -1,5 +1,10 @@
 # ChangeLog
 
+## v0.5.0 2022-04-03
+- Corrige métodos DrawCircle y DrawCanvas en la referencia a "surface"
+- Modifica activación de eventos para ser realizada sólo sobre un GameObject
+- Actualiza demos
+
 ## 2022-04-01
 - Elimina archivo Clases.md dado que se documentará todo con pdoc3
 - Elimina directorio plantilla

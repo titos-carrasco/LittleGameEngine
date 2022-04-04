@@ -1,10 +1,9 @@
 from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
-from lge.Rectangle import Rectangle
 
 
-class MiJuego():
+class TheWorld():
     def __init__(self):
         # creamos el juego
         win_size = (800, 440)
@@ -85,5 +84,5 @@ class MiJuego():
 
 
 # -- show time
-game = MiJuego()
+game = TheWorld()
 game.Run()
