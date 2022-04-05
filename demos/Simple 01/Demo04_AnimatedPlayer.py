@@ -61,9 +61,6 @@ def OnMainUpdate(dt):
         lge.Quit()
 
     # mostramos info
-    fps = lge.GetFPS()
-    fps = "FPS: %07.2f" % fps
-
     mx, my = lge.GetMousePosition()
     mb1, mb2, mb3 = lge.GetMouseButtons()
 

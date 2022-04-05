@@ -17,7 +17,6 @@ class Birds():
 
         self.lge = LittleGameEngine(win_size, "Birds", (255, 255, 0))
         self.lge.SetOnMainUpdate(self.OnMainUpdate)
-        #self.lge.ShowColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resource_dir = "../resources"
@@ -37,7 +36,6 @@ class Birds():
 
         # agregamos al heroe
         heroe = Sprite("heroe", (226, 142))
-        heroe.UseColliders(True)
         self.lge.AddGObject(heroe, 1)
 
         # agregamos pajaros
@@ -46,7 +44,6 @@ class Birds():
             x = random.random()*ww
             y = random.random()*(wh - 40)
             bird = Bird("bird", (x, y))
-            bird.UseColliders(True)
             self.lge.AddGObject(bird, 1)
 
     def OnMainUpdate(self, dt):
@@ -60,9 +57,6 @@ class Birds():
             self.lge.Quit()
 
         # mostramos info
-        fps = self.lge.GetFPS()
-        fps = "FPS: %07.2f" % fps
-
         mx, my = self.lge.GetMousePosition()
         mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
@@ -85,7 +79,7 @@ class Bird(Sprite):
         super().__init__(inames, position)
 
         # acceso al motor de juegos
-        self.lge = LittleGameEngine.GetLGE()
+        self.lge = self.GetLGE()
 
         # sus atributos
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)

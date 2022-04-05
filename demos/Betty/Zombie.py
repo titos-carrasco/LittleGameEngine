@@ -7,14 +7,14 @@ from lge.Sprite import Sprite
 class Zombie(Sprite):
     def __init__(self, name, win_size):
         super().__init__("zombie", (0, 0), name)
-        self.lge = LittleGameEngine.GetLGE()
+
+        self.lge = self.GetLGE()
 
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.SetShape("zombie")
         self.SetTag("zombie")
         self.UseColliders(True)
         self.active = True
-        self.dir = "R"
         self.win_size = win_size
 
         # direccion inicial - Right, Down, Left, Up

@@ -14,6 +14,9 @@ class WebCam(Canvas):
     def __init__(self):
         super().__init__((200, 257), (256, 144))
 
+        # acceso al motor de juegos
+        self.lge = self.GetLGE()
+
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.SetOnEvents(LittleGameEngine.E_ON_QUIT)
 

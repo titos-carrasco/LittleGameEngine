@@ -55,9 +55,6 @@ class Platform():
             self.lge.Quit()
 
         # mostramos info
-        fps = self.lge.GetFPS()
-        fps = "FPS: %07.2f" % fps
-
         mx, my = self.lge.GetMousePosition()
         mb1, mb2, mb3 = self.lge.GetMouseButtons()
 

@@ -7,6 +7,9 @@ class Ball(Canvas):
     def __init__(self, position, size, name):
         super().__init__(position, size, name)
 
+        # acceso al motor de juegos
+        self.lge = self.GetLGE()
+
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.SetOnEvents(LittleGameEngine.E_ON_COLLISION)
         self.UseColliders(True)

@@ -1,4 +1,5 @@
 import pygame
+
 from lge.LittleGameEngine import LittleGameEngine
 from lge.GameObject import GameObject
 
@@ -9,9 +10,8 @@ class Canvas(GameObject):
         Crea un objeto, para dibujar, en la posicion (x, y) y dimensiones(width, height) especificadas
         """
         super().__init__(position, size, name)
-        self.lge = LittleGameEngine.GetLGE()
         width, height = size
-        self.surface = self.lge.CreateTranslucentImage(width, height)
+        self.surface = self._lge.CreateTranslucentImage(width, height)
 
     def Fill(self, color):
         """
@@ -25,7 +25,7 @@ class Canvas(GameObject):
         """
         x, y = position
 
-        s = self.lge.fonts[fname].render(text, True, fcolor)
+        s = self._lge.fonts[fname].render(text, True, fcolor)
         self.surface.blit(s, (x, self.rect.height - s.get_height() - y))
 
     def DrawPoint(self, position, color):

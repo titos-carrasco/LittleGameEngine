@@ -4,7 +4,7 @@ from lge.GameObject import GameObject
 class Camera(GameObject):
     def __init__(self, position, size):
         """
-        Crea la camara en la posicion(x, y) y dimensiones (width, height) especificados
+        Crea la camara en la posicion(x, y) y de dimensiones (width, height) especificadas
 
         Esta clase es privada
         """

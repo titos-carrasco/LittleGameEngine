@@ -9,7 +9,7 @@ class Betty(Sprite):
         super().__init__(images, (x, y), "Betty")
 
         # acceso al motor de juegos
-        self.lge = LittleGameEngine.GetLGE()
+        self.lge = self.GetLGE()
 
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.SetOnEvents(LittleGameEngine.E_ON_COLLISION)

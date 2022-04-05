@@ -1,5 +1,5 @@
-from lge.GameObject import GameObject
 from lge.LittleGameEngine import LittleGameEngine
+from lge.GameObject import GameObject
 
 
 class Sprite(GameObject):
@@ -20,7 +20,7 @@ class Sprite(GameObject):
         if(not isinstance(inames, list)):
             inames = [inames]
         for iname in inames:
-            self.surfaces[iname] = LittleGameEngine.GetLGE().GetImages(iname)
+            self.surfaces[iname] = self._lge.GetImages(iname)
 
         self.iname = list(self.surfaces.keys())[0]
         self.idx = 0

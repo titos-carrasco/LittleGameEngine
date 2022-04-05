@@ -7,7 +7,7 @@ class Ninja(Sprite):
         super().__init__("ninja", position)
 
         # acceso al motor de juegos
-        self.lge = LittleGameEngine.GetLGE()
+        self.lge = self.GetLGE()
 
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
 

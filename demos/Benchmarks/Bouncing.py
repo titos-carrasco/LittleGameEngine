@@ -40,7 +40,7 @@ class Bouncing():
             y = 200 + random.random()*200
             vx = -50 + random.random()*100
             vy = 0
-            gobj = Objeto(x, y, vx, vy)
+            gobj = Ball(x, y, vx, vy)
             self.lge.AddGObject(gobj, 1)
 
     def OnMainUpdate(self, dt):
@@ -54,9 +54,6 @@ class Bouncing():
             self.lge.Quit()
 
         # mostramos info
-        fps = self.lge.GetFPS()
-        fps = "FPS: %07.2f" % fps
-
         mx, my = self.lge.GetMousePosition()
         mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
@@ -73,9 +70,13 @@ class Bouncing():
         self.lge.Run(60)
 
 
-class Objeto(Canvas):
+class Ball(Canvas):
     def __init__(self, x, y, vx, vy):
         super().__init__((x, y), (20, 20))
+
+        # acceso al motor de juegos
+        self.lge = self.GetLGE()
+
         self.vx = vx
         self.vy = vy
         self.g = 240

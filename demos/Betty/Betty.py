@@ -6,8 +6,7 @@ class Betty(Sprite):
     def __init__(self, name, win_size):
         super().__init__(["betty_idle", "betty_down", "betty_up", "betty_left", "betty_right"], (0, 0), name)
 
-        # acceso al motor de juegos
-        self.lge = LittleGameEngine.GetLGE()
+        self.lge = self.GetLGE()
 
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.SetOnEvents(LittleGameEngine.E_ON_COLLISION)
@@ -22,7 +21,7 @@ class Betty(Sprite):
 
     def SetAlive(self, alive):
         self.alive = alive
-        self.SetShape("betty_idle", 0)
+        self.SetShape("betty_idle")
 
     def OnUpdate(self, dt):
         # solo si estoy viva

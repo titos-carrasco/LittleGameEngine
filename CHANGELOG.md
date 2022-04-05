@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 2022-05-04
+- Deja disponible el objeto LGE dentro de cada GameObject
+- Ajusta demos
+
 ## v0.5.0 2022-04-03
 - Corrige métodos DrawCircle y DrawCanvas en la referencia a "surface"
 - Modifica activación de eventos para ser realizada sólo sobre un GameObject

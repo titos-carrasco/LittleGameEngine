@@ -1,4 +1,6 @@
 import uuid
+
+import lge
 from lge.Rectangle import Rectangle
 
 
@@ -11,6 +13,8 @@ class GameObject():
         - size: (width, height)
         - name: (opcional) nombre de este objeto
         """
+        self._lge = lge.LittleGameEngine.LittleGameEngine.GetLGE()
+
         self.rect = Rectangle(position, size)
         self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
         self.surface = None
@@ -19,6 +23,9 @@ class GameObject():
         self.use_colliders = False
         self.layer = -1
         self.on_events_enabled = 0x00
+
+    def GetLGE( self ):
+        return self._lge
 
     def GetPosition(self):
         """

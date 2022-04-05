@@ -54,9 +54,6 @@ class MovePlayer():
             self.lge.Quit()
 
         # mostramos info
-        fps = self.lge.GetFPS()
-        fps = "FPS: %07.2f" % fps
-
         mx, my = self.lge.GetMousePosition()
         mb1, mb2, mb3 = self.lge.GetMouseButtons()
 
@@ -90,7 +87,7 @@ class MiHeroe(Sprite):
         super().__init__(["heroe_right", "heroe_left"], (550, 346), "Heroe")
 
         # acceso al motor de juegos
-        self.lge = LittleGameEngine.GetLGE()
+        self.lge = self.GetLGE()
 
         # sus atributos
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)

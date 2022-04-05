@@ -7,7 +7,7 @@ class BlockHorizontal(Sprite):
         super().__init__("roca", (128, 128), "roca")
 
         # acceso al motor de juegos
-        self.lge = LittleGameEngine.GetLGE()
+        self.lge = self.GetLGE()
 
         self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.SetPosition(x, y)
