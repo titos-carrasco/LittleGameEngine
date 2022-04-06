@@ -3,8 +3,9 @@ class Rectangle():
         """
         Crea un rectangulo en el origen y dimensiones especificadas
 
-        - origin: (x, y)
-        - size: (width, height)
+        Parametros:
+            tuple origin: coordenadas (x, y) del origen del rectangulo
+            tuple size: dimension (width, height) del rectangulo
         """
         x, y = origin
         width, height = size
@@ -13,40 +14,63 @@ class Rectangle():
         self.x, self.y = int(x), int(y)
         self.width, self.height = int(width), int(height)
 
-    def Copy(self):
+    def copy(self):
         """
         Retorna una copia de este rectangulo
+
+        Retorna:
+            Rectangle( x, y, width, height ) : la copia
         """
         return Rectangle((self.x, self.y), (self.width, self.height))
 
-    def GetOrigin(self):
+    def getOrigin(self):
         """
-        Retorna las coordenadas (x,y) del origen de este rentangulo
+        Retorna las coordenadas del origen de este rectangulo
+
+        Retorna:
+            tuple : las coordenadas (x,y)
         """
         return self.x, self.y
 
-    def GetSize(self):
+    def getSize(self):
         """
-        Retorna la dimension (width,height) de este rectangulo
+        Retorna la dimension de este rectangulo
+
+        Retorna:
+            tuple : la dimension (width,height)
         """
         return self.width, self.height
 
-    def SetOrigin(self, x, y):
+    def setOrigin(self, x, y):
         """
-        Establece el origen de este rectangulo en las coordenadas (x,y)
+        Establece el origen de este rectangulo
+
+        Parametros:
+            int x : origen en X
+            int y : origen en Y
         """
         self.x, self.y = int(x), int(y)
 
-    def SetSize(self, width, height):
+    def setSize(self, width, height):
         """
-        Establece las dimensiones de este rectangulo en (width,height)
+        Establece las dimensiones de este rectangulo
+
+        Parametros:
+            int width : el ancho
+            int height : el alto
         """
         assert width > 0 and height > 0, "ancho/alto invalidos"
         self.width, self.height = int(width), int(height)
 
-    def Intersects(self, rect):
+    def intersects(self, rect):
         """
-        Retorna True si este rectangulo instersecta al rectangulo dado como parametro
+        Determina si el rectangulo intersecta a otro
+
+        Parametros:
+            Rectangle rect : el rectangulo sobre el cual determinar la interseccion
+
+        Retorna:
+            bool : True si sintersectan
         """
         sx1, sx2 = self.x, self.x + self.width - 1
         sy1, sy2 = self.y, self.y + self.height - 1
@@ -59,9 +83,16 @@ class Rectangle():
             ry1 <= sy2 and \
             sy1 <= ry2
 
-    def Contains(self, x, y):
+    def contains(self, x, y):
         """
-        Retorna True si las coordenadas (x,y) se encuentran dentro de este rectangulo
+        Retorna True si las coordenadas dadas se encuentran dentro de este rectangulo
+
+        Parametros:
+            int x : la coordenada X
+            int y : la coordenada Y
+
+        Retorna
+            bool : True si es que el punto dado se encuentra dentro del rectangulo
         """
         return x >= self.x and x < self.x + self.width and \
             y >= self.y and y < self.y + self.height

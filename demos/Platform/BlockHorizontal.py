@@ -6,19 +6,16 @@ class BlockHorizontal(Sprite):
     def __init__(self, x, y):
         super().__init__("roca", (128, 128), "roca")
 
-        # acceso al motor de juegos
-        self.lge = self.GetLGE()
-
-        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.SetPosition(x, y)
-        self.SetShape("roca")
-        self.SetTag("ground")
+        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.setPosition(x, y)
+        self.setShape("roca")
+        self.setTag("ground")
         self.x, self.y = x, y
         self.dir = "up"
-        self.limit_top = y + 64*4
-        self.limit_bottom = y - 64
+        self.limitTop = y + 64*4
+        self.limitBottom = y - 64
 
-    def OnUpdate(self, dt):
+    def onUpdate(self, dt):
         # velocity = pixeles por segundo
         velocity = 120
         pixels = velocity*dt
@@ -29,9 +26,9 @@ class BlockHorizontal(Sprite):
             self.y = self.y + pixels
         else:
             self.y = self.y - pixels
-        self.SetPosition(self.x, self.y)
+        self.setPosition(self.x, self.y)
 
-        if(self.y >= self.limit_top):
+        if(self.y >= self.limitTop):
             self.dir = "down"
-        elif(self.y < self.limit_bottom):
+        elif(self.y < self.limitBottom):
             self.dir = "up"

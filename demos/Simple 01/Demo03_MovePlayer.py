@@ -6,76 +6,76 @@ from lge.Rectangle import Rectangle
 
 def main():
     # creamos el juego
-    win_size = (640, 480)
-    lge = LittleGameEngine(win_size, "Move Player", (255, 255, 0))
-    lge.SetOnMainUpdate(OnMainUpdate)
+    winSize = (640, 480)
+    lge = LittleGameEngine(winSize, "Move player", (255, 255, 0))
+    lge.setOnMainUpdate(onMainUpdate)
 
     # cargamos los recursos que usaremos
-    resource_dir = "../resources"
+    resourceDir = "../resources"
 
-    lge.LoadImage("fondo", resource_dir + "/images/Backgrounds/FreeTileset/Fondo.png")
-    lge.LoadImage("heroe_right", resource_dir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
-    lge.LoadImage("heroe_left", resource_dir + "/images/Swordsman/Idle/Idle_000.png", 0.16, (True, False))
-    lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
-    lge.LoadSound("fondo", resource_dir + "/sounds/happy-and-sad.wav")
+    lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+    lge.loadImage("heroe_right", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
+    lge.loadImage("heroe_left", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16, (True, False))
+    lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+    lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
     # activamos la musica de fondo
-    lge.PlaySound("fondo", True, 50)
+    lge.playSound("fondo", True, 50)
 
     # agregamos el fondo
     fondo = Sprite("fondo", (0, 0))
-    lge.AddGObject(fondo, 0)
+    lge.addGObject(fondo, 0)
 
     # agregamos la barra de info
     infobar = Canvas((0, 460), (640, 20), "infobar")
-    lge.AddGObjectGUI(infobar)
+    lge.addGObjectGUI(infobar)
 
     # agregamos al heroe
     heroe = Sprite(["heroe_right", "heroe_left"], (550, 346), "Heroe")
-    heroe.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-    heroe.SetShape("heroe_right")
-    heroe.SetBounds(Rectangle((0, 0), (1920, 1056)))
-    heroe.OnUpdate = HeroeUpdate
-    lge.AddGObject(heroe, 1)
+    heroe.setOnEvents(LittleGameEngine.E_ON_UPDATE)
+    heroe.setShape("heroe_right")
+    heroe.setBounds(Rectangle((0, 0), (1920, 1056)))
+    heroe.onUpdate = HeroeUpdate
+    lge.addGObject(heroe, 1)
 
     # configuramos la camara
-    lge.SetCameraBounds(Rectangle((0, 0), (1920, 1056)))
+    lge.setCameraBounds(Rectangle((0, 0), (1920, 1056)))
 
     # establecemos que la camara siga al heroe
-    lge.SetCameraTarget(heroe, True)
+    lge.setCameraTarget(heroe, True)
 
     # main loop
-    lge.Run(60)
+    lge.run(60)
 
 
-def OnMainUpdate(dt):
+def onMainUpdate(dt):
     # acceso al motor de juegos
-    lge = LittleGameEngine.GetLGE()
+    lge = LittleGameEngine.getInstance()
 
     # abortamos con la tecla Escape
-    if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
-        lge.Quit()
+    if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+        lge.quit()
 
     # mostramos info
-    mx, my = lge.GetMousePosition()
-    mb1, mb2, mb3 = lge.GetMouseButtons()
+    mx, my = lge.getMousePosition()
+    mb1, mb2, mb3 = lge.getMouseButtons()
 
     info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
-        lge.GetFPS(),
-        lge.GetCountGObjects(), mx, my,
+        lge.getFPS(),
+        lge.getCountGObjects(), mx, my,
         mb1, mb2, mb3
     )
-    infobar = lge.GetGObject("infobar")
-    infobar.Fill((20, 20, 20, 10))
-    infobar.DrawText(info, (50, 0), "monospace.16", (0, 0, 0))
+    infobar = lge.getGObject("infobar")
+    infobar.fill((20, 20, 20, 10))
+    infobar.drawText(info, (50, 0), "monospace.16", (0, 0, 0))
 
 
 def HeroeUpdate(dt):
     # acceso al motor de juegos
-    lge = LittleGameEngine.GetLGE()
+    lge = LittleGameEngine.getInstance()
 
     # el heroe
-    heroe = lge.GetGObject("Heroe")
+    heroe = lge.getGObject("Heroe")
 
     # velocity = pixeles por segundo
     velocity = 240
@@ -84,23 +84,23 @@ def HeroeUpdate(dt):
         pixels = 1
 
     # la posiciona actual del heroe
-    x, y = heroe.GetPosition()
+    x, y = heroe.getPosition()
 
     # cambiamos sus coordenadas y orientacion segun la tecla presionada
-    if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
+    if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
         x = x + pixels
-        heroe.SetShape("heroe_right")
-    elif(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
+        heroe.setShape("heroe_right")
+    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
         x = x - pixels
-        heroe.SetShape("heroe_left")
+        heroe.setShape("heroe_left")
 
-    if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_UP)):
+    if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
         y = y + pixels
-    elif(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
         y = y - pixels
 
     # lo posicionamos
-    heroe.SetPosition(x, y)
+    heroe.setPosition(x, y)
 
 
 # --- show time

@@ -14,11 +14,8 @@ class WebCam(Canvas):
     def __init__(self):
         super().__init__((200, 257), (256, 144))
 
-        # acceso al motor de juegos
-        self.lge = self.GetLGE()
-
-        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.SetOnEvents(LittleGameEngine.E_ON_QUIT)
+        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.setOnEvents(LittleGameEngine.E_ON_QUIT)
 
         self.cam = cv2.VideoCapture(0)
         #self.cam.set( cv2.CAP_PROP_POS_FRAMES, 1 )
@@ -40,7 +37,7 @@ class WebCam(Canvas):
                 except:
                     pass
 
-                frame = cv2.resize(frame, self.GetSize(), interpolation=cv2.INTER_AREA)
+                frame = cv2.resize(frame, self.getSize(), interpolation=cv2.INTER_AREA)
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame = numpy.rot90(frame)
 
@@ -48,15 +45,15 @@ class WebCam(Canvas):
                 self.queue.put(surface)
             cv2.waitKey(10)
 
-    def OnUpdate(self, dt):
+    def onUpdate(self, dt):
         if(not self.running):
             return
         try:
             surface = self.queue.get_nowait()
-            self.DrawSurface((0, 0), surface)
+            self.drawSurface((0, 0), surface)
         except Exception as e:
             pass
 
-    def OnQuit(self):
+    def onQuit(self):
         self.running = False
         self.task.join()

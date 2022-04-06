@@ -5,25 +5,25 @@ from lge.Sprite import Sprite
 
 
 class Zombie(Sprite):
-    def __init__(self, name, win_size):
+    def __init__(self, name, winSize):
         super().__init__("zombie", (0, 0), name)
 
-        self.lge = self.GetLGE()
+        self.lge = LittleGameEngine.getInstance()
 
-        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.SetShape("zombie")
-        self.SetTag("zombie")
-        self.UseColliders(True)
+        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.setShape("zombie")
+        self.setTag("zombie")
+        self.useColliders(True)
         self.active = True
-        self.win_size = win_size
+        self.winSize = winSize
 
         # direccion inicial - Right, Down, Left, Up
         self.dir = "RDLU"[int(random.random() * 4)]
 
-    def SetActive(self, state):
+    def setActive(self, state):
         self.active = state
 
-    def OnUpdate(self, dt):
+    def onUpdate(self, dt):
         if(not self.active):
             return
 
@@ -33,11 +33,11 @@ class Zombie(Sprite):
         pixels = 2
 
         # las coordenadas de Betty
-        betty = self.lge.GetGObject("Betty")
-        bx, by = betty.GetPosition()
+        betty = self.lge.getGObject("Betty")
+        bx, by = betty.getPosition()
 
         # nuestra posicion actual
-        x, y = self.GetPosition()
+        x, y = self.getPosition()
 
         # posicion respecto a Betty
         abajo = y < by
@@ -131,11 +131,11 @@ class Zombie(Sprite):
                 ny -= pixels
 
             # verificamos que no colisionemos con un muro u otro zombie
-            self.SetPosition(nx, ny)
-            gobjs = self.lge.IntersectGObjects(self)
+            self.setPosition(nx, ny)
+            gobjs = self.lge.intersectGObjects(self)
             collision = False
             for gobj in gobjs:
-                tag = gobj.GetTag()
+                tag = gobj.getTag()
                 if(tag == "zombie" or tag == "muro"):
                     collision = True
                     break
@@ -145,14 +145,14 @@ class Zombie(Sprite):
 
                 # tunel?
                 if (nx < -16):
-                    nx = self.win_size[0] - 16
-                elif (nx > self.win_size[0] - 16):
+                    nx = self.winSize[0] - 16
+                elif (nx > self.winSize[0] - 16):
                     nx = -16
-                self.SetPosition(nx, ny)
+                self.setPosition(nx, ny)
                 break
 
             # otro intento
-            self.SetPosition(x, y)
+            self.setPosition(x, y)
 
         # siguiente imagen de la secuencia
-        self.NextShape(dt, 0.100)
+        self.nextShape(dt, 0.100)

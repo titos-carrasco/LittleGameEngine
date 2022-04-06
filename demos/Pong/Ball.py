@@ -7,36 +7,33 @@ class Ball(Canvas):
     def __init__(self, position, size, name):
         super().__init__(position, size, name)
 
-        # acceso al motor de juegos
-        self.lge = self.GetLGE()
+        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
+        self.useColliders(True)
+        self.fill((255, 255, 255))
+        self.initX, self.initY = position
+        self.speedX = 180
+        self.speedY = -180
 
-        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.SetOnEvents(LittleGameEngine.E_ON_COLLISION)
-        self.UseColliders(True)
-        self.Fill((255, 255, 255))
-        self.init_x, self.init_y = position
-        self.speed_x = 180
-        self.speed_y = -180
+    def onUpdate(self, dt):
+        x, y = self.getPosition()
+        dx = self.speedX*dt
+        dy = self.speedY*dt
 
-    def OnUpdate(self, dt):
-        x, y = self.GetPosition()
-        dx = self.speed_x*dt
-        dy = self.speed_y*dt
+        self.setPosition(x+dx, y+dy)
 
-        self.SetPosition(x+dx, y+dy)
-
-    def OnCollision(self, dt, gobjs):
-        x, y = self.GetPosition()
-        dx = self.speed_x*dt
-        dy = self.speed_y*dt
+    def onCollision(self, dt, gobjs):
+        x, y = self.getPosition()
+        dx = self.speedX*dt
+        dy = self.speedY*dt
 
         for gobj in gobjs:
-            if(gobj.GetTag() == "wall-horizontal"):
-                self.speed_y = -self.speed_y
+            if(gobj.getTag() == "wall-horizontal"):
+                self.speedY = -self.speedY
                 dy = -dy
-            if(gobj.GetTag() == "paddle"):
-                self.speed_x = -self.speed_x
+            if(gobj.getTag() == "paddle"):
+                self.speedX = -self.speedX
                 dx = -dx
-            if(gobj.GetTag() == "wall-vertical"):
-                x, y = self.init_x, self.init_y
-        self.SetPosition(x+dx, y+dy)
+            if(gobj.getTag() == "wall-vertical"):
+                x, y = self.initX, self.initY
+        self.setPosition(x+dx, y+dy)

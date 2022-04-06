@@ -3,27 +3,27 @@ from lge.Sprite import Sprite
 
 
 class Betty(Sprite):
-    def __init__(self, name, win_size):
+    def __init__(self, name, winSize):
         super().__init__(["betty_idle", "betty_down", "betty_up", "betty_left", "betty_right"], (0, 0), name)
 
-        self.lge = self.GetLGE()
+        self.lge = LittleGameEngine.getInstance()
 
-        self.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.SetOnEvents(LittleGameEngine.E_ON_COLLISION)
-        self.SetShape("betty_idle")
-        self.SetTag("Betty")
-        self.UseColliders(True)
+        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
+        self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
+        self.setShape("betty_idle")
+        self.setTag("Betty")
+        self.useColliders(True)
         self.alive = True
-        self.win_size = win_size
+        self.winSize = winSize
 
     def IsAlive(self):
         return self.alive
 
-    def SetAlive(self, alive):
+    def setAlive(self, alive):
         self.alive = alive
-        self.SetShape("betty_idle")
+        self.setShape("betty_idle")
 
-    def OnUpdate(self, dt):
+    def onUpdate(self, dt):
         # solo si estoy viva
         if(not self.alive):
             return
@@ -34,26 +34,26 @@ class Betty(Sprite):
         pixels = 2
 
         # nuestra posicion actual y tamano
-        x, y = self.GetPosition()
-        w, h = self.GetSize()
-        self.last_point = x, y
+        x, y = self.getPosition()
+        w, h = self.getSize()
+        self.lastPoint = x, y
 
         # cambiamos sus coordenadas e imagen segun la tecla presionada
-        idx = self.GetCurrentIdx()
-        if (self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
-            self.SetShape("betty_right", idx)
+        idx = self.getCurrentIdx()
+        if (self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
+            self.setShape("betty_right", idx)
             x = x + pixels
-        elif(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
-            self.SetShape("betty_left", idx)
+        elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
+            self.setShape("betty_left", idx)
             x = x - pixels
-        elif(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_UP)):
-            self.SetShape("betty_up", idx)
+        elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
+            self.setShape("betty_up", idx)
             y = y + pixels
-        elif(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
-            self.SetShape("betty_down", idx)
+        elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+            self.setShape("betty_down", idx)
             y = y - pixels
         else:
-            self.SetShape("betty_idle", idx)
+            self.setShape("betty_idle", idx)
             if (x % 32 < 4):
                 x = round(x / 32) * 32
             elif (x % 32 > 28):
@@ -65,23 +65,23 @@ class Betty(Sprite):
 
         # tunel?
         if (x < -16):
-            x = self.win_size[0] - 16
-        elif (x > self.win_size[0] - 16):
+            x = self.winSize[0] - 16
+        elif (x > self.winSize[0] - 16):
             x = -16
 
         # siguiente imagen de la secuencia
-        self.SetPosition(x, y)
-        self.NextShape(dt, 0.1)
+        self.setPosition(x, y)
+        self.nextShape(dt, 0.1)
 
-    def OnCollision(self, dt, gobjs):
+    def onCollision(self, dt, gobjs):
         if(not self.alive):
             return
 
         for gobj in gobjs:
-            if(gobj.GetTag() == "zombie"):
+            if(gobj.getTag() == "zombie"):
                 self.alive = False
                 print("Un zombie me mato!!!")
                 return
 
-        x, y = self.last_point
-        self.SetPosition(x, y)
+        x, y = self.lastPoint
+        self.setPosition(x, y)

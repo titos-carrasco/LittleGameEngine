@@ -1,6 +1,5 @@
 import uuid
 
-import lge
 from lge.Rectangle import Rectangle
 
 
@@ -9,89 +8,116 @@ class GameObject():
         """
         Crea un objeto del juego en la posicion y dimensiones especificadas
 
-        - position: (x, y)
-        - size: (width, height)
-        - name: (opcional) nombre de este objeto
+        Parametros:
+            tuple position : posicion (x, y) inicial de este GameObject
+            tuple size : dimension (width, height)de este GameObject
+            string name : nombre (opcional) a asignar a este GameObject
         """
-        self._lge = lge.LittleGameEngine.LittleGameEngine.GetLGE()
-
         self.rect = Rectangle(position, size)
         self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
         self.surface = None
         self.bounds = None
         self.tag = ""
-        self.use_colliders = False
+        self._useColliders = False
         self.layer = -1
-        self.on_events_enabled = 0x00
+        self.onEventsEnabled = 0x00
 
-    def GetLGE( self ):
-        return self._lge
-
-    def GetPosition(self):
+    def getPosition(self):
         """
         Retorna la posicion (x, y) de este objeto
         """
         return self.rect.x, self.rect.y
 
-    def GetX(self):
+    def getX(self):
         """
-        Retorna la coordenada X de este objeto
+        Obtiene la coordenada X del GameObject
+
+        Retorna:
+            int : la coordenada X
         """
         return self.rect.x
 
-    def GetY(self):
+    def getY(self):
         """
-        Retorna la coordenada Y de este objeto
+        Obtiene la coordenada Y del GameObject
+
+        Retorna:
+            int : la coordenada Y
         """
         return self.rect.y
 
-    def GetSize(self):
+    def getSize(self):
         """
-        Retorna la dimension (width, height) de este objeto
+        Retorna la dimension de este objeto
+
+        Retorna:
+            (int, int) : la dimension
         """
         return self.rect.width, self.rect.height
 
-    def GetWidth(self):
+    def getWidth(self):
         """
         Retorna el ancho de este objeto
+
+        Retorna
+            int : el ancho
         """
         return self.rect.width
 
-    def GetHeight(self):
+    def getHeight(self):
         """
         Retorna el alto de este objeto
+
+        Retorna:
+            int : el alto
         """
         return self.rect.height
 
-    def GetRectangle(self):
+    def getRectangle(self):
         """
-        Retorna el rectangulo que rodea a este objeto
-        """
-        return self.rect.Copy()
+        Retorna una copia del rectangulo que rodea a este objeto
 
-    def GetName(self):
+        Retorna:
+            Rectangle( x, y, width, height ) : el rectangulo
+        """
+        return self.rect.copy()
+
+    def getName(self):
         """
         Retorna el nombre de este objeto
+
+        Retorna:
+            string : el nombre
         """
         return self.name
 
-    def GetTag(self):
+    def getTag(self):
         """
         Retorna el TAG de este objeto
+
+        Retorna:
+            string: el tag
         """
         return self.tag
 
-    def SetBounds(self, bounds):
+    def setBounds(self, bounds):
         """
         Establece el rectangulo que limita el movimiento de este objeto
-        """
-        self.bounds = bounds.Copy()
 
-    def SetPosition(self, x, y):
+        Parametro:
+            Rectangle : el rectangulo en donde se permitira mover al objeto
         """
-        Establece la posicion (x, y) de este objeto
+        self.bounds = bounds.copy()
+
+    def setPosition(self, x, y):
         """
-        self.rect.SetOrigin(x, y)
+        Establece la posicion de este objeto
+
+        Parametro:
+            int x : la coordenada x
+            int y : la coordenada y
+        """
+        self.rect.setOrigin(x, y)
         if (self.bounds == None):
             return
 
@@ -105,69 +131,49 @@ class GameObject():
             elif (self.rect.y + self.rect.height >= self.bounds.y + self.bounds.height):
                 self.rect.y = self.bounds.y + self.bounds.height - self.rect.height
 
-    def SetTag(self, tag):
+    def setTag(self, tag):
         """
         Establece el TAG para este objeto
+
+        Parametro:
+            string tag : el tag a asignar
         """
         self.tag = tag
 
-    def UseColliders(self, enabled):
+    def useColliders(self, enabled):
         """
         Establece si este objeto participara o no del procesamiento de colisiones
+
+        Parametro:
+            bool enabled : si es verdadero participara del procesamiento de colisiones
         """
-        self.use_colliders = enabled
+        self._useColliders = enabled
 
     # manejo de eventos
-    def SetOnEvents(self, on_events_enabled):
+    def setOnEvents(self, onEventsEnabled):
         """
         Establece los eventos que recibira este objeto
-        """
-        self.on_events_enabled |= on_events_enabled
 
-    def OnDelete(self):
-        """
-        Redefinir si es que se procesara este evento
-        """
-        pass
+        Parametros:
+            bool onEventsEnabled : el evento que se sumara a los eventos que recibira
+                                    LittleGameEngine.E_ON_DELETE
+                                    LittleGameEngine.E_ON_START
+                                    LittleGameEngine.E_ON_PRE_UPDATE
+                                    LittleGameEngine.E_ON_UPDATE
+                                    LittleGameEngine.E_ON_POST_UPDATE
+                                    LittleGameEngine.E_ON_COLLISION
+                                    LittleGameEngine.E_ON_PRE_RENDER
+                                    LittleGameEngine.E_ON_QUIT
 
-    def OnStart(self):
-        """
-        Redefinir si es que se procesara este evento
-        """
-        pass
+        Se deben agregar los siguientes metodos segun se habiliten los eventos:
+            onDelete(self)
+            onStart(self)
+            onPreUpdate(self, dt)
+            onUpdate(self, dt)
+            onPostUpdate(self, dt)
+            onCollision(self, dt, gobjs)
+            onPreRender(self, dt)
+            onQuit(self)
 
-    def OnPreUpdate(self, dt):
         """
-        Redefinir si es que se procesara este evento
-        """
-        pass
-
-    def OnUpdate(self, dt):
-        """
-        Redefinir si es que se procesara este evento
-        """
-        pass
-
-    def OnPostUpdate(self, dt):
-        """
-        Redefinir si es que se procesara este evento
-        """
-        pass
-
-    def OnCollision(self, dt, gobjs):
-        """
-        Redefinir si es que se procesara este evento
-        """
-        pass
-
-    def OnPreRender(self, dt):
-        """
-        Redefinir si es que se procesara este evento
-        """
-        pass
-
-    def OnQuit(self):
-        """
-        Redefinir si es que se procesara este evento
-        """
-        pass
+        self.onEventsEnabled |= onEventsEnabled

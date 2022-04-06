@@ -1,5 +1,8 @@
 # ChangeLog
 
+## v0.5.1 2020-04-05
+- Convierte nombres de variables y métodos a camelCase
+
 ## 2022-05-04
 - Deja disponible el objeto LGE dentro de cada GameObject
 - Ajusta demos

@@ -6,80 +6,80 @@ from lge.Rectangle import Rectangle
 
 def main():
     # creamos el juego
-    win_size = (640, 480)
-    lge = LittleGameEngine(win_size, "Animated Player", (255, 255, 0))
-    lge.SetOnMainUpdate(OnMainUpdate)
+    winSize = (640, 480)
+    lge = LittleGameEngine(winSize, "Animated player", (255, 255, 0))
+    lge.setOnMainUpdate(onMainUpdate)
 
     # cargamos los recursos que usaremos
-    resource_dir = "../resources"
+    resourceDir = "../resources"
 
-    lge.LoadImage("fondo", resource_dir + "/images/Backgrounds/FreeTileset/Fondo.png")
-    lge.LoadImage("heroe_idle_right", resource_dir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
-    lge.LoadImage("heroe_idle_left", resource_dir + "/images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
-    lge.LoadImage("heroe_run_right", resource_dir + "/images/Swordsman/Run/Run_0*.png", 0.16)
-    lge.LoadImage("heroe_run_left", resource_dir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
-    lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
-    lge.LoadSound("fondo", resource_dir + "/sounds/happy-and-sad.wav")
+    lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+    lge.loadImage("heroe_idle_right", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+    lge.loadImage("heroe_idle_left", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
+    lge.loadImage("heroe_run_right", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16)
+    lge.loadImage("heroe_run_left", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
+    lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+    lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
     # activamos la musica de fondo
-    lge.PlaySound("fondo", True, 50)
+    lge.playSound("fondo", True, 50)
 
     # agregamos el fondo
     fondo = Sprite("fondo", (0, 0))
-    lge.AddGObject(fondo, 0)
+    lge.addGObject(fondo, 0)
 
     # agregamos la barra de info
     infobar = Canvas((0, 460), (640, 20), "infobar")
-    lge.AddGObjectGUI(infobar)
+    lge.addGObjectGUI(infobar)
 
     # agregamos al heroe
     heroe = Sprite(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 346), "Heroe")
-    heroe.SetOnEvents(LittleGameEngine.E_ON_UPDATE)
-    heroe.SetShape("heroe_idle_right")
-    heroe.SetBounds(Rectangle((0, 0), (1920, 1056)))
-    heroe.UseColliders(True)
-    heroe.OnUpdate = HeroeUpdate
+    heroe.setOnEvents(LittleGameEngine.E_ON_UPDATE)
+    heroe.setShape("heroe_idle_right")
+    heroe.setBounds(Rectangle((0, 0), (1920, 1056)))
+    heroe.useColliders(True)
+    heroe.onUpdate = HeroeUpdate
     heroe.state = 1
-    lge.AddGObject(heroe, 1)
+    lge.addGObject(heroe, 1)
 
     # configuramos la camara
-    lge.SetCameraBounds(Rectangle((0, 0), (1920, 1056)))
+    lge.setCameraBounds(Rectangle((0, 0), (1920, 1056)))
 
     # establecemos que la camara siga al heroe
-    lge.SetCameraTarget(heroe, False)
+    lge.setCameraTarget(heroe, False)
 
     # main loop
-    lge.Run(60)
+    lge.run(60)
 
 
-def OnMainUpdate(dt):
+def onMainUpdate(dt):
     # acceso al motor de juegos
-    lge = LittleGameEngine.GetLGE()
+    lge = LittleGameEngine.getInstance()
 
     # abortamos con la tecla Escape
-    if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
-        lge.Quit()
+    if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+        lge.quit()
 
     # mostramos info
-    mx, my = lge.GetMousePosition()
-    mb1, mb2, mb3 = lge.GetMouseButtons()
+    mx, my = lge.getMousePosition()
+    mb1, mb2, mb3 = lge.getMouseButtons()
 
     info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
-        lge.GetFPS(),
-        lge.GetCountGObjects(), mx, my,
+        lge.getFPS(),
+        lge.getCountGObjects(), mx, my,
         mb1, mb2, mb3
     )
-    infobar = lge.GetGObject("infobar")
-    infobar.Fill((20, 20, 20, 10))
-    infobar.DrawText(info, (50, 0), "monospace.16", (0, 0, 0))
+    infobar = lge.getGObject("infobar")
+    infobar.fill((20, 20, 20, 10))
+    infobar.drawText(info, (50, 0), "monospace.16", (0, 0, 0))
 
 
 def HeroeUpdate(dt):
     # acceso al motor de juegos
-    lge = LittleGameEngine.GetLGE()
+    lge = LittleGameEngine.getInstance()
 
     # el heroe
-    heroe = lge.GetGObject("Heroe")
+    heroe = lge.getGObject("Heroe")
 
     # velocity = pixeles por segundo
     velocity = 240
@@ -88,38 +88,38 @@ def HeroeUpdate(dt):
         pixels = 1
 
     # la posiciona actual del heroe
-    x, y = heroe.GetPosition()
+    x, y = heroe.getPosition()
 
     # cambiamos sus coordenadas, orientacion e imagen segun la tecla presionada
-    if (lge.KeyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
+    if (lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
         x = x + pixels
         if (heroe.state != 2):
-            heroe.SetShape("heroe_run_right")
+            heroe.setShape("heroe_run_right")
             heroe.state = 2
-    elif (lge.KeyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
+    elif (lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
         x = x - pixels
         if (heroe.state != -2):
-            heroe.SetShape("heroe_run_left")
+            heroe.setShape("heroe_run_left")
             heroe.state = -2
     elif (heroe.state == 2):
         if (heroe.state != 1):
-            heroe.SetShape("heroe_idle_right")
+            heroe.setShape("heroe_idle_right")
             heroe.state = 1
     elif (heroe.state == -2):
         if (heroe.state != -1):
-            heroe.SetShape("heroe_idle_left")
+            heroe.setShape("heroe_idle_left")
             heroe.state = -1
 
-    if(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_UP)):
+    if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
         y = y + pixels
-    elif(lge.KeyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
         y = y - pixels
 
     # siguiente imagen de la secuencia
-    heroe.NextShape(dt, 0.050)
+    heroe.nextShape(dt, 0.050)
 
     # lo posicionamos
-    heroe.SetPosition(x, y)
+    heroe.setPosition(x, y)
 
 
 # --- show time

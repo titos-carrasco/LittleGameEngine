@@ -9,32 +9,32 @@ from lge.Canvas import Canvas
 class Particles():
     def __init__(self):
         # instante de inicio
-        self.t_ini = time.time()
+        self.tIni = time.time()
 
         # creamos el juego
-        win_size = (800, 440)
+        winSize = (800, 440)
 
-        self.lge = LittleGameEngine(win_size, "Particles", (255, 255, 0))
-        self.lge.SetOnMainUpdate(self.OnMainUpdate)
+        self.lge = LittleGameEngine(winSize, "Particles", (255, 255, 0))
+        self.lge.setOnMainUpdate(self.onMainUpdate)
 
         # cargamos los recursos que usaremos
-        resource_dir = "../resources"
+        resourceDir = "../resources"
 
-        self.lge.LoadTTFFont("monospace.16", resource_dir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos la barra de info
         infobar = Canvas((0, 420), (800, 20), "infobar")
-        self.lge.AddGObjectGUI(infobar)
+        self.lge.addGObjectGUI(infobar)
 
         # un canvas para plotear
         panel = Canvas((0, 0), (800, 600), "Panel")
-        panel.Fill((255, 255, 255))
-        self.lge.AddGObject(panel, 1)
+        panel.fill((255, 255, 255))
+        self.lge.addGObject(panel, 1)
 
         # las particulas
-        self.num_particles = 500
-        self.particles = [0]*self.num_particles
-        for i in range(self.num_particles):
+        self.numParticles = 500
+        self.particles = [0]*self.numParticles
+        for i in range(self.numParticles):
             x = 100 + random.random()*600
             y = 300 + random.random()*200
             vx = -60 + random.random()*120
@@ -42,47 +42,47 @@ class Particles():
             m = 0.1 + random.random()
             self.particles[i] = Particle(x, y, vx, vy, m)
 
-    def OnMainUpdate(self, dt):
+    def onMainUpdate(self, dt):
         # limite de ejecucion
-        if(time.time() - self.t_ini > 10):
-            self.lge.Quit()
+        if(time.time() - self.tIni > 10):
+            self.lge.quit()
             return
 
         # abortamos con la tecla Escape
-        if(self.lge.KeyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
-            self.lge.Quit()
+        if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
+            self.lge.quit()
 
         # mostramos info
-        mx, my = self.lge.GetMousePosition()
-        mb1, mb2, mb3 = self.lge.GetMouseButtons()
+        mx, my = self.lge.getMousePosition()
+        mb1, mb2, mb3 = self.lge.getMouseButtons()
 
         info = "FPS: %07.2f - gObjs: %03d - Mouse: (%3d,%3d) (%d,%d,%d)" % (
-            self.lge.GetFPS(),
-            self.lge.GetCountGObjects(), mx, my,
+            self.lge.getFPS(),
+            self.lge.getCountGObjects(), mx, my,
             mb1, mb2, mb3
         )
-        infobar = self.lge.GetGObject("infobar")
-        infobar.Fill((20, 20, 20, 10))
-        infobar.DrawText(info, (140, 0), "monospace.16", (0, 0, 0))
+        infobar = self.lge.getGObject("infobar")
+        infobar.fill((20, 20, 20, 10))
+        infobar.drawText(info, (140, 0), "monospace.16", (0, 0, 0))
 
         # las particulas
-        for i in range(self.num_particles):
+        for i in range(self.numParticles):
             particle = self.particles[i]
-            particle.OnUpdate(dt)
+            particle.onUpdate(dt)
 
-        panel = self.lge.GetGObject("Panel")
-        panel.Fill((255, 255, 255))
-        for i in range(self.num_particles):
+        panel = self.lge.getGObject("Panel")
+        panel.fill((255, 255, 255))
+        for i in range(self.numParticles):
             particle = self.particles[i]
             x = round(particle.x)
             y = round(particle.y)
             r = round(particle.m*5)
-            #panel.DrawPoint( (x,y), (0,0,0) )
-            #panel.DrawCircle( (x,y), r, (0,0,0) )
-            panel.DrawRectangle((x, y), (r, r), (0, 0, 0))
+            #panel.drawPoint( (x,y), (0,0,0) )
+            #panel.drawCircle( (x,y), r, (0,0,0) )
+            panel.drawRectangle((x, y), (r, r), (0, 0, 0))
 
-    def Run(self):
-        self.lge.Run(60)
+    def run(self):
+        self.lge.run(60)
 
 
 class Particle():
@@ -93,12 +93,12 @@ class Particle():
         self.vy = vy
         self.m = m
 
-    def ComputeForce(self):
+    def computeForce(self):
         # return 0, self.m * -9.81
         return 0, self.m * -60
 
-    def OnUpdate(self, dt):
-        fx, fy = self.ComputeForce()
+    def onUpdate(self, dt):
+        fx, fy = self.computeForce()
         ax, ay = fx/self.m, fy/self.m
         self.vx = self.vx + ax*dt
         self.vy = self.vy + ay*dt
@@ -108,4 +108,4 @@ class Particle():
 
 # -- show time
 game = Particles()
-cProfile.run("game.Run()")
+cProfile.run("game.run()")
