@@ -4,14 +4,15 @@ from lge.Rectangle import Rectangle
 
 
 class GameObject():
+
     def __init__(self, position, size, name=None):
         """
         Crea un objeto del juego en la posicion y dimensiones especificadas
 
         Parametros:
-            tuple position : posicion (x, y) inicial de este GameObject
-            tuple size : dimension (width, height)de este GameObject
-            string name : nombre (opcional) a asignar a este GameObject
+            - tuple position : posicion (x, y) inicial de este GameObject
+            - tuple size : dimension (width, height)de este GameObject
+            - string name : nombre (opcional) a asignar a este GameObject
         """
         self.rect = Rectangle(position, size)
         self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
@@ -24,7 +25,10 @@ class GameObject():
 
     def getPosition(self):
         """
-        Retorna la posicion (x, y) de este objeto
+        Retorna la posicion de este objeto
+
+        Retorna:
+            - (int, int) : la posicion
         """
         return self.rect.x, self.rect.y
 
@@ -33,7 +37,7 @@ class GameObject():
         Obtiene la coordenada X del GameObject
 
         Retorna:
-            int : la coordenada X
+            - int : la coordenada X
         """
         return self.rect.x
 
@@ -42,7 +46,7 @@ class GameObject():
         Obtiene la coordenada Y del GameObject
 
         Retorna:
-            int : la coordenada Y
+            - int : la coordenada Y
         """
         return self.rect.y
 
@@ -51,7 +55,7 @@ class GameObject():
         Retorna la dimension de este objeto
 
         Retorna:
-            (int, int) : la dimension
+            - (int, int) : la dimension
         """
         return self.rect.width, self.rect.height
 
@@ -60,7 +64,7 @@ class GameObject():
         Retorna el ancho de este objeto
 
         Retorna
-            int : el ancho
+            - int : el ancho
         """
         return self.rect.width
 
@@ -69,7 +73,7 @@ class GameObject():
         Retorna el alto de este objeto
 
         Retorna:
-            int : el alto
+            - int : el alto
         """
         return self.rect.height
 
@@ -78,7 +82,7 @@ class GameObject():
         Retorna una copia del rectangulo que rodea a este objeto
 
         Retorna:
-            Rectangle( x, y, width, height ) : el rectangulo
+            - Rectangle( x, y, width, height ) : el rectangulo
         """
         return self.rect.copy()
 
@@ -87,7 +91,7 @@ class GameObject():
         Retorna el nombre de este objeto
 
         Retorna:
-            string : el nombre
+            - string : el nombre
         """
         return self.name
 
@@ -96,7 +100,7 @@ class GameObject():
         Retorna el TAG de este objeto
 
         Retorna:
-            string: el tag
+            - string: el tag
         """
         return self.tag
 
@@ -105,7 +109,7 @@ class GameObject():
         Establece el rectangulo que limita el movimiento de este objeto
 
         Parametro:
-            Rectangle : el rectangulo en donde se permitira mover al objeto
+            - Rectangle : el rectangulo en donde se permitira mover al objeto
         """
         self.bounds = bounds.copy()
 
@@ -114,8 +118,8 @@ class GameObject():
         Establece la posicion de este objeto
 
         Parametro:
-            int x : la coordenada x
-            int y : la coordenada y
+            - int x : la coordenada x
+            - int y : la coordenada y
         """
         self.rect.setOrigin(x, y)
         if (self.bounds == None):
@@ -136,7 +140,7 @@ class GameObject():
         Establece el TAG para este objeto
 
         Parametro:
-            string tag : el tag a asignar
+            - string tag : el tag a asignar
         """
         self.tag = tag
 
@@ -145,7 +149,7 @@ class GameObject():
         Establece si este objeto participara o no del procesamiento de colisiones
 
         Parametro:
-            bool enabled : si es verdadero participara del procesamiento de colisiones
+            - bool enabled : si es verdadero participara del procesamiento de colisiones
         """
         self._useColliders = enabled
 
@@ -155,25 +159,26 @@ class GameObject():
         Establece los eventos que recibira este objeto
 
         Parametros:
-            bool onEventsEnabled : el evento que se sumara a los eventos que recibira
-                                    LittleGameEngine.E_ON_DELETE
-                                    LittleGameEngine.E_ON_START
-                                    LittleGameEngine.E_ON_PRE_UPDATE
-                                    LittleGameEngine.E_ON_UPDATE
-                                    LittleGameEngine.E_ON_POST_UPDATE
-                                    LittleGameEngine.E_ON_COLLISION
-                                    LittleGameEngine.E_ON_PRE_RENDER
-                                    LittleGameEngine.E_ON_QUIT
+            - bool onEventsEnabled : el evento que se sumara a los eventos que recibira
+                - LittleGameEngine.E_ON_DELETE
+                - LittleGameEngine.E_ON_START
+                - LittleGameEngine.E_ON_PRE_UPDATE
+                - LittleGameEngine.E_ON_UPDATE
+                - LittleGameEngine.E_ON_POST_UPDATE
+                - LittleGameEngine.E_ON_COLLISION
+                - LittleGameEngine.E_ON_PRE_RENDER
+                - LittleGameEngine.E_ON_QUIT
 
         Se deben agregar los siguientes metodos segun se habiliten los eventos:
-            onDelete(self)
-            onStart(self)
-            onPreUpdate(self, dt)
-            onUpdate(self, dt)
-            onPostUpdate(self, dt)
-            onCollision(self, dt, gobjs)
-            onPreRender(self, dt)
-            onQuit(self)
+
+        - onDelete(self)
+        - onStart(self)
+        - onPreUpdate(self, dt)
+        - onUpdate(self, dt)
+        - onPostUpdate(self, dt)
+        - onCollision(self, dt, gobjs)
+        - onPreRender(self, dt)
+        - onQuit(self)
 
         """
         self.onEventsEnabled |= onEventsEnabled

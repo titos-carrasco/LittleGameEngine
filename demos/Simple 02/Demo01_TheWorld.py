@@ -1,9 +1,11 @@
 from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
+from lge.MouseClick import MouseClick
 
 
 class TheWorld():
+
     def __init__(self):
         # creamos el juego
         winSize = (800, 440)
@@ -46,6 +48,9 @@ class TheWorld():
         canvas.drawText("Little Game Engine", (30, 90), "backlash.40", (20, 20, 20))
         self.lge.addGObjectGUI(canvas)
 
+        # para manejar el clic del mouse
+        self.leftMouseButton = MouseClick()
+
     def OnMainUpdate(self, dt):
         # abortamos con la tecla Escape
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
@@ -65,15 +70,16 @@ class TheWorld():
         infobar.drawText(info, (140, 0), "monospace.16", (0, 0, 0))
 
         # mute on/off
-        mute = self.lge.getGObject("mute")
-        r = mute.getRectangle()
-        if(self.lge.getMouseClicked(0) and r.contains(mx, my)):
-            idx = mute.getCurrentIdx()
-            if(idx == 1):
-                self.lge.setSoundVolume("fondo", 0)
-            else:
-                self.lge.setSoundVolume("fondo", 50)
-            mute.nextShape()
+        if(self.leftMouseButton.isClicked(mb1, mx, my)):
+            mute = self.lge.getGObject("mute")
+            r = mute.getRectangle()
+            if(r.contains(mx, my)):
+                idx = mute.getCurrentIdx()
+                if(idx == 1):
+                    self.lge.setSoundVolume("fondo", 0)
+                else:
+                    self.lge.setSoundVolume("fondo", 50)
+                mute.nextShape()
 
     # main loop
     def run(self):

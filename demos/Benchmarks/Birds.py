@@ -8,6 +8,7 @@ from lge.Canvas import Canvas
 
 
 class Birds():
+
     def __init__(self):
         # instante de inicio
         self.tIni = time.time()
@@ -41,8 +42,8 @@ class Birds():
         # agregamos pajaros
         ww, wh = self.lge.getCameraSize()
         for i in range(500):
-            x = random.random()*ww
-            y = random.random()*(wh - 40)
+            x = random.random() * ww
+            y = random.random() * (wh - 40)
             bird = Bird("bird", (x, y))
             self.lge.addGObject(bird, 1)
 
@@ -75,6 +76,7 @@ class Birds():
 
 
 class Bird(Sprite):
+
     def __init__(self, inames, position):
         super().__init__(inames, position)
 

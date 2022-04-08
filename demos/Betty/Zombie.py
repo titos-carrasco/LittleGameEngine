@@ -5,6 +5,7 @@ from lge.Sprite import Sprite
 
 
 class Zombie(Sprite):
+
     def __init__(self, name, winSize):
         super().__init__("zombie", (0, 0), name)
 
@@ -28,8 +29,8 @@ class Zombie(Sprite):
             return
 
         # velocity = pixeles por segundo
-        #velocity = 120
-        #pixels = velocity*dt
+        # velocity = 120
+        # pixels = velocity*dt
         pixels = 2
 
         # las coordenadas de Betty

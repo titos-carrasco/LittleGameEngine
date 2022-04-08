@@ -3,6 +3,7 @@ from lge.Sprite import Sprite
 
 
 class Betty(Sprite):
+
     def __init__(self, x, y):
         images = ["betty_idle", "betty_left", "betty_right"]
 
@@ -15,10 +16,10 @@ class Betty(Sprite):
         self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
         self.useColliders(True)
 
-        self.vx = 240           # velocidad en x
-        self.vy = 0             # velocidad en y
-        self.vs = 360           # velocidad en y en el salto
-        self.ay = 480           # aceleracion en y
+        self.vx = 240  # velocidad en x
+        self.vy = 0  # velocidad en y
+        self.vs = 360  # velocidad en y en el salto
+        self.ay = 480  # aceleracion en y
         self.jumping = False
 
     def onUpdate(self, dt):
@@ -33,11 +34,11 @@ class Betty(Sprite):
             self.jumping = True
 
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
-            x = x + self.vx*dt
+            x = x + self.vx * dt
             if(action != "betty_right"):
                 self.setShape("betty_right", 0)
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
-            x = x - self.vx*dt
+            x = x - self.vx * dt
             if(action != "betty_left"):
                 self.setShape("betty_left", 0)
         else:
@@ -46,8 +47,8 @@ class Betty(Sprite):
         self.nextShape(dt, 0.050)
 
         # caida por gravedad
-        y = y + self.vy*dt
-        self.vy = self.vy - self.ay*dt
+        y = y + self.vy * dt
+        self.vy = self.vy - self.ay * dt
 
         # nueva posicion
         self.setPosition(x, y)

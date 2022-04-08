@@ -3,6 +3,7 @@ from lge.Sprite import Sprite
 
 
 class Betty(Sprite):
+
     def __init__(self, name, winSize):
         super().__init__(["betty_idle", "betty_down", "betty_up", "betty_left", "betty_right"], (0, 0), name)
 
@@ -29,8 +30,8 @@ class Betty(Sprite):
             return
 
         # velocity = pixeles por segundo
-        #velocity = 120
-        #pixels = velocity*dt
+        # velocity = 120
+        # pixels = velocity*dt
         pixels = 2
 
         # nuestra posicion actual y tamano

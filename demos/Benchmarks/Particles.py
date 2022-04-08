@@ -7,6 +7,7 @@ from lge.Canvas import Canvas
 
 
 class Particles():
+
     def __init__(self):
         # instante de inicio
         self.tIni = time.time()
@@ -33,12 +34,12 @@ class Particles():
 
         # las particulas
         self.numParticles = 500
-        self.particles = [0]*self.numParticles
+        self.particles = [0] * self.numParticles
         for i in range(self.numParticles):
-            x = 100 + random.random()*600
-            y = 300 + random.random()*200
-            vx = -60 + random.random()*120
-            vy = -120 + random.random()*240
+            x = 100 + random.random() * 600
+            y = 300 + random.random() * 200
+            vx = -60 + random.random() * 120
+            vy = -120 + random.random() * 240
             m = 0.1 + random.random()
             self.particles[i] = Particle(x, y, vx, vy, m)
 
@@ -76,9 +77,9 @@ class Particles():
             particle = self.particles[i]
             x = round(particle.x)
             y = round(particle.y)
-            r = round(particle.m*5)
-            #panel.drawPoint( (x,y), (0,0,0) )
-            #panel.drawCircle( (x,y), r, (0,0,0) )
+            r = round(particle.m * 5)
+            # panel.drawPoint( (x,y), (0,0,0) )
+            # panel.drawCircle( (x,y), r, (0,0,0) )
             panel.drawRectangle((x, y), (r, r), (0, 0, 0))
 
     def run(self):
@@ -86,6 +87,7 @@ class Particles():
 
 
 class Particle():
+
     def __init__(self, x, y, vx, vy, m):
         self.x = x
         self.y = y
@@ -99,11 +101,11 @@ class Particle():
 
     def onUpdate(self, dt):
         fx, fy = self.computeForce()
-        ax, ay = fx/self.m, fy/self.m
-        self.vx = self.vx + ax*dt
-        self.vy = self.vy + ay*dt
-        self.x = self.x + self.vx*dt
-        self.y = self.y + self.vy*dt
+        ax, ay = fx / self.m, fy / self.m
+        self.vx = self.vx + ax * dt
+        self.vy = self.vy + ay * dt
+        self.x = self.x + self.vx * dt
+        self.y = self.y + self.vy * dt
 
 
 # -- show time

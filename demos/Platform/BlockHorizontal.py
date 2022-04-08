@@ -3,6 +3,7 @@ from lge.Sprite import Sprite
 
 
 class BlockHorizontal(Sprite):
+
     def __init__(self, x, y):
         super().__init__("roca", (128, 128), "roca")
 
@@ -12,13 +13,13 @@ class BlockHorizontal(Sprite):
         self.setTag("ground")
         self.x, self.y = x, y
         self.dir = "up"
-        self.limitTop = y + 64*4
+        self.limitTop = y + 64 * 4
         self.limitBottom = y - 64
 
     def onUpdate(self, dt):
         # velocity = pixeles por segundo
         velocity = 120
-        pixels = velocity*dt
+        pixels = velocity * dt
         if(pixels < 1):
             pixels = 1
 

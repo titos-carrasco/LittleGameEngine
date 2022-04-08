@@ -1,5 +1,10 @@
 # ChangeLog
 
+## v0.5.2 2022-04-07
+- Formateo de código con PyDev
+- Agrega clase para manejar clic del mouse
+- Mejora manejo de eventos de teclado y mouse
+
 ## v0.5.1 2020-04-05
 - Convierte nombres de variables y métodos a camelCase
 

@@ -11,6 +11,7 @@ from WebCam import WebCam
 
 
 class MiJuego():
+
     # inicializamos el juego
     def __init__(self):
         # creamos el juego
@@ -42,6 +43,7 @@ class MiJuego():
 
         # agregamos los personajes
         betty = Betty(10, 300)
+        betty.setBounds(Rectangle((0, 0), (1920, 1056)))
         self.lge.addGObject(betty, 2)
 
         # agregamos la webcam

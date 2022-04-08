@@ -8,6 +8,7 @@ from Ninja import Ninja
 
 
 class Platform():
+
     def __init__(self):
         # creamos el juego
         win_size = (800, 600)
@@ -37,7 +38,7 @@ class Platform():
         self.lge.addGObjectGUI(ninja)
 
         # agregamos el bloque que se mueve vertical
-        bloque = BlockHorizontal(13*64, 1*64)
+        bloque = BlockHorizontal(13 * 64, 1 * 64)
         self.lge.addGObject(bloque, 1)
 
         # agregamos el mensaje
@@ -69,7 +70,7 @@ class Platform():
 
         # velocity = pixeles por segundo
         velocity = 240
-        pixels = velocity*dt
+        pixels = velocity * dt
         if(pixels < 1):
             pixels = 1
 
@@ -81,7 +82,7 @@ class Platform():
         elif(self.direction == -1 and x <= 0):
             self.direction = 1
 
-        x = x + pixels*self.direction
+        x = x + pixels * self.direction
         self.lge.setCameraPosition(x, y)
 
         # verificamos si se ha presionada la barra espaciadora

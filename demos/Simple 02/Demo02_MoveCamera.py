@@ -2,9 +2,11 @@ from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
 from lge.Rectangle import Rectangle
+from lge.MouseClick import MouseClick
 
 
 class MoveCamera():
+
     def __init__(self):
         # creamos el juego
         winSize = (640, 480)
@@ -50,6 +52,9 @@ class MoveCamera():
         cw, ch = self.lge.getCameraSize()
         self.lge.setCameraPosition(x + w / 2 - cw / 2, y + h / 2 - ch / 2)
 
+        # para manejar el clic del mouse
+        self.leftMouseButton = MouseClick()
+
     def onMainUpdate(self, dt):
         # abortamos con la tecla Escape
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
@@ -69,19 +74,20 @@ class MoveCamera():
         infobar.drawText(info, (50, 0), "monospace.16", (0, 0, 0))
 
         # mute on/off
-        mute = self.lge.getGObject("mute")
-        r = mute.getRectangle()
-        if(self.lge.getMouseClicked(0) and r.contains(mx, my)):
-            idx = mute.getCurrentIdx()
-            if(idx == 1):
-                self.lge.setSoundVolume("fondo", 0)
-            else:
-                self.lge.setSoundVolume("fondo", 50)
-            mute.nextShape()
+        if(self.leftMouseButton.isClicked(mb1, mx, my)):
+            mute = self.lge.getGObject("mute")
+            r = mute.getRectangle()
+            if(r.contains(mx, my)):
+                idx = mute.getCurrentIdx()
+                if(idx == 1):
+                    self.lge.setSoundVolume("fondo", 0)
+                else:
+                    self.lge.setSoundVolume("fondo", 50)
+                mute.nextShape()
 
         # velocity = pixeles por segundo
         velocity = 240
-        pixels = velocity*dt
+        pixels = velocity * dt
         if(pixels < 1):
             pixels = 1
 

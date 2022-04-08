@@ -2,13 +2,14 @@ from lge.GameObject import GameObject
 
 
 class Camera(GameObject):
+
     def __init__(self, position, size):
         """
         Crea la camara en la posicion y dimensiones dadas. Esta clase es privada al motor de juegos
 
         Parametros:
-            tuple position : coordenadas (x, y) de la posicion inicial de la camara
-            tuple size : dimension (width, height) de la camara
+            - tuple position : coordenadas (x, y) de la posicion inicial de la camara
+            - tuple size : dimension (width, height) de la camara
         """
         super().__init__(position, size, "__LGE_CAMERA__")
         self.target = None

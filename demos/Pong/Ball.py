@@ -17,15 +17,15 @@ class Ball(Canvas):
 
     def onUpdate(self, dt):
         x, y = self.getPosition()
-        dx = self.speedX*dt
-        dy = self.speedY*dt
+        dx = self.speedX * dt
+        dy = self.speedY * dt
 
-        self.setPosition(x+dx, y+dy)
+        self.setPosition(x + dx, y + dy)
 
     def onCollision(self, dt, gobjs):
         x, y = self.getPosition()
-        dx = self.speedX*dt
-        dy = self.speedY*dt
+        dx = self.speedX * dt
+        dy = self.speedY * dt
 
         for gobj in gobjs:
             if(gobj.getTag() == "wall-horizontal"):
@@ -36,4 +36,4 @@ class Ball(Canvas):
                 dx = -dx
             if(gobj.getTag() == "wall-vertical"):
                 x, y = self.initX, self.initY
-        self.setPosition(x+dx, y+dy)
+        self.setPosition(x + dx, y + dy)

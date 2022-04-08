@@ -5,14 +5,15 @@ from lge.GameObject import GameObject
 
 
 class Canvas(GameObject):
+
     def __init__(self, position, size, name=None):
         """
         Crea un objeto, para dibujar, en la posicion y dimensiones dadas
 
         Parametros:
-            tupla position : posicion (x, y) del canvas
-            tupla size : dimension (width, height= del canvas
-            string name : nombre para esta GameObject (opcional)
+            - tupla position : posicion (x, y) del canvas
+            - tupla size : dimension (width, height= del canvas
+            - string name : nombre para esta GameObject (opcional)
         """
         super().__init__(position, size, name)
         width, height = size
@@ -23,7 +24,7 @@ class Canvas(GameObject):
         Colorea el canvas con el color especificado
 
         Parametros:
-            tupla color : rellena el canvas con el color especificado (r,g,b,a). El alpha es opcional
+            - tupla color : rellena el canvas con el color especificado (r,g,b,a). El alpha es opcional
         """
         self.surface.fill(color)
 
@@ -32,10 +33,10 @@ class Canvas(GameObject):
         Traza un texto en este canvas en la posicion, tipo de letra y color especificados
 
         Parametros:
-            string text : el texto a trazar
-            tuple position : coordenada (x, y) en donde se trazara el texto dentro del canvas
-            string fname : nombre del font (cargado con LoadFont) a utilizar para trazar el texto
-            tuple fcolor : color a utilizar (r,g,b) para trazar el texto
+            - string text : el texto a trazar
+            - tuple position : coordenada (x, y) en donde se trazara el texto dentro del canvas
+            - string fname : nombre del font (cargado con LoadFont) a utilizar para trazar el texto
+            - tuple fcolor : color a utilizar (r,g,b) para trazar el texto
         """
         x, y = position
 
@@ -47,8 +48,8 @@ class Canvas(GameObject):
         Traza un punto en este canvas en la posicion y color especificados
 
         Parametros:
-            tuple position : coordenada (x, y) en donde se trazara el punto dentro del canvas
-            tuple color : color a utilizar (r,g,b) para trazar el punto
+            - tuple position : coordenada (x, y) en donde se trazara el punto dentro del canvas
+            - tuple color : color a utilizar (r,g,b) para trazar el punto
         """
         x, y = position
         y = self.rect.height - y
@@ -60,10 +61,10 @@ class Canvas(GameObject):
         Traza un circulo en este canvas en la position, de radio y color especificado
 
         Parametros:
-            tuple position : coordenada (x, y) en donde se trazara el circulo dentro del canvas
-            int radio : radio del circulo a trazar
-            tuple color : color a utilizar (r,g,b) para trazar el circulo
-            bool thickness : si es True se mostrara el borde del circulo
+            - tuple position : coordenada (x, y) en donde se trazara el circulo dentro del canvas
+            - int radio : radio del circulo a trazar
+            - tuple color : color a utilizar (r,g,b) para trazar el circulo
+            - bool thickness : si es True se mostrara el borde del circulo
         """
         x, y = position
         y = self.rect.height - y
@@ -76,10 +77,10 @@ class Canvas(GameObject):
         Traza un rectangulo en este canvas en la posicion, dimensiones y color especificado
 
         Parametros:
-            tuple position : coordenada (x, y) en donde se trazara el circulo dentro del canvas
-            tuple size : dimension (width, height) del rectangulo
-            tuple color : color a utilizar (r,g,b) para trazar el rectangulo
-            bool thickness : si es True se mostrara el borde del rectangulo
+            - tuple position : coordenada (x, y) en donde se trazara el circulo dentro del canvas
+            - tuple size : dimension (width, height) del rectangulo
+            - tuple color : color a utilizar (r,g,b) para trazar el rectangulo
+            - bool thickness : si es True se mostrara el borde del rectangulo
         """
         x, y = position
         w, h = size
@@ -93,8 +94,8 @@ class Canvas(GameObject):
         Traza una superficie en este canvas en la posicion dada
 
         Parametros:
-            tuple position : coordenada (x, y) en donde se trazara la superfice dentro del canvas
-            surface surface : superficie (imagen) a trazar. Puede ser creada con pygame.surfarray.make_surface()
+            - tuple position : coordenada (x, y) en donde se trazara la superfice dentro del canvas
+            - surface surface : superficie (imagen) a trazar. Puede ser creada con pygame.surfarray.make_surface()
         """
         x, y = position
         w, h = surface.get_size()

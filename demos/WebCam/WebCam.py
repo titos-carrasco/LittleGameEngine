@@ -11,6 +11,7 @@ from lge.Rectangle import Rectangle
 
 
 class WebCam(Canvas):
+
     def __init__(self):
         super().__init__((200, 257), (256, 144))
 
@@ -18,9 +19,9 @@ class WebCam(Canvas):
         self.setOnEvents(LittleGameEngine.E_ON_QUIT)
 
         self.cam = cv2.VideoCapture(0)
-        #self.cam.set( cv2.CAP_PROP_POS_FRAMES, 1 )
-        #self.cam.set( cv2.CAP_PROP_FRAME_WIDTH, 160 )
-        #self.cam.set( cv2.CAP_PROP_FRAME_HEIGHT, 120 )
+        # self.cam.set( cv2.CAP_PROP_POS_FRAMES, 1 )
+        # self.cam.set( cv2.CAP_PROP_FRAME_WIDTH, 160 )
+        # self.cam.set( cv2.CAP_PROP_FRAME_HEIGHT, 120 )
 
         self.queue = queue.Queue(1)
         self.running = False

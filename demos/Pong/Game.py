@@ -5,6 +5,7 @@ from Ball import Ball
 
 
 class Pong():
+
     def __init__(self):
         # creamos el juego
         winSize = (640, 640)
@@ -27,42 +28,42 @@ class Pong():
         self.lge.addGObject(field, 0)
 
         # los bordes
-        wall = Canvas((0, 560),  (640, 4))
+        wall = Canvas((0, 560), (640, 4))
         wall.fill((255, 255, 255))
         wall.setTag("wall-horizontal")
         wall.useColliders(True)
         self.lge.addGObject(wall, 1)
 
-        wall = Canvas((0, 30),  (640, 4))
+        wall = Canvas((0, 30), (640, 4))
         wall.fill((255, 255, 255))
         wall.setTag("wall-horizontal")
         wall.useColliders(True)
         self.lge.addGObject(wall, 1)
 
-        wall = Canvas((20, 34),  (4, 526))
+        wall = Canvas((20, 34), (4, 526))
         wall.fill((255, 255, 255))
         wall.setTag("wall-vertical")
         wall.useColliders(True)
         self.lge.addGObject(wall, 1)
 
-        wall = Canvas((616, 34),  (4, 526))
+        wall = Canvas((616, 34), (4, 526))
         wall.fill((255, 255, 255))
         wall.setTag("wall-vertical")
         wall.useColliders(True)
         self.lge.addGObject(wall, 1)
 
         # los actores
-        ball = Ball((320, 400),  (8, 8), "ball")
+        ball = Ball((320, 400), (8, 8), "ball")
         self.lge.addGObject(ball, 1)
 
-        paddle = Canvas((90, 270),  (8, 60), "user-paddle")
+        paddle = Canvas((90, 270), (8, 60), "user-paddle")
         paddle.fill((255, 255, 255))
         paddle.setTag("paddle")
         paddle.useColliders(True)
         paddle.setBounds(field.getRectangle())
         self.lge.addGObject(paddle, 1)
 
-        paddle = Canvas((540, 270),  (8, 60), "system-paddle")
+        paddle = Canvas((540, 270), (8, 60), "system-paddle")
         paddle.fill((255, 255, 255))
         paddle.setTag("paddle")
         paddle.useColliders(True)
@@ -102,14 +103,14 @@ class Pong():
 
         # la pelota
         ball = self.lge.getGObject("ball")
-        #bx = ball.getX()
+        # bx = ball.getX()
         by = ball.getY()
 
         # system paddle
         systemPaddle = self.lge.getGObject("system-paddle")
         px = systemPaddle.getX()
         py = systemPaddle.getY()
-        #pw = systemPaddle.getWidth()
+        # pw = systemPaddle.getWidth()
         ph = systemPaddle.getHeight()
 
         if (py + ph / 2 < by):

@@ -7,6 +7,7 @@ from lge.Canvas import Canvas
 
 
 class Bouncing():
+
     def __init__(self):
         # instante de inicio
         self.tIni = time.time()
@@ -16,7 +17,7 @@ class Bouncing():
 
         self.lge = LittleGameEngine(winSize, "Bouncing Balls", (255, 255, 255))
         self.lge.setOnMainUpdate(self.onMainUpdate)
-        #self.lge.ShowColliders((255, 0, 0))
+        # self.lge.ShowColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
@@ -36,9 +37,9 @@ class Bouncing():
 
         # los objetos a rebotar
         for i in range(100):
-            x = 50 + random.random()*700
-            y = 200 + random.random()*200
-            vx = -50 + random.random()*100
+            x = 50 + random.random() * 700
+            y = 200 + random.random() * 200
+            vx = -50 + random.random() * 100
             vy = 0
             gobj = Ball(x, y, vx, vy)
             self.lge.addGObject(gobj, 1)
@@ -71,6 +72,7 @@ class Bouncing():
 
 
 class Ball(Canvas):
+
     def __init__(self, x, y, vx, vy):
         super().__init__((x, y), (20, 20))
 
@@ -89,14 +91,14 @@ class Ball(Canvas):
     def onUpdate(self, dt):
         x, y = self.getPosition()
 
-        x = x + self.vx*dt
-        y = y + self.vy*dt
+        x = x + self.vx * dt
+        y = y + self.vy * dt
 
         if(x < 0):
             self.lge.delGObject(self)
             return
 
-        self.vy = self.vy - self.g*dt
+        self.vy = self.vy - self.g * dt
         self.setPosition(x, y)
 
     def onCollision(self, dt, gobjs):
@@ -104,7 +106,7 @@ class Ball(Canvas):
             if(gobj.getTag() == "ground"):
                 self.setPosition(self.getX(), gobj.getY() + gobj.getHeight())
 
-                self.vy = -self.vy*self.e
+                self.vy = -self.vy * self.e
                 if(abs(self.vy) < 30):
                     self.vy = 0
                     self.vx = 0

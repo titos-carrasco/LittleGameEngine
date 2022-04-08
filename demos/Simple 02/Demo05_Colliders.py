@@ -3,9 +3,11 @@ from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
 from lge.Canvas import Canvas
 from lge.Rectangle import Rectangle
+from lge.MouseClick import MouseClick
 
 
 class Colliders():
+
     def __init__(self):
         # creamos el juego
         winSize = (640, 480)
@@ -60,6 +62,9 @@ class Colliders():
         # establecemos que la camara siga al heroe
         self.lge.setCameraTarget(heroe, False)
 
+        # para manejar el clic del mouse
+        self.leftMouseButton = MouseClick()
+
     def onMainUpdate(self, dt):
         # abortamos con la tecla Escape
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_ESCAPE)):
@@ -79,20 +84,16 @@ class Colliders():
         infobar.drawText(info, (50, 0), "monospace.16", (0, 0, 0))
 
         # mute on/off
-        mute = self.lge.getGObject("mute")
-        r = mute.getRectangle()
-        if(self.lge.getMouseClicked(0) and r.contains(mx, my)):
-            idx = mute.getCurrentIdx()
-            if(idx == 1):
-                self.lge.setSoundVolume("fondo", 0)
-            else:
-                self.lge.setSoundVolume("fondo", 50)
-            mute.nextShape()
-
-        # de manera aleatorio activamos sonido de aves
-        n = random.random()*1000
-        if(n < 3):
-            self.lge.playSound("aves", False, 50)
+        if(self.leftMouseButton.isClicked(mb1, mx, my)):
+            mute = self.lge.getGObject("mute")
+            r = mute.getRectangle()
+            if(r.contains(mx, my)):
+                idx = mute.getCurrentIdx()
+                if(idx == 1):
+                    self.lge.setSoundVolume("fondo", 0)
+                else:
+                    self.lge.setSoundVolume("fondo", 50)
+                mute.nextShape()
 
     # main loop
     def run(self):
@@ -100,6 +101,7 @@ class Colliders():
 
 
 class MiHeroe(Sprite):
+
     def __init__(self):
         # agregamos el heroe con diferentes imagenes
         super().__init__(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 346), "Heroe")
@@ -118,7 +120,7 @@ class MiHeroe(Sprite):
     def onUpdate(self, dt):
         # velocity = pixeles por segundo
         velocity = 240
-        pixels = velocity*dt
+        pixels = velocity * dt
         if(pixels < 1):
             pixels = 1
 
