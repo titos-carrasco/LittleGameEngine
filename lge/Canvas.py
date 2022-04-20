@@ -1,3 +1,9 @@
+"""
+GameObject para trazar formas en LittleGameObject
+
+@autor oberto carrasco (titos.carrasco@gmail.com)
+"""
+
 import pygame
 
 from lge.LittleGameEngine import LittleGameEngine
@@ -8,11 +14,11 @@ class Canvas(GameObject):
 
     def __init__(self, position, size, name=None):
         """
-        Crea un objeto, para dibujar, en la posicion y dimensiones dadas
+        Crea un canvas, para dibujar, en la posicion y dimensiones dadas
 
         Parametros:
             - tupla position : posicion (x, y) del canvas
-            - tupla size : dimension (width, height= del canvas
+            - tupla size : dimension (width, height) del canvas
             - string name : nombre para esta GameObject (opcional)
         """
         super().__init__(position, size, name)
@@ -24,7 +30,7 @@ class Canvas(GameObject):
         Colorea el canvas con el color especificado
 
         Parametros:
-            - tupla color : rellena el canvas con el color especificado (r,g,b,a). El alpha es opcional
+            - tupla color : color de relleno (r,g,b,a). El alpha es opcional
         """
         self.surface.fill(color)
 
@@ -58,7 +64,7 @@ class Canvas(GameObject):
 
     def drawCircle(self, position, radius, color, thickness=False):
         """
-        Traza un circulo en este canvas en la position, de radio y color especificado
+        Traza un circulo en este canvas en la posicion, de radio y color especificado
 
         Parametros:
             - tuple position : coordenada (x, y) en donde se trazara el circulo dentro del canvas

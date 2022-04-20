@@ -1,3 +1,10 @@
+"""
+Clase para manejar el clic del Mouse
+
+@author Roberto carrasco (titos.carrasco@gmail.com)
+"""
+
+
 class MouseClick():
 
     def __init__(self):
