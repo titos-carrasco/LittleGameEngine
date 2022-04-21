@@ -1,5 +1,8 @@
 # ChangeLog
 
+## v0.5.2.1 2022-04-21
+- Documentación
+
 ## v0.5.2 2022-04-07
 - Formateo de código con PyDev
 - Agrega clase para manejar clic del mouse

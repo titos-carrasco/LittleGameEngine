@@ -1,5 +1,5 @@
 """
-GameObject para trazar formas en LittleGameObject
+GameObject para trazar formas en Little Game Engine
 
 @autor oberto carrasco (titos.carrasco@gmail.com)
 """
