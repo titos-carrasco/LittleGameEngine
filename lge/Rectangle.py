@@ -1,3 +1,10 @@
+"""
+Clase para manejar Rectangulos
+
+@author Roberto carrasco (titos.carrasco@gmail.com)
+"""
+
+
 class Rectangle():
 
     def __init__(self, origin, size):

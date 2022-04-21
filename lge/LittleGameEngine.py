@@ -1,3 +1,9 @@
+"""
+La Pequena Maquina de Juegos
+
+@author Roberto carrasco (titos.carrasco@gmail.com)
+"""
+
 from glob import glob
 import pygame
 
@@ -21,6 +27,14 @@ class LittleGameEngine():
 
     # ------ game engine ------
     def __init__(self, camSize, title, bgColor):
+        """
+        Crea el juego
+        
+        Parametros
+            - tuple camSize : alto y ancho de la ventana de despliegue
+            - string title : titulo de la ventana
+            - tuple bgColor : color de fondo de la ventana
+        """
         assert LittleGameEngine.lge is None, "LittleGameEngine ya se encuentra activa"
         LittleGameEngine.lge = self
 

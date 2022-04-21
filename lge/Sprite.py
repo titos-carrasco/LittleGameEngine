@@ -1,3 +1,9 @@
+"""
+Clase para manejar GameObjects animados
+
+@author Roberto carrasco (titos.carrasco@gmail.com)
+"""
+
 from lge.LittleGameEngine import LittleGameEngine
 from lge.GameObject import GameObject
 
@@ -71,7 +77,7 @@ class Sprite(GameObject):
 
     def setShape(self, iname, idx=0):
         """
-        Establece la secuencia de imaganes a utilizar en este Sprite
+        Establece la secuencia de imagenes a utilizar en este Sprite
 
         Parametros:
             - string iname : el nombre de la secuencia (cargada con LoadImage y especificada al crear este Sprite)

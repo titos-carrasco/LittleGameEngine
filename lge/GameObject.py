@@ -1,3 +1,9 @@
+"""
+Objeto base del juego. En Little Game Engine casi todo es un GameObject
+
+@author Roberto carrasco (titos.carrasco@gmail.com)
+"""
+
 import uuid
 
 from lge.Rectangle import Rectangle
