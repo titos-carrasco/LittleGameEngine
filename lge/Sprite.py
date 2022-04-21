@@ -10,15 +10,15 @@ from lge.GameObject import GameObject
 
 class Sprite(GameObject):
 
-    def __init__(self, inames, position, name=None):
+    def __init__(self, inames, position:tuple, name:str=None):
         """
         Crea un GameObject animado con las secuencias de imagenes cargadas con LittleGameEngine.LoadImage()
 
-        Parametros:
-            - string inames : si es un string corresponde al nombre de la secuencia a utilizar
-            - list inames : si es una lista corresponde a los nombres de las secuencias a utilizar (seleccionable con SetShape() )
-            - tuple position : posicion inicial (x, y) del este Sprite
-            - string name : nombre a asignar a este objeto (opcional)77
+        **Parametros**
+        : *inames* : si es un string corresponde al nombre de la secuencia a utilizar
+        : *inames* : si es una lista corresponde a los nombres de las secuencias a utilizar (seleccionable con SetShape() )
+        : *position* : posicion inicial (x, y) del este Sprite
+        : *name* : nombre a asignar a este objeto (opcional)
         """
         super().__init__(position, (1, 1), name)
 
@@ -36,31 +36,31 @@ class Sprite(GameObject):
         width, height = self.surface.get_rect().size
         self.rect.setSize(width, height)
 
-    def getCurrentIName(self):
+    def getCurrentIName(self) -> str:
         """
         Retorna el nombre de la secuencia actual de imagenes que utiliza este Sprite
 
-        Retorna:
-            - string : el nombre de la secuencia
+        **Retorna**
+        : *str* : el nombre de la secuencia
         """
         return self.iname
 
-    def getCurrentIdx(self):
+    def getCurrentIdx(self) -> int:
         """
         Retorna el indice de la secuencia actual de imagenes que utiliza este Sprite
 
-        Retorna:
-            - int : el numero de la imagen dentro de la secuencia actual
+        **Retorna**
+        : *int* : el numero de la imagen dentro de la secuencia actual
         """
         return self.idx
 
-    def nextShape(self, dt=0, delay=0):
+    def nextShape(self, dt:float=0, delay:float=0):
         """
         Avanza automaticamente a la siguiente imagen de la secuencia de este Sprite
 
-        Parametros:
-            - double dt: tiempo transcurrido desde la ultima invocacion a este metodo
-            - double delay: tiempo que debe transcurrir antes de pasar a la siguiente imagen de la secuencia
+        **Parametros**
+        : *dt* : tiempo transcurrido desde la ultima invocacion a este metodo
+        : *delay* : tiempo que debe transcurrir antes de pasar a la siguiente imagen de la secuencia
         """
         self.elapsed = self.elapsed + dt
         if(self.elapsed < delay):
@@ -75,13 +75,13 @@ class Sprite(GameObject):
         width, height = self.surface.get_rect().size
         self.rect.setSize(width, height)
 
-    def setShape(self, iname, idx=0):
+    def setShape(self, iname:str, idx:int=0):
         """
         Establece la secuencia de imagenes a utilizar en este Sprite
 
-        Parametros:
-            - string iname : el nombre de la secuencia (cargada con LoadImage y especificada al crear este Sprite)
-            - int idx: el numero de la secuencia a utilizar
+        **Parametros**
+        : *iname* : el nombre de la secuencia (cargada con LoadImage y especificada al crear este Sprite)
+        : *idx* : el numero de la secuencia a utilizar
         """
         self.iname = iname
         if(idx >= len(self.surfaces[iname])):
