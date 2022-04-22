@@ -31,16 +31,16 @@ class TheWorld():
         self.lge.addGObject(fondo, 0)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 420), (800, 20), "infobar")
+        infobar = Canvas((0, 0), (800, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # agregamos el icono del sonido
-        mute = Sprite("mute", (8, 423), "mute")
+        mute = Sprite("mute", (8, 3), "mute")
         mute.setShape("mute", 1)
         self.lge.addGObjectGUI(mute)
 
         # agregamos al heroe
-        heroe = Sprite("heroe", (226, 142), "Heroe")
+        heroe = Sprite("heroe", (226, 254), "Heroe")
         self.lge.addGObject(heroe, 1)
 
         # agregamos un texto con transparencia

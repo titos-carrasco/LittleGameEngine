@@ -30,7 +30,7 @@ class Betty(Sprite):
 
         # cambiamos sus coordenadas y orientacion segun la tecla presionada
         if(not self.jumping and self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_SPACE)):
-            self.vy = self.vs
+            self.vy = -self.vs
             self.jumping = True
 
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
@@ -48,7 +48,7 @@ class Betty(Sprite):
 
         # caida por gravedad
         y = y + self.vy * dt
-        self.vy = self.vy - self.ay * dt
+        self.vy = self.vy + self.ay * dt
 
         # nueva posicion
         self.setPosition(x, y)
@@ -59,7 +59,7 @@ class Betty(Sprite):
             if(tag == "suelo"):
                 self.jumping = False
                 self.vy = 0
-                self.setPosition(self.getX(), gobj.getY() + gobj.getHeight())
+                self.setPosition(self.getX(), gobj.getY() - self.getHeight())
             elif(tag == "muerte"):
                 self.lge.delGObject(self)
                 print("he muerto")

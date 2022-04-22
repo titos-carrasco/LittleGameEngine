@@ -1,5 +1,8 @@
 # ChangeLog
 
+## v0.5.3 2022-04-22
+- Cambia coordenadas a la clásica 2D coincidiendo así con las coordenadas de pantalla (IV cuadrante)
+
 ## v0.5.2.1 2022-04-21
 - Documentación
 

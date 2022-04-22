@@ -29,11 +29,11 @@ def main():
     lge.addGObject(fondo, 0)
 
     # agregamos la barra de info
-    infobar = Canvas((0, 460), (640, 20), "infobar")
+    infobar = Canvas((0, 0), (640, 20), "infobar")
     lge.addGObjectGUI(infobar)
 
     # agregamos al heroe
-    heroe = Sprite(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 346), "Heroe")
+    heroe = Sprite(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 626), "Heroe")
     heroe.setOnEvents(LittleGameEngine.E_ON_UPDATE)
     heroe.setShape("heroe_idle_right")
     heroe.setBounds(Rectangle((0, 0), (1920, 1056)))
@@ -111,9 +111,9 @@ def HeroeUpdate(dt):
             heroe.state = -1
 
     if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
-        y = y + pixels
-    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
         y = y - pixels
+    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+        y = y + pixels
 
     # siguiente imagen de la secuencia
     heroe.nextShape(dt, 0.050)

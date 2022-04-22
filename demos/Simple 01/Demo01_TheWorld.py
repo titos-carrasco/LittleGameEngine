@@ -22,7 +22,7 @@ fondo = Sprite("fondo", (0, 0))
 lge.addGObject(fondo, 0)
 
 # agregamos al heroe
-heroe = Sprite("heroe", (226, 142))
+heroe = Sprite("heroe", (226, 254))
 lge.addGObject(heroe, 1)
 
 # agregamos un texto con transparencia

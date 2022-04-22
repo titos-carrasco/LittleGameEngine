@@ -24,7 +24,7 @@ class Particles():
         self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 420), (800, 20), "infobar")
+        infobar = Canvas((0, 0), (800, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # un canvas para plotear
@@ -36,9 +36,9 @@ class Particles():
         self.numParticles = 500
         self.particles = [0] * self.numParticles
         for i in range(self.numParticles):
-            x = 100 + random.random() * 600
-            y = 300 + random.random() * 200
-            vx = -60 + random.random() * 120
+            x = 300 + random.random() * 200
+            y = 100 + random.random() * 100
+            vx = -120 + random.random() * 240
             vy = -120 + random.random() * 240
             m = 0.1 + random.random()
             self.particles[i] = Particle(x, y, vx, vy, m)
@@ -105,7 +105,7 @@ class Particle():
         self.vx = self.vx + ax * dt
         self.vy = self.vy + ay * dt
         self.x = self.x + self.vx * dt
-        self.y = self.y + self.vy * dt
+        self.y = self.y - self.vy * dt
 
 
 # -- show time

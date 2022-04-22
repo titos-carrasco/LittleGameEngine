@@ -26,11 +26,11 @@ def main():
     lge.addGObject(fondo, 0)
 
     # agregamos la barra de info
-    infobar = Canvas((0, 460), (640, 20), "infobar")
+    infobar = Canvas((0, 0), (640, 20), "infobar")
     lge.addGObjectGUI(infobar)
 
     # agregamos al heroe
-    heroe = Sprite("heroe", (550, 346))
+    heroe = Sprite("heroe", (550, 626))
     lge.addGObject(heroe, 1)
 
     # configuramos la camara
@@ -82,9 +82,9 @@ def onMainUpdate(dt):
     elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
         x = x - pixels
     if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
-        y = y + pixels
-    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
         y = y - pixels
+    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+        y = y + pixels
 
     # posicionamos la camara
     lge.setCameraPosition(x, y)

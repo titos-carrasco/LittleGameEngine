@@ -47,7 +47,7 @@ class Canvas(GameObject):
         x, y = position
 
         s = LittleGameEngine.getInstance().fonts[fname].render(text, True, fcolor)
-        self.surface.blit(s, (x, self.rect.height - s.get_height() - y))
+        self.surface.blit(s, (x, y))
 
     def drawPoint(self, position:tuple, color:tuple):
         """
@@ -73,7 +73,6 @@ class Canvas(GameObject):
         : *thickness* : si es True se mostrara el borde del circulo
         """
         x, y = position
-        y = self.rect.height - y
         thickness = 1 if thickness else 0
 
         pygame.draw.circle(self.surface, color, (x, y), radius, thickness)
@@ -90,7 +89,6 @@ class Canvas(GameObject):
         """
         x, y = position
         w, h = size
-        y = self.rect.height - h - y
         thickness = 1 if thickness else 0
 
         pygame.draw.rect(self.surface, color, pygame.Rect((x, y), (w, h)), thickness)
@@ -105,6 +103,5 @@ class Canvas(GameObject):
         """
         x, y = position
         w, h = surface.get_size()
-        y = self.rect.height - h - y
 
         self.surface.blit(surface, (x, y))

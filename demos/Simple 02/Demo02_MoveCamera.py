@@ -31,16 +31,16 @@ class MoveCamera():
         self.lge.addGObject(fondo, 0)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 460), (640, 20), "infobar")
+        infobar = Canvas((0, 0), (640, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # agregamos el icono del sonido
-        mute = Sprite("mute", (8, 463), "mute")
+        mute = Sprite("mute", (8, 3), "mute")
         mute.setShape("mute", 1)
         self.lge.addGObjectGUI(mute)
 
         # agregamos al heroe
-        heroe = Sprite("heroe", (550, 346), "Heroe")
+        heroe = Sprite("heroe", (550, 626), "Heroe")
         self.lge.addGObject(heroe, 1)
 
         # configuramos la camara
@@ -100,9 +100,9 @@ class MoveCamera():
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
             x = x - pixels
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
-            y = y + pixels
-        elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
             y = y - pixels
+        elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+            y = y + pixels
 
         # posicionamos la camara
         self.lge.setCameraPosition(x, y)

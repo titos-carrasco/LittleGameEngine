@@ -27,11 +27,11 @@ def main():
     lge.addGObject(fondo, 0)
 
     # agregamos la barra de info
-    infobar = Canvas((0, 460), (640, 20), "infobar")
+    infobar = Canvas((0, 0), (640, 20), "infobar")
     lge.addGObjectGUI(infobar)
 
     # agregamos al heroe
-    heroe = Sprite(["heroe_right", "heroe_left"], (550, 346), "Heroe")
+    heroe = Sprite(["heroe_right", "heroe_left"], (550, 626), "Heroe")
     heroe.setOnEvents(LittleGameEngine.E_ON_UPDATE)
     heroe.setShape("heroe_right")
     heroe.setBounds(Rectangle((0, 0), (1920, 1056)))
@@ -95,9 +95,9 @@ def HeroeUpdate(dt):
         heroe.setShape("heroe_left")
 
     if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
-        y = y + pixels
-    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
         y = y - pixels
+    elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+        y = y + pixels
 
     # lo posicionamos
     heroe.setPosition(x, y)

@@ -32,18 +32,18 @@ class Birds():
         self.lge.addGObject(fondo, 0)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 420), (800, 20), "infobar")
+        infobar = Canvas((0, 0), (800, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # agregamos al heroe
-        heroe = Sprite("heroe", (226, 142))
+        heroe = Sprite("heroe", (226, 254))
         self.lge.addGObject(heroe, 1)
 
         # agregamos pajaros
         ww, wh = self.lge.getCameraSize()
         for i in range(500):
             x = random.random() * ww
-            y = random.random() * (wh - 40)
+            y = random.random() * wh
             bird = Bird("bird", (x, y))
             self.lge.addGObject(bird, 1)
 

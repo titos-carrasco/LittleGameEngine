@@ -30,15 +30,15 @@ class Platform():
         self.lge.addGObject(fondo, 0)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 580), (800, 20), "infobar")
+        infobar = Canvas((0, 0), (800, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # agregamos el ninja
-        ninja = Ninja((340, 300))
+        ninja = Ninja((340, 180))
         self.lge.addGObjectGUI(ninja)
 
         # agregamos el bloque que se mueve vertical
-        bloque = BlockHorizontal(13 * 64, 1 * 64)
+        bloque = BlockHorizontal(13 * 64, 3 * 64)
         self.lge.addGObject(bloque, 1)
 
         # agregamos el mensaje

@@ -13,7 +13,7 @@ class Ball(Canvas):
         self.fill((255, 255, 255))
         self.initX, self.initY = position
         self.speedX = 180
-        self.speedY = -180
+        self.speedY = 180
 
     def onUpdate(self, dt):
         x, y = self.getPosition()

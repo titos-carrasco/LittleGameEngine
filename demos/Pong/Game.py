@@ -19,34 +19,34 @@ class Pong():
         self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 620), (640, 20), "infobar")
+        infobar = Canvas((0, 0), (640, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # el campo de juego
-        field = Canvas((24, 34), (592, 526), "field")
+        field = Canvas((24, 80), (592, 526), "field")
         field.fill((0, 0, 100))
         self.lge.addGObject(field, 0)
 
         # los bordes
-        wall = Canvas((0, 560), (640, 4))
+        wall = Canvas((0, 76), (640, 4))
         wall.fill((255, 255, 255))
         wall.setTag("wall-horizontal")
         wall.useColliders(True)
         self.lge.addGObject(wall, 1)
 
-        wall = Canvas((0, 30), (640, 4))
+        wall = Canvas((0, 606), (640, 4))
         wall.fill((255, 255, 255))
         wall.setTag("wall-horizontal")
         wall.useColliders(True)
         self.lge.addGObject(wall, 1)
 
-        wall = Canvas((20, 34), (4, 526))
+        wall = Canvas((20, 80), (4, 526))
         wall.fill((255, 255, 255))
         wall.setTag("wall-vertical")
         wall.useColliders(True)
         self.lge.addGObject(wall, 1)
 
-        wall = Canvas((616, 34), (4, 526))
+        wall = Canvas((616, 80), (4, 526))
         wall.fill((255, 255, 255))
         wall.setTag("wall-vertical")
         wall.useColliders(True)
@@ -97,9 +97,9 @@ class Pong():
         y = userPaddle.getY()
 
         if (self.lge.keyPressed(self.lge.CONSTANTS.K_UP)):
-            userPaddle.setPosition(x, y + speed)
-        elif (self.lge.keyPressed(self.lge.CONSTANTS.K_DOWN)):
             userPaddle.setPosition(x, y - speed)
+        elif (self.lge.keyPressed(self.lge.CONSTANTS.K_DOWN)):
+            userPaddle.setPosition(x, y + speed)
 
         # la pelota
         ball = self.lge.getGObject("ball")

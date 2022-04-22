@@ -13,7 +13,7 @@ from lge.Rectangle import Rectangle
 class WebCam(Canvas):
 
     def __init__(self):
-        super().__init__((200, 257), (256, 144))
+        super().__init__((200, 656), (256, 144))
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setOnEvents(LittleGameEngine.E_ON_QUIT)

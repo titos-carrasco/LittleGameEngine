@@ -13,8 +13,8 @@ class BlockHorizontal(Sprite):
         self.setTag("ground")
         self.x, self.y = x, y
         self.dir = "up"
-        self.limitTop = y + 64 * 4
-        self.limitBottom = y - 64
+        self.limitTop = y - 64
+        self.limitBottom = y + 64 * 4
 
     def onUpdate(self, dt):
         # velocity = pixeles por segundo
@@ -24,12 +24,12 @@ class BlockHorizontal(Sprite):
             pixels = 1
 
         if(self.dir == "up"):
-            self.y = self.y + pixels
-        else:
             self.y = self.y - pixels
+        else:
+            self.y = self.y + pixels
         self.setPosition(self.x, self.y)
 
-        if(self.y >= self.limitTop):
+        if(self.y < self.limitTop):
             self.dir = "down"
-        elif(self.y < self.limitBottom):
+        elif(self.y > self.limitBottom):
             self.dir = "up"

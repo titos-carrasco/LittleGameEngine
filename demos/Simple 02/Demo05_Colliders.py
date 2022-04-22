@@ -39,16 +39,16 @@ class Colliders():
         self.lge.addGObject(fondo, 0)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 460), (640, 20), "infobar")
+        infobar = Canvas((0, 0), (640, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # agregamos el icono del sonido
-        mute = Sprite("mute", (8, 463), "mute")
+        mute = Sprite("mute", (8, 3), "mute")
         mute.setShape("mute", 1)
         self.lge.addGObjectGUI(mute)
 
         # agregamos un ninja
-        ninja = Sprite("ninja", (350, 250), "ninja")
+        ninja = Sprite("ninja", (350, 720), "ninja")
         ninja.useColliders(True)
         self.lge.addGObject(ninja, 1)
 
@@ -104,7 +104,7 @@ class MiHeroe(Sprite):
 
     def __init__(self):
         # agregamos el heroe con diferentes imagenes
-        super().__init__(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 346), "Heroe")
+        super().__init__(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 626), "Heroe")
 
         # acceso al motor de juegos
         self.lge = LittleGameEngine.getInstance()
@@ -149,9 +149,9 @@ class MiHeroe(Sprite):
                 self.state = -1
 
         if (self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
-            y = y + pixels
-        elif (self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
             y = y - pixels
+        elif (self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
+            y = y + pixels
 
         # siguiente imagen de la secuencia
         self.nextShape(dt, 0.050)

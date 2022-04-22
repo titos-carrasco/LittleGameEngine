@@ -35,14 +35,14 @@ class MiJuego():
         self.lge.addGObject(fondo, 0)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 460), (640, 20), "infobar")
+        infobar = Canvas((0, 0), (640, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # agregamos colisionadores para el suelo
         self.addColliders()
 
         # agregamos los personajes
-        betty = Betty(10, 300)
+        betty = Betty(10, 700)
         betty.setBounds(Rectangle((0, 0), (1920, 1056)))
         self.lge.addGObject(betty, 2)
 
@@ -55,17 +55,17 @@ class MiJuego():
         self.lge.setCameraTarget(betty, True)
 
     def addColliders(self):
-        gobj = GameObject((0, 247), (510, 9))
+        gobj = GameObject((0, 800), (510, 9))
         gobj.setTag("suelo")
         gobj.useColliders(True)
         self.lge.addGObject(gobj, 2)
 
-        gobj = GameObject((484, 340), (250, 9))
+        gobj = GameObject((484, 707), (250, 9))
         gobj.setTag("suelo")
         gobj.useColliders(True)
         self.lge.addGObject(gobj, 2)
 
-        gobj = GameObject((507, 210), (266, 9))
+        gobj = GameObject((507, 837), (266, 9))
         gobj.setTag("muerte")
         gobj.useColliders(True)
         self.lge.addGObject(gobj, 2)

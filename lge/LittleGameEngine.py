@@ -14,7 +14,6 @@ from lge.Rectangle import Rectangle
 
 class LittleGameEngine():
     CONSTANTS = pygame.constants
-    VLIMIT = 0xFFFFFFFF
     GUI_LAYER = 0xFFFF
     E_ON_DELETE = 0b00000001
     E_ON_START = 0b00000010
@@ -253,8 +252,7 @@ class LittleGameEngine():
                     for gobj in gobjs:
                         if(gobj.surface != None):
                             x, y = gobj.getPosition()
-                            w, h = gobj.getSize()
-                            self.screen.blit(gobj.surface, (x, self.camera.rect.height - y - h))
+                            self.screen.blit(gobj.surface, (x, y))
 
             # ---
             pygame.display.update()
@@ -272,31 +270,21 @@ class LittleGameEngine():
     # sistema cartesiano y zona visible dada por la camara
     def fixXY(self, gobj:GameObject) -> tuple:
         """
-        Convierte las coordenadas en sistema cartesiano del GameObject a coordenadas
-        de pantalla ajustandolas a la zona de vision de la camara
+        Traslada las coordenadas del GameObject a la zona de despliegue de la camara
         
         **Parametros**
-        : *gobj* : el objeto del cual convertir sus coordenadas
+        : *gobj* : el objeto del cual trasladar sus coordenadas
         
         **Retorna**
-        : *tuple* : las coordenadas ajustadas
+        : *tuple* : las coordenadas trasladadas
         """
         xo = gobj.rect.x
-        yo = gobj.rect.y
-        # wo = gobj.rect.width
-        ho = gobj.rect.height
-
-        wh = LittleGameEngine.VLIMIT
-
         vx = self.camera.rect.x
-        vy = self.camera.rect.y
-        # vw = self.camera.rect.width
-        vh = self.camera.rect.height
-
-        dy = wh - (vy + vh)
         x = xo - vx
-        y = wh - (yo + ho) - dy
 
+        yo = gobj.rect.y
+        vy = self.camera.rect.y
+        y = yo - vy
         return x, y
 
     # ------ gobjects ------
@@ -457,7 +445,7 @@ class LittleGameEngine():
         """
         x, y = pygame.mouse.get_pos()
         wh = self.camera.rect.height
-        return x, wh - y - 1
+        return x, y
 
     # ------ fonts ------
     def getSysFonts(self) -> list:

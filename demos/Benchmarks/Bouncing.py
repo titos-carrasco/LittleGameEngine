@@ -25,11 +25,11 @@ class Bouncing():
         self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 420), (800, 20), "infobar")
+        infobar = Canvas((0, 0), (800, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # agregamos el suelo
-        ground = Canvas((0, 0), (800, 100), "ground")
+        ground = Canvas((0, 340), (800, 100), "ground")
         ground.fill((200, 200, 200))
         ground.setTag("ground")
         ground.useColliders(True)
@@ -38,7 +38,7 @@ class Bouncing():
         # los objetos a rebotar
         for i in range(100):
             x = 50 + random.random() * 700
-            y = 200 + random.random() * 200
+            y = 50 + random.random() * 150
             vx = -50 + random.random() * 100
             vy = 0
             gobj = Ball(x, y, vx, vy)
@@ -82,7 +82,7 @@ class Ball(Canvas):
         self.vx = vx
         self.vy = vy
         self.g = 240
-        self.e = 0.8
+        self.e = 0.4
         self.fill((0, 128, 0, 200))
         self.useColliders(True)
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
@@ -98,16 +98,16 @@ class Ball(Canvas):
             self.lge.delGObject(self)
             return
 
-        self.vy = self.vy - self.g * dt
+        self.vy = self.vy + self.g * dt
         self.setPosition(x, y)
 
     def onCollision(self, dt, gobjs):
         for gobj in gobjs:
             if(gobj.getTag() == "ground"):
-                self.setPosition(self.getX(), gobj.getY() + gobj.getHeight())
+                self.setPosition(self.getX(), gobj.getY() - self.getHeight())
 
                 self.vy = -self.vy * self.e
-                if(abs(self.vy) < 30):
+                if(abs(self.vy) < 50):
                     self.vy = 0
                     self.vx = 0
                     self.g = 0
