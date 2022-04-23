@@ -34,7 +34,7 @@ class MiJuego():
         self.lge.addGObject(fondo, 0)
 
         # agregamos la barra de info
-        infobar = Canvas((0, 714), (640, 20), "infobar")
+        infobar = Canvas((0, 0), (640, 20), "infobar")
         self.lge.addGObjectGUI(infobar)
 
         # cargamos el mapa en memoria
@@ -48,17 +48,17 @@ class MiJuego():
 
         # agregamos a Betty
         betty = Betty("Betty", winSize)
-        betty.setPosition(32 * 9, 32 * 13)
+        betty.setPosition(32 * 9, 32 * 9)
         self.lge.addGObject(betty, 1)
 
         # agregamos 3 zombies
         for i in range(3):
             zombie = Zombie("Zombie-%03d" % i, winSize)
-            zombie.setPosition(32 + 32 * 4 + 32 * (i * 4), 32 * 1)
+            zombie.setPosition(32 + 32 * 4 + 32 * (i * 4), 32 * 21)
             self.lge.addGObject(zombie, 1)
 
         # agregamos los muros para las colisiones (segun el mapa)
-        y = 21
+        y = 1
         for row in mapa:
             x = 0
             for v in row:
@@ -68,7 +68,7 @@ class MiJuego():
                     muro.setTag("muro")
                     self.lge.addGObject(muro, 1)
                 x = x + 1
-            y = y - 1
+            y = y + 1
 
     def onMainUpdate(self, dt):
         # abortamos con la tecla Escape

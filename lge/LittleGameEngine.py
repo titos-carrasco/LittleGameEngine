@@ -386,7 +386,7 @@ class LittleGameEngine():
         **Parametros**
         : *gobj* : el GameObject a seguir
         : *center* : si es verdadero la camara se centrara en el centro del
-                     GameObject, en caso contrario lo hara en el extremo inferior
+                     GameObject, en caso contrario lo hara en el extremo superior
                      izquierdo
         """
         assert gobj.layer >= 0, "'gobj' no ha sido agregado"
@@ -444,7 +444,6 @@ class LittleGameEngine():
         : *tuple* : la posicion del mouse
         """
         x, y = pygame.mouse.get_pos()
-        wh = self.camera.rect.height
         return x, y
 
     # ------ fonts ------

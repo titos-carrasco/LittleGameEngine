@@ -41,8 +41,8 @@ class Zombie(Sprite):
         x, y = self.getPosition()
 
         # posicion respecto a Betty
-        abajo = y < by
-        arriba = y > by
+        abajo = y > by
+        arriba = y < by
         izquierda = x < bx
         derecha = x > bx
 
@@ -127,9 +127,9 @@ class Zombie(Sprite):
             elif (c == 'L'):
                 nx -= pixels
             elif (c == 'U'):
-                ny += pixels
-            elif (c == 'D'):
                 ny -= pixels
+            elif (c == 'D'):
+                ny += pixels
 
             # verificamos que no colisionemos con un muro u otro zombie
             self.setPosition(nx, ny)

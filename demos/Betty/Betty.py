@@ -49,10 +49,10 @@ class Betty(Sprite):
             x = x - pixels
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
             self.setShape("betty_up", idx)
-            y = y + pixels
+            y = y - pixels
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
             self.setShape("betty_down", idx)
-            y = y - pixels
+            y = y + pixels
         else:
             self.setShape("betty_idle", idx)
             if (x % 32 < 4):
