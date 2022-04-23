@@ -10,53 +10,40 @@ from lge.GameObject import GameObject
 
 class Sprite(GameObject):
 
-    def __init__(self, inames, position:tuple, name:str=None):
+    def __init__(self, iname, position:tuple, name:str=None):
         """
-        Crea un GameObject animado con las secuencias de imagenes cargadas con LittleGameEngine.LoadImage()
+        Crea un GameObject con la secuencia de imagenes a utilizar
 
         **Parametros**
-        : *inames* : si es un string corresponde al nombre de la secuencia a utilizar
-        : *inames* : si es una lista corresponde a los nombres de las secuencias a utilizar (seleccionable con SetShape() )
+        : *iname* : nombre de la secuencia de imagenes a utilizar (puede ser None)
         : *position* : posicion inicial (x, y) del este Sprite
-        : *name* : nombre a asignar a este objeto (opcional)
+        : *name* : nombre a asignar a este Sprite (opcional)
         """
         super().__init__(position, (1, 1), name)
 
-        self.surfaces = {}
-        if(not isinstance(inames, list)):
-            inames = [inames]
-        for iname in inames:
-            self.surfaces[iname] = LittleGameEngine.getInstance().getImages(iname)
-
-        self.iname = list(self.surfaces.keys())[0]
+        self.surface = None
+        self.surfaces = None
+        self.iname = None
         self.idx = 0
         self.elapsed = 0
 
-        self.surface = self.surfaces[iname][0]
-        width, height = self.surface.get_rect().size
-        self.rect.setSize(width, height)
+        self.setImage(iname)
 
-    def getCurrentIName(self) -> str:
+    def getImagesName(self):
         """
-        Retorna el nombre de la secuencia actual de imagenes que utiliza este Sprite
+        retorna el nombre de la secuencia de imagenes en uso
 
         **Retorna**
-        : *str* : el nombre de la secuencia
+        : *str* : el nombre de la secuencia actual
         """
         return self.iname
 
-    def getCurrentIdx(self) -> int:
+    def nextImage(self, dt:float=0, delay:float=0):
         """
-        Retorna el indice de la secuencia actual de imagenes que utiliza este Sprite
-
-        **Retorna**
-        : *int* : el numero de la imagen dentro de la secuencia actual
-        """
-        return self.idx
-
-    def nextShape(self, dt:float=0, delay:float=0):
-        """
-        Avanza automaticamente a la siguiente imagen de la secuencia de este Sprite
+        Avanza a la siguiente imagen de la secuencia
+        
+        nextImage() avanza a la siguiente imagen
+        nextImage(dt, 0.10) avanza a la siguiente imagen cuando la suma de los dt supere a delay
 
         **Parametros**
         : *dt* : tiempo transcurrido desde la ultima invocacion a este metodo
@@ -65,28 +52,36 @@ class Sprite(GameObject):
         self.elapsed = self.elapsed + dt
         if(self.elapsed < delay):
             return
-
         self.elapsed = 0
+
         self.idx = self.idx + 1
-        if(self.idx >= len(self.surfaces[self.iname])):
+        if(self.idx >= len(self.surfaces)):
             self.idx = 0
 
-        self.surface = self.surfaces[self.iname][self.idx]
+        self.surface = self.surfaces[self.idx]
         width, height = self.surface.get_rect().size
         self.rect.setSize(width, height)
 
-    def setShape(self, iname:str, idx:int=0):
+    def setImage(self, iname:str, idx:int=0):
         """
-        Establece la secuencia de imagenes a utilizar en este Sprite
+        Establece la secuencia de imagenes a utilizar
 
         **Parametros**
-        : *iname* : el nombre de la secuencia (cargada con LoadImage y especificada al crear este Sprite)
-        : *idx* : el numero de la secuencia a utilizar
+        : *iname* : nombre de la secuencia de imagenes a utilizar
+        : *idx* : indice dentro de la secuencia de imagenes para especificar que imagen utilizar
         """
-        self.iname = iname
-        if(idx >= len(self.surfaces[iname])):
-            idx = 0
-        self.idx = idx
-        self.surface = self.surfaces[iname][idx]
-        width, height = self.surface.get_rect().size
-        self.rect.setSize(width, height)
+        if(not iname is None):
+            if(self.iname != iname):
+                self.surfaces = LittleGameEngine.getInstance().getImages(iname)
+                self.iname = iname
+
+            if(idx >= len(self.surfaces)):
+                idx = 0
+            self.idx = idx
+
+            self.surface = self.surfaces[idx]
+            width, height = self.surface.get_rect().size
+            self.rect.setSize(width, height)
+
+            self.elapsed = 0
+

@@ -36,8 +36,9 @@ class MoveCamera():
 
         # agregamos el icono del sonido
         mute = Sprite("mute", (8, 3), "mute")
-        mute.setShape("mute", 1)
+        mute.setImage("mute", 1)
         self.lge.addGObjectGUI(mute)
+        self.isMute = False
 
         # agregamos al heroe
         heroe = Sprite("heroe", (550, 626), "Heroe")
@@ -78,12 +79,12 @@ class MoveCamera():
             mute = self.lge.getGObject("mute")
             r = mute.getRectangle()
             if(r.contains(mx, my)):
-                idx = mute.getCurrentIdx()
-                if(idx == 1):
-                    self.lge.setSoundVolume("fondo", 0)
-                else:
+                if(self.isMute):
                     self.lge.setSoundVolume("fondo", 50)
-                mute.nextShape()
+                else:
+                    self.lge.setSoundVolume("fondo", 0)
+                self.isMute = not self.isMute
+                mute.nextImage()
 
         # velocity = pixeles por segundo
         velocity = 240

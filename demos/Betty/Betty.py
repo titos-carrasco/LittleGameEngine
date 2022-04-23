@@ -5,24 +5,24 @@ from lge.Sprite import Sprite
 class Betty(Sprite):
 
     def __init__(self, name, winSize):
-        super().__init__(["betty_idle", "betty_down", "betty_up", "betty_left", "betty_right"], (0, 0), name)
+        super().__init__("betty_idle", (0, 0), name)
 
         self.lge = LittleGameEngine.getInstance()
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
-        self.setShape("betty_idle")
         self.setTag("Betty")
         self.useColliders(True)
         self.alive = True
         self.winSize = winSize
+        self.state = "I"
 
     def IsAlive(self):
         return self.alive
 
     def setAlive(self, alive):
         self.alive = alive
-        self.setShape("betty_idle")
+        self.setImage("betty_idle")
 
     def onUpdate(self, dt):
         # solo si estoy viva
@@ -40,21 +40,30 @@ class Betty(Sprite):
         self.lastPoint = x, y
 
         # cambiamos sus coordenadas e imagen segun la tecla presionada
-        idx = self.getCurrentIdx()
         if (self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
-            self.setShape("betty_right", idx)
+            if( self.state != "R" ):
+                self.state="R"
+                self.setImage("betty_right")
             x = x + pixels
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
-            self.setShape("betty_left", idx)
+            if( self.state != "L" ):
+                self.state="L"
+                self.setImage("betty_left")
             x = x - pixels
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
-            self.setShape("betty_up", idx)
+            if( self.state != "U" ):
+                self.state="U"
+                self.setImage("betty_up")
             y = y - pixels
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
-            self.setShape("betty_down", idx)
+            if( self.state != "D" ):
+                self.state="D"
+                self.setImage("betty_down")
             y = y + pixels
         else:
-            self.setShape("betty_idle", idx)
+            if( self.state != "I" ):
+                self.state="I"
+                self.setImage("betty_idle")
             if (x % 32 < 4):
                 x = round(x / 32) * 32
             elif (x % 32 > 28):
@@ -72,7 +81,7 @@ class Betty(Sprite):
 
         # siguiente imagen de la secuencia
         self.setPosition(x, y)
-        self.nextShape(dt, 0.1)
+        self.nextImage(dt, 0.1)
 
     def onCollision(self, dt, gobjs):
         if(not self.alive):

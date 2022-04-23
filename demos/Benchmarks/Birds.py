@@ -84,7 +84,7 @@ class Bird(Sprite):
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
 
     def onUpdate(self, dt):
-        self.nextShape(dt, 0.1)
+        self.nextImage(dt, 0.1)
 
 
 # ----

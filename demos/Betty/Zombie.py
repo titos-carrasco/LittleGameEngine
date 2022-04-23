@@ -12,7 +12,6 @@ class Zombie(Sprite):
         self.lge = LittleGameEngine.getInstance()
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setShape("zombie")
         self.setTag("zombie")
         self.useColliders(True)
         self.active = True
@@ -156,4 +155,4 @@ class Zombie(Sprite):
             self.setPosition(x, y)
 
         # siguiente imagen de la secuencia
-        self.nextShape(dt, 0.100)
+        self.nextImage(dt, 0.100)

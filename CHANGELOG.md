@@ -1,5 +1,15 @@
 # ChangeLog
 
+## v0.5.4 2022-04-23
+- Sprite.py: 
+  - Modifica constructor para recibir una única referencia a una secuencia de imágenes
+  - Cambia de nombre método getCurrentIName() a getImagesName()
+  - Elimina método getCurrentIdx() 
+  - Cambia de nombre método nextShape() a nextShapeImage()
+  - Cambia de nombre y modifica método setShape() por setImage()
+
+- Se ajustan los demos acorde a los cambios
+
 ## v0.5.3 2022-04-22
 - Cambia coordenadas a la clásica 2D coincidiendo así con las coordenadas de pantalla (IV cuadrante)
 

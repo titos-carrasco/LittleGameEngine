@@ -37,8 +37,9 @@ class Moveplayer():
 
         # agregamos el icono del sonido
         mute = Sprite("mute", (8, 3), "mute")
-        mute.setShape("mute", 1)
+        mute.setImage("mute", 1)
         self.lge.addGObjectGUI(mute)
+        self.isMute = False
 
         # agregamos al heroe
         heroe = MiHeroe()
@@ -76,12 +77,12 @@ class Moveplayer():
             mute = self.lge.getGObject("mute")
             r = mute.getRectangle()
             if(r.contains(mx, my)):
-                idx = mute.getCurrentIdx()
-                if(idx == 1):
-                    self.lge.setSoundVolume("fondo", 0)
-                else:
+                if(self.isMute):
                     self.lge.setSoundVolume("fondo", 50)
-                mute.nextShape()
+                else:
+                    self.lge.setSoundVolume("fondo", 0)
+                self.isMute = not self.isMute
+                mute.nextImage()
 
     # main loop
     def run(self):
@@ -91,14 +92,14 @@ class Moveplayer():
 class MiHeroe(Sprite):
 
     def __init__(self):
-        super().__init__(["heroe_right", "heroe_left"], (550, 626), "Heroe")
+        super().__init__("heroe_right", (550, 626), "Heroe")
 
         # acceso al motor de juegos
         self.lge = LittleGameEngine.getInstance()
 
         # sus atributos
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setShape("heroe_right")
+        self.setImage("heroe_right")
         self.setBounds(Rectangle((0, 0), (1920, 1056)))
 
     def onUpdate(self, dt):
@@ -114,10 +115,10 @@ class MiHeroe(Sprite):
         # cambiamos sus coordenadas y orientacion segun la tecla presionada
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
             x = x + pixels
-            self.setShape("heroe_right")
+            self.setImage("heroe_right")
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
             x = x - pixels
-            self.setShape("heroe_left")
+            self.setImage("heroe_left")
 
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
             y = y - pixels

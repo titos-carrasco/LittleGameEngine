@@ -31,9 +31,8 @@ def main():
     lge.addGObjectGUI(infobar)
 
     # agregamos al heroe
-    heroe = Sprite(["heroe_right", "heroe_left"], (550, 626), "Heroe")
+    heroe = Sprite("heroe_right", (550, 626), "Heroe")
     heroe.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-    heroe.setShape("heroe_right")
     heroe.setBounds(Rectangle((0, 0), (1920, 1056)))
     heroe.onUpdate = HeroeUpdate
     lge.addGObject(heroe, 1)
@@ -89,10 +88,10 @@ def HeroeUpdate(dt):
     # cambiamos sus coordenadas y orientacion segun la tecla presionada
     if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
         x = x + pixels
-        heroe.setShape("heroe_right")
+        heroe.setImage("heroe_right")
     elif(lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
         x = x - pixels
-        heroe.setShape("heroe_left")
+        heroe.setImage("heroe_left")
 
     if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
         y = y - pixels

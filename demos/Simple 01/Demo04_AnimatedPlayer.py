@@ -33,9 +33,8 @@ def main():
     lge.addGObjectGUI(infobar)
 
     # agregamos al heroe
-    heroe = Sprite(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 626), "Heroe")
+    heroe = Sprite("heroe_idle_right", (550, 626), "Heroe")
     heroe.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-    heroe.setShape("heroe_idle_right")
     heroe.setBounds(Rectangle((0, 0), (1920, 1056)))
     heroe.useColliders(True)
     heroe.onUpdate = HeroeUpdate
@@ -94,20 +93,20 @@ def HeroeUpdate(dt):
     if (lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
         x = x + pixels
         if (heroe.state != 2):
-            heroe.setShape("heroe_run_right")
+            heroe.setImage("heroe_run_right")
             heroe.state = 2
     elif (lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
         x = x - pixels
         if (heroe.state != -2):
-            heroe.setShape("heroe_run_left")
+            heroe.setImage("heroe_run_left")
             heroe.state = -2
     elif (heroe.state == 2):
         if (heroe.state != 1):
-            heroe.setShape("heroe_idle_right")
+            heroe.setImage("heroe_idle_right")
             heroe.state = 1
     elif (heroe.state == -2):
         if (heroe.state != -1):
-            heroe.setShape("heroe_idle_left")
+            heroe.setImage("heroe_idle_left")
             heroe.state = -1
 
     if(lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
@@ -116,7 +115,7 @@ def HeroeUpdate(dt):
         y = y + pixels
 
     # siguiente imagen de la secuencia
-    heroe.nextShape(dt, 0.050)
+    heroe.nextImage(dt, 0.050)
 
     # lo posicionamos
     heroe.setPosition(x, y)

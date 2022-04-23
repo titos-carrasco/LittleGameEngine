@@ -44,8 +44,9 @@ class Colliders():
 
         # agregamos el icono del sonido
         mute = Sprite("mute", (8, 3), "mute")
-        mute.setShape("mute", 1)
+        mute.setImage("mute", 1)
         self.lge.addGObjectGUI(mute)
+        self.isMute = False
 
         # agregamos un ninja
         ninja = Sprite("ninja", (350, 720), "ninja")
@@ -88,12 +89,12 @@ class Colliders():
             mute = self.lge.getGObject("mute")
             r = mute.getRectangle()
             if(r.contains(mx, my)):
-                idx = mute.getCurrentIdx()
-                if(idx == 1):
-                    self.lge.setSoundVolume("fondo", 0)
-                else:
+                if(self.isMute):
                     self.lge.setSoundVolume("fondo", 50)
-                mute.nextShape()
+                else:
+                    self.lge.setSoundVolume("fondo", 0)
+                self.isMute = not self.isMute
+                mute.nextImage()
 
     # main loop
     def run(self):
@@ -104,7 +105,7 @@ class MiHeroe(Sprite):
 
     def __init__(self):
         # agregamos el heroe con diferentes imagenes
-        super().__init__(["heroe_idle_right", "heroe_idle_left", "heroe_run_right", "heroe_run_left"], (550, 626), "Heroe")
+        super().__init__("heroe_idle_left", (550, 626), "Heroe")
 
         # acceso al motor de juegos
         self.lge = LittleGameEngine.getInstance()
@@ -112,7 +113,6 @@ class MiHeroe(Sprite):
         # sus atributos
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
-        self.setShape("heroe_idle_left")
         self.useColliders(True)
         self.state = -1
         self.setBounds(Rectangle((0, 0), (1920, 1056)))
@@ -132,20 +132,20 @@ class MiHeroe(Sprite):
         if (self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
             x = x + pixels
             if (self.state != 2):
-                self.setShape("heroe_run_right")
+                self.setImage("heroe_run_right")
                 self.state = 2
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
             x = x - pixels
             if (self.state != -2):
-                self.setShape("heroe_run_left")
+                self.setImage("heroe_run_left")
                 self.state = -2
         elif(self.state == 2):
             if (self.state != 1):
-                self.setShape("heroe_idle_right")
+                self.setImage("heroe_idle_right")
                 self.state = 1
         elif(self.state == -2):
             if (self.state != -1):
-                self.setShape("heroe_idle_left")
+                self.setImage("heroe_idle_left")
                 self.state = -1
 
         if (self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
@@ -154,7 +154,7 @@ class MiHeroe(Sprite):
             y = y + pixels
 
         # siguiente imagen de la secuencia
-        self.nextShape(dt, 0.050)
+        self.nextImage(dt, 0.050)
 
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
         self.setPosition(x, y)

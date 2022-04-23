@@ -9,7 +9,6 @@ class BlockHorizontal(Sprite):
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setPosition(x, y)
-        self.setShape("roca")
         self.setTag("ground")
         self.x, self.y = x, y
         self.dir = "up"

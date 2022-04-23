@@ -5,9 +5,7 @@ from lge.Sprite import Sprite
 class Betty(Sprite):
 
     def __init__(self, x, y):
-        images = ["betty_idle", "betty_left", "betty_right"]
-
-        super().__init__(images, (x, y), "Betty")
+        super().__init__("betty_idle", (x, y), "Betty")
 
         # acceso al motor de juegos
         self.lge = LittleGameEngine.getInstance()
@@ -20,13 +18,13 @@ class Betty(Sprite):
         self.vy = 0  # velocidad en y
         self.vs = 360  # velocidad en y en el salto
         self.ay = 480  # aceleracion en y
+
         self.jumping = False
 
     def onUpdate(self, dt):
         # los datos actuales
         x, y = self.getPosition()
-        action = self.getCurrentIName()
-        idx = self.getCurrentIdx()
+        action = self.getImagesName()
 
         # cambiamos sus coordenadas y orientacion segun la tecla presionada
         if(not self.jumping and self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_SPACE)):
@@ -36,15 +34,15 @@ class Betty(Sprite):
         if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
             x = x + self.vx * dt
             if(action != "betty_right"):
-                self.setShape("betty_right", 0)
+                self.setImage("betty_right", 0)
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
             x = x - self.vx * dt
             if(action != "betty_left"):
-                self.setShape("betty_left", 0)
+                self.setImage("betty_left", 0)
         else:
             if(action != "betty_idle"):
-                self.setShape("betty_idle", 0)
-        self.nextShape(dt, 0.050)
+                self.setImage("betty_idle", 0)
+        self.nextImage(dt, 0.050)
 
         # caida por gravedad
         y = y + self.vy * dt
