@@ -6,6 +6,7 @@ Clase para manejar GameObjects animados
 
 from lge.LittleGameEngine import LittleGameEngine
 from lge.GameObject import GameObject
+from lge.Rectangle import Rectangle
 
 
 class Sprite(GameObject):
@@ -29,7 +30,7 @@ class Sprite(GameObject):
 
         self.setImage(iname)
 
-    def getImagesName(self):
+    def getImagesName(self) -> str:
         """
         retorna el nombre de la secuencia de imagenes en uso
 
@@ -38,7 +39,16 @@ class Sprite(GameObject):
         """
         return self.iname
 
-    def nextImage(self, dt:float=0, delay:float=0):
+    def getImagesIndex(self) -> int:
+        """
+        Retorna el indice actual dentro de la secuencia de imagenes
+
+        **Retorna**
+        : *int* : el indice actual dentro de la secuencia de imagenes
+        """
+        return self.idx
+
+    def nextImage(self, dt:float=0, delay:float=0) -> int:
         """
         Avanza a la siguiente imagen de la secuencia
         
@@ -48,10 +58,13 @@ class Sprite(GameObject):
         **Parametros**
         : *dt* : tiempo transcurrido desde la ultima invocacion a este metodo
         : *delay* : tiempo que debe transcurrir antes de pasar a la siguiente imagen de la secuencia
+
+        **Retorna**
+        : *int* : el indice actual dentro de la secuencia de imagenes
         """
         self.elapsed = self.elapsed + dt
         if(self.elapsed < delay):
-            return
+            return self.idx
         self.elapsed = 0
 
         self.idx = self.idx + 1
@@ -61,14 +74,20 @@ class Sprite(GameObject):
         self.surface = self.surfaces[self.idx]
         width, height = self.surface.get_rect().size
         self.rect.setSize(width, height)
+        self.setCollider(Rectangle((0, 0), (width, height)))
 
-    def setImage(self, iname:str, idx:int=0):
+        return self.idx
+
+    def setImage(self, iname:str, idx:int=0) -> int:
         """
         Establece la secuencia de imagenes a utilizar
 
         **Parametros**
         : *iname* : nombre de la secuencia de imagenes a utilizar
         : *idx* : indice dentro de la secuencia de imagenes para especificar que imagen utilizar
+
+        **Retorna**
+        : *int* : el indice actual dentro de la secuencia de imagenes
         """
         if(not iname is None):
             if(self.iname != iname):
@@ -82,6 +101,7 @@ class Sprite(GameObject):
             self.surface = self.surfaces[idx]
             width, height = self.surface.get_rect().size
             self.rect.setSize(width, height)
+            self.setCollider(Rectangle((0, 0), (width, height)))
 
             self.elapsed = 0
-
+            return self.idx

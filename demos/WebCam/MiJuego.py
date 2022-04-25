@@ -17,9 +17,9 @@ class MiJuego():
         # creamos el juego
         win_size = (640, 480)
 
-        self.lge = LittleGameEngine(win_size, "MiJuego", (255, 255, 0))
-        self.lge.showColliders((255, 0, 0))
+        self.lge = LittleGameEngine(win_size, "MiJuego", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.showColliders((255, 0, 0))
 
         # cargamos recursos globales
         resourceDir = "../resources"
@@ -57,17 +57,17 @@ class MiJuego():
     def addColliders(self):
         gobj = GameObject((0, 800), (510, 9))
         gobj.setTag("suelo")
-        gobj.useColliders(True)
+        gobj.enableCollider(True)
         self.lge.addGObject(gobj, 2)
 
         gobj = GameObject((484, 707), (250, 9))
         gobj.setTag("suelo")
-        gobj.useColliders(True)
+        gobj.enableCollider(True)
         self.lge.addGObject(gobj, 2)
 
         gobj = GameObject((507, 837), (266, 9))
         gobj.setTag("muerte")
-        gobj.useColliders(True)
+        gobj.enableCollider(True)
         self.lge.addGObject(gobj, 2)
 
     def onMainUpdate(self, dt):

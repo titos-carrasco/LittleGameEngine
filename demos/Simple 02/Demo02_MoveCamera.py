@@ -11,7 +11,7 @@ class MoveCamera():
         # creamos el juego
         winSize = (640, 480)
 
-        self.lge = LittleGameEngine(winSize, "Move Camera", (255, 255, 0))
+        self.lge = LittleGameEngine(winSize, "Move Camera", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
 
         # cargamos los recursos que usaremos

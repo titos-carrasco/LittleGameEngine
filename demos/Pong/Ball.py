@@ -9,7 +9,7 @@ class Ball(Canvas):
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
-        self.useColliders(True)
+        self.enableCollider(True)
         self.fill((255, 255, 255))
         self.initX, self.initY = position
         self.speedX = 180

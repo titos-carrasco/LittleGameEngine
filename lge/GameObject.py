@@ -21,11 +21,12 @@ class GameObject():
         : *name* : nombre (opcional) a asignar a este GameObject
         """
         self.rect = Rectangle(position, size)
+        self.setCollider(Rectangle((0, 0), size))
         self.name = "__noname__-" + uuid.uuid4().hex if name is None else name
         self.surface = None
         self.bounds = None
         self.tag = ""
-        self._useColliders = False
+        self.useCollider = False
         self.layer = -1
         self.onEventsEnabled = 0x00
 
@@ -110,6 +111,21 @@ class GameObject():
         """
         return self.tag
 
+    def getCollider(self) -> list:
+        """
+        Retorna la lista de rectangulos que componen el colisionador ajustada a las coordenadas de LGE
+
+        **Retorna**
+        : *list* : la lista de rectangulos
+        """
+        collider = []
+        for r in self.collider:
+            r = r.copy()
+            r.x += self.rect.x
+            r.y += self.rect.y
+            collider.append(r)
+        return collider
+
     def setBounds(self, bounds:Rectangle):
         """
         Establece el rectangulo que limita el movimiento de este objeto
@@ -150,14 +166,35 @@ class GameObject():
         """
         self.tag = tag
 
-    def useColliders(self, enabled:bool):
+    def setCollider(self, rects):
+        """
+        Establece el colisionador para este objeto
+
+        **Parametros**
+        : *rects* : puede ser un Rectangulo o una lista de Rectangulos
+        """
+        if(isinstance(rects, Rectangle)):
+            rects = [rects]
+        collider = [ r.copy() for r in rects if isinstance(r, Rectangle) ]
+        if(collider):
+            self.collider = collider
+
+    def enableCollider(self, enabled:bool):
         """
         Establece si este objeto participara o no del procesamiento de colisiones
 
         **Parametros**
         : *enabled* : si es verdadero participara del procesamiento de colisiones
         """
-        self._useColliders = enabled
+        self.useCollider = enabled
+
+    def collidesWith(self, gobj):
+        if(self.layer == gobj.layer):
+            for r1 in self.getCollider():
+                for r2 in gobj.getCollider():
+                    if(r1.intersects(r2)):
+                        return True
+        return False
 
     # manejo de eventos
     def setOnEvents(self, onEventsEnabled:int):

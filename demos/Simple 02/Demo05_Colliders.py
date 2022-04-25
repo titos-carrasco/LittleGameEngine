@@ -12,9 +12,9 @@ class Colliders():
         # creamos el juego
         winSize = (640, 480)
 
-        self.lge = LittleGameEngine(winSize, "Colliders", (255, 255, 0))
-        self.lge.showColliders((255, 0, 0))
+        self.lge = LittleGameEngine(winSize, "Colliders", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
@@ -50,7 +50,11 @@ class Colliders():
 
         # agregamos un ninja
         ninja = Sprite("ninja", (350, 720), "ninja")
-        ninja.useColliders(True)
+        ninja.setCollider([
+            Rectangle( (36,8), (36, 36)),
+            Rectangle( (28,44), (44, 36))
+            ])
+        ninja.enableCollider(True)
         self.lge.addGObject(ninja, 1)
 
         # agregamos al heroe
@@ -113,7 +117,7 @@ class MiHeroe(Sprite):
         # sus atributos
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
-        self.useColliders(True)
+        self.enableCollider(True)
         self.state = -1
         self.setBounds(Rectangle((0, 0), (1920, 1056)))
 

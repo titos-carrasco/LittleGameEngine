@@ -7,7 +7,7 @@ from lge.Rectangle import Rectangle
 def main():
     # creamos el juego
     winSize = (640, 480)
-    lge = LittleGameEngine(winSize, "Animated player", (255, 255, 0))
+    lge = LittleGameEngine(winSize, "Animated player", (0, 0, 0))
     lge.setOnMainUpdate(onMainUpdate)
 
     # cargamos los recursos que usaremos
@@ -36,7 +36,6 @@ def main():
     heroe = Sprite("heroe_idle_right", (550, 626), "Heroe")
     heroe.setOnEvents(LittleGameEngine.E_ON_UPDATE)
     heroe.setBounds(Rectangle((0, 0), (1920, 1056)))
-    heroe.useColliders(True)
     heroe.onUpdate = HeroeUpdate
     heroe.state = 1
     lge.addGObject(heroe, 1)

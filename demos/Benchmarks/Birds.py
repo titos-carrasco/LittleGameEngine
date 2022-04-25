@@ -16,8 +16,9 @@ class Birds():
         # creamos el juego
         winSize = (800, 440)
 
-        self.lge = LittleGameEngine(winSize, "Birds", (255, 255, 0))
+        self.lge = LittleGameEngine(winSize, "Birds", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
+        #self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
@@ -45,6 +46,7 @@ class Birds():
             x = random.random() * ww
             y = random.random() * wh
             bird = Bird("bird", (x, y))
+            #bird.enableCollider(True)
             self.lge.addGObject(bird, 1)
 
     def onMainUpdate(self, dt):

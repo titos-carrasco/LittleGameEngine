@@ -13,7 +13,7 @@ class Platform():
         # creamos el juego
         win_size = (800, 600)
 
-        self.lge = LittleGameEngine(win_size, "Vulcano", (255, 255, 0))
+        self.lge = LittleGameEngine(win_size, "Vulcano", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
 
         # cargamos algunos recursos

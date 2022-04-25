@@ -10,7 +10,7 @@ class TheWorld():
         # creamos el juego
         winSize = (800, 440)
 
-        self.lge = LittleGameEngine(winSize, "The World", (255, 255, 0))
+        self.lge = LittleGameEngine(winSize, "The World", (0, 0, 0))
         self.lge.setOnMainUpdate(self.OnMainUpdate)
 
         # cargamos los recursos que usaremos

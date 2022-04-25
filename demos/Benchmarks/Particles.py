@@ -15,7 +15,7 @@ class Particles():
         # creamos el juego
         winSize = (800, 440)
 
-        self.lge = LittleGameEngine(winSize, "Particles", (255, 255, 0))
+        self.lge = LittleGameEngine(winSize, "Particles", (255, 255, 255))
         self.lge.setOnMainUpdate(self.onMainUpdate)
 
         # cargamos los recursos que usaremos

@@ -58,14 +58,17 @@ class LittleGameEngine():
 
         self.camera = Camera((0, 0), camSize)
 
-        pygame.init()
-        pygame.font.init()
-        pygame.mixer.init()
-        pygame.key.set_repeat(0)
+        pygame.display.init()
+        self.screen = pygame.display.set_mode(camSize)
+        self.screen.fill(self.bgColor)
+        pygame.display.flip()
         pygame.display.set_caption(title)
 
-        self.screen = pygame.display.set_mode(camSize)
+        pygame.key.set_repeat(0)
         self.keysPressed = pygame.key.get_pressed()
+
+        pygame.font.init()
+        pygame.mixer.init()
 
     def getInstance():
         """
@@ -206,14 +209,14 @@ class LittleGameEngine():
             for layer, gobjs in self.gLayers.items():
                 if(layer == LittleGameEngine.GUI_LAYER):
                     continue
-                withUseColliders = list([gobj for gobj in gobjs if gobj.useColliders])
+                withUseColliders = list([gobj for gobj in gobjs if gobj.useCollider])
                 withOnCollision = list([gobj for gobj in withUseColliders if gobj.onEventsEnabled & LittleGameEngine.E_ON_COLLISION])
 
                 for o1 in withOnCollision:
                     colliders = []
                     for o2 in withUseColliders:
                         if o1 != o2:
-                            if o1.rect.intersects(o2.rect):
+                            if o1.collidesWith(o2):
                                 colliders.append(o2)
                     oncollisions.append((o1, colliders))
             list(gobj.onCollision(dt, colliders)
@@ -239,12 +242,14 @@ class LittleGameEngine():
             for layer, gobjs in self.gLayers.items():
                 if(layer != LittleGameEngine.GUI_LAYER):
                     for gobj in [gobj for gobj in gobjs if(gobj.rect.intersects(self.camera.rect))]:
-                        x, y = self.fixXY(gobj)
+                        x, y = self.fixXY(gobj.getPosition())
                         if(gobj.surface != None):
                             self.screen.blit(gobj.surface, (x, y))
 
-                        if(self.collidersColor and gobj.useColliders):
-                            pygame.draw.rect(self.screen, self.collidersColor, pygame.Rect((x, y), (gobj.rect.width, gobj.rect.height)), 1)
+                        if(self.collidersColor and gobj.useCollider):
+                            for r in gobj.getCollider():
+                                x, y = self.fixXY((r.x, r.y))
+                                pygame.draw.rect(self.screen, self.collidersColor, pygame.Rect((x, y), (r.width, r.height)), 1)
 
             # GUI
             for layer, gobjs in self.gLayers.items():
@@ -255,7 +260,7 @@ class LittleGameEngine():
                             self.screen.blit(gobj.surface, (x, y))
 
             # ---
-            pygame.display.update()
+            pygame.display.flip()
 
         # --- gobj.onQuit
         list(gobj.onQuit()
@@ -268,21 +273,22 @@ class LittleGameEngine():
         pygame.quit()
 
     # sistema cartesiano y zona visible dada por la camara
-    def fixXY(self, gobj:GameObject) -> tuple:
+    def fixXY(self, position:tuple) -> tuple:
         """
         Traslada las coordenadas del GameObject a la zona de despliegue de la camara
         
         **Parametros**
-        : *gobj* : el objeto del cual trasladar sus coordenadas
+        : *position* : coordenadas a convertir
         
         **Retorna**
         : *tuple* : las coordenadas trasladadas
         """
-        xo = gobj.rect.x
+        x, y = position
+        xo = x
         vx = self.camera.rect.x
         x = xo - vx
 
-        yo = gobj.rect.y
+        yo = y
         vy = self.camera.rect.y
         y = yo - vy
         return x, y
@@ -342,7 +348,7 @@ class LittleGameEngine():
         assert gobj.layer >= 0, "'gobj' no ha sido agregado"
         self.gObjectsToDel.append(gobj)
 
-    def intersectGObjects(self, gobj) -> list:
+    def collidesWithGObjects(self, gobj) -> list:
         """
         Obtiene todos los GameObject que colisionan con un GameObject dado en la
         misma capa
@@ -353,9 +359,11 @@ class LittleGameEngine():
         **Retorna**
         : *list* : los GameObjects con los que colisiona
         """
-        if(gobj.useColliders):
+        if(gobj.useCollider):
             layer = gobj.layer
-            return [o for o in self.gLayers[layer] if o != gobj and o.useColliders and gobj.rect.intersects(o.rect)]
+            return [o
+                    for o in self.gLayers[layer]
+                        if o != gobj and o.useCollider and gobj.collidesWith(o)]
 
         return []
 

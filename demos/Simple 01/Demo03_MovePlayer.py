@@ -7,7 +7,7 @@ from lge.Rectangle import Rectangle
 def main():
     # creamos el juego
     winSize = (640, 480)
-    lge = LittleGameEngine(winSize, "Move player", (255, 255, 0))
+    lge = LittleGameEngine(winSize, "Move player", (0, 0, 0))
     lge.setOnMainUpdate(onMainUpdate)
 
     # cargamos los recursos que usaremos

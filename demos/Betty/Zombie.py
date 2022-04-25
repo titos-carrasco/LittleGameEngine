@@ -13,7 +13,7 @@ class Zombie(Sprite):
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setTag("zombie")
-        self.useColliders(True)
+        self.enableCollider(True)
         self.active = True
         self.winSize = winSize
 
@@ -132,7 +132,7 @@ class Zombie(Sprite):
 
             # verificamos que no colisionemos con un muro u otro zombie
             self.setPosition(nx, ny)
-            gobjs = self.lge.intersectGObjects(self)
+            gobjs = self.lge.collidesWithGObjects(self)
             collision = False
             for gobj in gobjs:
                 tag = gobj.getTag()

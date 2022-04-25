@@ -12,7 +12,7 @@ class Betty(Sprite):
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
         self.setTag("Betty")
-        self.useColliders(True)
+        self.enableCollider(True)
         self.alive = True
         self.winSize = winSize
         self.state = "I"

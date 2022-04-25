@@ -12,6 +12,7 @@ class Pong():
 
         self.lge = LittleGameEngine(winSize, "Pong", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
+        #self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
@@ -31,25 +32,25 @@ class Pong():
         wall = Canvas((0, 76), (640, 4))
         wall.fill((255, 255, 255))
         wall.setTag("wall-horizontal")
-        wall.useColliders(True)
+        wall.enableCollider(True)
         self.lge.addGObject(wall, 1)
 
         wall = Canvas((0, 606), (640, 4))
         wall.fill((255, 255, 255))
         wall.setTag("wall-horizontal")
-        wall.useColliders(True)
+        wall.enableCollider(True)
         self.lge.addGObject(wall, 1)
 
         wall = Canvas((20, 80), (4, 526))
         wall.fill((255, 255, 255))
         wall.setTag("wall-vertical")
-        wall.useColliders(True)
+        wall.enableCollider(True)
         self.lge.addGObject(wall, 1)
 
         wall = Canvas((616, 80), (4, 526))
         wall.fill((255, 255, 255))
         wall.setTag("wall-vertical")
-        wall.useColliders(True)
+        wall.enableCollider(True)
         self.lge.addGObject(wall, 1)
 
         # los actores
@@ -59,14 +60,14 @@ class Pong():
         paddle = Canvas((90, 270), (8, 60), "user-paddle")
         paddle.fill((255, 255, 255))
         paddle.setTag("paddle")
-        paddle.useColliders(True)
+        paddle.enableCollider(True)
         paddle.setBounds(field.getRectangle())
         self.lge.addGObject(paddle, 1)
 
         paddle = Canvas((540, 270), (8, 60), "system-paddle")
         paddle.fill((255, 255, 255))
         paddle.setTag("paddle")
-        paddle.useColliders(True)
+        paddle.enableCollider(True)
         paddle.setBounds(field.getRectangle())
         self.lge.addGObject(paddle, 1)
 

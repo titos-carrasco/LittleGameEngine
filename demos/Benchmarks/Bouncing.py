@@ -17,7 +17,7 @@ class Bouncing():
 
         self.lge = LittleGameEngine(winSize, "Bouncing Balls", (255, 255, 255))
         self.lge.setOnMainUpdate(self.onMainUpdate)
-        # self.lge.ShowColliders((255, 0, 0))
+        # self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
@@ -32,11 +32,11 @@ class Bouncing():
         ground = Canvas((0, 340), (800, 100), "ground")
         ground.fill((200, 200, 200))
         ground.setTag("ground")
-        ground.useColliders(True)
+        ground.enableCollider(True)
         self.lge.addGObject(ground, 1)
 
         # los objetos a rebotar
-        for i in range(100):
+        for i in range(50):
             x = 50 + random.random() * 700
             y = 50 + random.random() * 150
             vx = -50 + random.random() * 100
@@ -84,7 +84,7 @@ class Ball(Canvas):
         self.g = 240
         self.e = 0.4
         self.fill((0, 128, 0, 200))
-        self.useColliders(True)
+        self.enableCollider(True)
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
 

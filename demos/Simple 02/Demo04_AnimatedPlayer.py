@@ -11,7 +11,7 @@ class Animatedplayer():
         # creamos el juego
         winSize = (640, 480)
 
-        self.lge = LittleGameEngine(winSize, "Animated player", (255, 255, 0))
+        self.lge = LittleGameEngine(winSize, "Animated player", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
 
         # cargamos los recursos que usaremos

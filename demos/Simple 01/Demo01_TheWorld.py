@@ -4,7 +4,7 @@ from lge.Canvas import Canvas
 
 # creamos el juego
 winSize = (800, 440)
-lge = LittleGameEngine(winSize, "The World", (255, 255, 0))
+lge = LittleGameEngine(winSize, "The World", (0, 0, 0))
 
 # cargamos los recursos que usaremos
 resourceDir = "../resources"

@@ -13,9 +13,9 @@ class MiJuego():
         # creamos el juego
         winSize = (608, 736)
 
-        self.lge = LittleGameEngine(winSize, "Betty", (255, 255, 0))
+        self.lge = LittleGameEngine(winSize, "Betty", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
-        # self.lge.ShowColliders((255, 0, 0))
+        #self.lge.showColliders((255, 0, 0))
 
         # cargamos algunos recursos
         resourceDir = "../resources"
@@ -64,7 +64,7 @@ class MiJuego():
             for v in row:
                 if(v == 1):
                     muro = GameObject((x * 32, y * 32), (32, 32))
-                    muro.useColliders(True)
+                    muro.enableCollider(True)
                     muro.setTag("muro")
                     self.lge.addGObject(muro, 1)
                 x = x + 1

@@ -12,7 +12,7 @@ class Betty(Sprite):
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
-        self.useColliders(True)
+        self.enableCollider(True)
 
         self.vx = 240  # velocidad en x
         self.vy = 0  # velocidad en y
