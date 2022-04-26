@@ -104,4 +104,4 @@ class Sprite(GameObject):
             self.setCollider(Rectangle((0, 0), (width, height)))
 
             self.elapsed = 0
-            return self.idx
+        return self.idx

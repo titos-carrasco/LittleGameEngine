@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 2022-04-26
+- Sprite.py:Corrige errorn en retorno de setImage()
+
 ## v0.5.5 2022-04-24
 - GameObject.py
     - Permite múltiples rectángulos como colisionador
