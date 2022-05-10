@@ -25,15 +25,15 @@ class MouseClick():
         self.y = -1
         self.pushed = False
 
-    def isClicked(self, pushed: bool, x:int , y:int ) -> bool:
+    def isClicked(self, pushed: bool, x:int , y:int) -> bool:
         """
         Detecta un clic en las coordenadas dadas (ver ejemplo anterior)
-        
+
         **Parametros**
         : *pushed* : verdadero si el boton a monitorear se encuentra presionado
         : *x* : coordenada X actual del mouse
         : *y* : coordenada Y actual del mouse
-        
+
         **Retorna**
          : *bool* : Verdadero si el boton se solto en las mismas coordenada en se habia presionado
         """

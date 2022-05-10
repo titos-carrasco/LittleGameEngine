@@ -51,7 +51,7 @@ class Sprite(GameObject):
     def nextImage(self, dt:float=0, delay:float=0) -> int:
         """
         Avanza a la siguiente imagen de la secuencia
-        
+
         nextImage() avanza a la siguiente imagen
         nextImage(dt, 0.10) avanza a la siguiente imagen cuando la suma de los dt supere a delay
 
@@ -78,7 +78,7 @@ class Sprite(GameObject):
 
         return self.idx
 
-    def setImage(self, iname:str, idx:int=0) -> int:
+    def setImage(self, iname:str, idx:int=-1) -> int:
         """
         Establece la secuencia de imagenes a utilizar
 
@@ -94,6 +94,8 @@ class Sprite(GameObject):
                 self.surfaces = LittleGameEngine.getInstance().getImages(iname)
                 self.iname = iname
 
+            if(idx == -1):
+                idx = self.idx
             if(idx >= len(self.surfaces)):
                 idx = 0
             self.idx = idx
@@ -103,5 +105,4 @@ class Sprite(GameObject):
             self.rect.setSize(width, height)
             self.setCollider(Rectangle((0, 0), (width, height)))
 
-            self.elapsed = 0
         return self.idx

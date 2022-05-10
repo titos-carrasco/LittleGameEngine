@@ -102,6 +102,15 @@ class GameObject():
         """
         return self.name
 
+    def getLayer(self) -> int:
+        """
+        Retorna el layer de este objeto
+
+        **Retorna**
+        : *int* : el layer
+        """
+        return self.layer
+
     def getTag(self) -> str:
         """
         Retorna el TAG de este objeto
@@ -203,7 +212,7 @@ class GameObject():
 
         **Parametros**
         : *onEventsEnabled* : el evento que se sumara a los eventos que recibira
-        
+
         >>
             LittleGameEngine.E_ON_DELETE
             LittleGameEngine.E_ON_START

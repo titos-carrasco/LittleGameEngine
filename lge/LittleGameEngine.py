@@ -30,7 +30,7 @@ class LittleGameEngine():
     def __init__(self, camSize:tuple, title:str, bgColor:tuple):
         """
         Crea el juego
-        
+
         : *winSize* : dimensiones de la ventana de despliegue
         : *title* : titulo de la ventana
         : *bgColor* : color de fondo de la ventana
@@ -74,16 +74,16 @@ class LittleGameEngine():
         """
         Obtiene una instancia del juego en ejecucion. Util para las diferentes clases
         utilizadas en un juego tal de acceder a metodos estaticos
-        
+
         **Retorna**
-        : *LittleGameEngine* : una referencia a LGE en ejecucion 
+        : *LittleGameEngine* : una referencia a LGE en ejecucion
          """
         return LittleGameEngine.lge
 
     def getFPS(self) -> float:
         """
         Obtiene los FPS calculados como el promedio de los ultimos 30 valores
-        
+
         **Retorna**
         : *float* : los frame por segundo calculados
          """
@@ -97,9 +97,9 @@ class LittleGameEngine():
         """
         Si se especifica un color se habilita el despliegue del rectangulo que bordea
         a todos los objetos (util para ver colisiones).
-        
+
         Si se especifica None se desactiva
-        
+
         **Parametros**
         : *color* : el color para los bordes de los rectangulos
         """
@@ -109,7 +109,7 @@ class LittleGameEngine():
         """
         Establece la funcion/metodo que recibira el evento onMainUpdate que es invocado justo
         despues de invocar a los metodos onUpdate() de los GameObjects.
-        
+
         **Parametros**
         : *func* : la funcion o metodo que procesara los eventos onMainUpdate
          """
@@ -124,7 +124,7 @@ class LittleGameEngine():
     def run(self, fps:int):
         """
         Inicia el Game Loop de LGE tratando de mantener los fps especificados
-     
+
         : *fps* : los fps a mantener
         """
         clock = pygame.time.Clock()
@@ -276,10 +276,10 @@ class LittleGameEngine():
     def fixXY(self, position:tuple) -> tuple:
         """
         Traslada las coordenadas del GameObject a la zona de despliegue de la camara
-        
+
         **Parametros**
         : *position* : coordenadas a convertir
-        
+
         **Retorna**
         : *tuple* : las coordenadas trasladadas
         """
@@ -297,7 +297,7 @@ class LittleGameEngine():
     def addGObject(self, gobj:GameObject, layer:int):
         """
         Agrega un GameObject al juego el que quedara habilitado en el siguiente ciclo
-        
+
         **Parametros**
         : *gobj* :  el gameObject a agregar
         : *layer* : la capa a la cual pertenece
@@ -311,7 +311,7 @@ class LittleGameEngine():
     def addGObjectGUI(self, gobj:GameObject):
         """
         Agrega un GameObject a la interfaz grafica del juego
-        
+
         **Parametros**
         : *gobj* : el GameObject a agregar
         """
@@ -320,19 +320,34 @@ class LittleGameEngine():
     def getGObject(self, name:str) -> GameObject:
         """
         Retorna el GameObject identificado con el nombre especificado
-        
+
         **Parametros**
         : *name* : el nombre del GameObject a buscar
-        
+
         **Retorna**
         : *GameObject* : el GameObject buscado (nulo si no lo encuentra)
         """
         return self.gObjects[name]
 
+    def findGObjectsByTag(self, layer:int, tag:str) -> list:
+        """
+        Retorna los GameObject cuto tag comienza con el tag especificado
+
+        **Parametros**
+        : *layer* : el layer de los GameObject a buscar
+        : *tag* : el texto de inicio del tag
+
+        **Retorna**
+        : *list* : la lista de GameObjects (nulo si no lo encuentra)
+        """
+        return [o
+                for o in self.gLayers[layer]
+                    if o.tag.startswith(tag)]
+
     def getCountGObjects(self) -> int:
         """
         Retorna el total de GameObjects en el juego
-        
+
         **Retorna**
         : *int* : el total de gameObjects
         """
@@ -341,9 +356,9 @@ class LittleGameEngine():
     def delGObject(self, gobj:GameObject):
         """
         Elimina un GameObject del juego en el siguiente ciclo
-        
+
         **Parametros**
-        : *gobj* : el gameObject a eliminar        
+        : *gobj* : el gameObject a eliminar
         """
         assert gobj.layer >= 0, "'gobj' no ha sido agregado"
         self.gObjectsToDel.append(gobj)
@@ -352,10 +367,10 @@ class LittleGameEngine():
         """
         Obtiene todos los GameObject que colisionan con un GameObject dado en la
         misma capa
-        
+
         **Parametros**
         : *gobj* : el GameObject a inspeccionar
-        
+
         **Retorna**
         : *list* : los GameObjects con los que colisiona
         """
@@ -371,9 +386,9 @@ class LittleGameEngine():
     def getCameraPosition(self) -> tuple:
         """
         Retorna la posiciona de la camara
-        
+
         **Retorna**
-        
+
         : *tuple* : la posicion
         """
         return self.camera.getPosition()
@@ -381,7 +396,7 @@ class LittleGameEngine():
     def getCameraSize(self) -> tuple:
         """
         Retorna la dimension de la camara
-        
+
         **Retorna**
         : *tuple* : la dimension
         """
@@ -390,7 +405,7 @@ class LittleGameEngine():
     def setCameraTarget(self, gobj:GameObject, center:bool=True):
         """
         Establece el GameObject al cual la camara seguira de manera automatica
-        
+
         **Parametros**
         : *gobj* : el GameObject a seguir
         : *center* : si es verdadero la camara se centrara en el centro del
@@ -406,7 +421,7 @@ class LittleGameEngine():
     def setCameraBounds(self, bounds:Rectangle):
         """
         Establece los limites en los cuales se movera la camara
-        
+
         **Parametros**
         : *bounds* : los limites
         """
@@ -415,7 +430,7 @@ class LittleGameEngine():
     def setCameraPosition(self, x:float, y:float):
         """
         Establece la posicion de la camara
-        
+
         **Parametros**
         : *position* : la posicion
         """
@@ -425,10 +440,10 @@ class LittleGameEngine():
     def keyPressed(self, key:int) -> bool:
         """
         Determina si una tecla se encuentra presionada o no
-        
+
         **Parametros**
         : *key* : la tecla a inspeccionar
-        
+
         **Retorna**
         : *bool* : verdadero si la tecla se encuentra presionada
         """
@@ -438,7 +453,7 @@ class LittleGameEngine():
     def getMouseButtons(self) -> list:
         """
         Retorna el estado de los botones del mouse
-        
+
         **Retorna**
         : *list* : el estado de los botones
         """
@@ -447,7 +462,7 @@ class LittleGameEngine():
     def getMousePosition(self) -> tuple:
         """
         Determina la posicion del mouse en la ventana
-        
+
         **Retorna**
         : *tuple* : la posicion del mouse
         """
@@ -458,7 +473,7 @@ class LittleGameEngine():
     def getSysFonts(self) -> list:
         """
         Obtiene los tipos de letra del sistema
-        
+
         **Retorna**
         : *list* : los tipos de letra
         """
@@ -467,7 +482,7 @@ class LittleGameEngine():
     def loadSysFont(self, name:str, size:int, bold:bool=False, italic:bool=False):
         """
          Carga un tipo de letra para ser utilizado en el juego
-        
+
         **Parametros**
         : *name* : nombre interno a asignar
         : *size* : tamano del tipo de letra
@@ -481,7 +496,7 @@ class LittleGameEngine():
     def loadTTFFont(self, name:str, path:str, size:int):
         """
          Carga un tipo de letra True Type para ser utilizado en el juego
-        
+
         **Parametros**
         : *name* : nombre interno a asignar
         : *path* : nombre del archivo que contiene la fuente TTF
@@ -494,10 +509,10 @@ class LittleGameEngine():
     def getFont(self, fname:str):
         """
         Recupera un tipo de letra previamente cargado
-        
+
         **Parametros**
         : *fname* : el nombre del tipo de letra a recuperar
-        
+
         **Retorna**
         : *pygame.Font* : el tipo de letra
         """
@@ -507,7 +522,7 @@ class LittleGameEngine():
     def loadSound(self, name:str, fname:str):
         """
         Carga un archivo de sonido para ser utilizado durante el juego
-        
+
         **Parametros**
         : *name* :  nombre a asignar al sonido
         : *fname* : nombre del archivo que contiene el sonido
@@ -517,7 +532,7 @@ class LittleGameEngine():
     def playSound(self, name:str, loop:int, level:float):
         """
         Inicia la reproduccion de un sonido
-        
+
         **Parametros**
         :  *name* : el sonido (previamente cargado) a reproducir
         : *loop* : el numero de veces a repetirlo
@@ -533,7 +548,7 @@ class LittleGameEngine():
     def stopSound(self, name:str):
         """
         Detiene la reproduccion de un sonido
-        
+
         **Parametros**
         : *name* : el nombre del sonido a detener
         """
@@ -542,7 +557,7 @@ class LittleGameEngine():
     def setSoundVolume(self, name:str, level:float):
         """
         Establece el volumen de un sonido previamente cargado
-        
+
         **Paranmetros**
         : *name* :  el nombre del sonido
         : *level* : el nivel de volumen
@@ -552,11 +567,11 @@ class LittleGameEngine():
     def getSoundVolume(self, name:str) -> float:
         """
         Obtiene el volumen de un sonido previamente cargado
-        
+
         **Paranmetros**
         : *name* : el nombre del sonido
-        
-        
+
+
         **Retorna**
         : *float* : el nivel de volumen
         """
@@ -566,11 +581,11 @@ class LittleGameEngine():
     def createOpaqueImage(self, width:int, height:int) -> pygame.Surface:
         """
         Crea una imagen sin transparencia de dimensiones dadas
-        
+
         **Parametros**
         : *width* : ancho deseado
         : *height* : alto deseado
-        
+
         **Retorna**
         : *pygame.Surface* : la imagen creada
         """
@@ -579,11 +594,11 @@ class LittleGameEngine():
     def createTranslucentImage(self, width, height):
         """
         Crea una imagen con transparencia de dimensiones dadas
-        
+
         **Parametros**
         : *width* : ancho deseado
         : *height* : alto deseado
-        
+
         **Retorna**
         : *pygame.Surface* : la imagen creada
         """
@@ -592,10 +607,10 @@ class LittleGameEngine():
     def getImages(self, iname) -> list:
         """
         Recupera un grupo de imagenes previamente cargadas
-        
+
         **Parametros**
         : *iname* : el nombre asignado al grupo de imagenes
-        
+
         **Retorna**
         : *list* : las imagenes
         """
@@ -605,7 +620,7 @@ class LittleGameEngine():
         """
         Cara una imagen o grupo de imagenes desde archivos para ser utilizadas en el
         juego
-        
+
         **Parametros**
         : *iname* : nombre a asignar a la imagen o grupo de imagenes cargados
         : *pattern* : nombre del archivo de imagenes a cargar. Si contiene un '\*' se

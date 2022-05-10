@@ -1,5 +1,14 @@
 # ChangeLog
 
+## v0.5.6 2022-05-10
+- GameObject.py
+    - Agrega método getLayer()
+- Sprite.py
+    - Corrige método SetImage
+- LittleGameEngine.py
+    - Agrega método findGObjectsByTag()
+- Agrega demo "Cementerio"
+
 ## 2022-04-26
 - Sprite.py:Corrige errorn en retorno de setImage()
 
