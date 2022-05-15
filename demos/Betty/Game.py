@@ -15,7 +15,7 @@ class MiJuego():
 
         self.lge = LittleGameEngine(winSize, "Betty", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
-        #self.lge.showColliders((255, 0, 0))
+        # self.lge.showColliders((255, 0, 0))
 
         # cargamos algunos recursos
         resourceDir = "../resources"

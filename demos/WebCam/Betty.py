@@ -11,7 +11,7 @@ class Betty(Sprite):
         self.lge = LittleGameEngine.getInstance()
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
+        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.enableCollider(True)
 
         self.vx = 240  # velocidad en x
@@ -51,13 +51,15 @@ class Betty(Sprite):
         # nueva posicion
         self.setPosition(x, y)
 
-    def onCollision(self, dt, gobjs):
-        for gobj in gobjs:
-            tag = gobj.getTag()
-            if(tag == "suelo"):
-                self.jumping = False
-                self.vy = 0
-                self.setPosition(self.getX(), gobj.getY() - self.getHeight())
-            elif(tag == "muerte"):
-                self.lge.delGObject(self)
-                print("he muerto")
+    def onPostUpdate(self, dt):
+        gobjs = self.lge.collidesWithGObjects(self)
+        if(gobjs):
+            for gobj in gobjs:
+                tag = gobj.getTag()
+                if(tag == "suelo"):
+                    self.jumping = False
+                    self.vy = 0
+                    self.setPosition(self.getX(), gobj.getY() - self.getHeight())
+                elif(tag == "muerte"):
+                    self.lge.delGObject(self)
+                    print("he muerto")

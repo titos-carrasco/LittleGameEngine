@@ -1,6 +1,5 @@
 import cProfile
 import random
-import time
 
 from lge.LittleGameEngine import LittleGameEngine
 from lge.Canvas import Canvas
@@ -10,7 +9,7 @@ class Bouncing():
 
     def __init__(self):
         # instante de inicio
-        self.tIni = time.time()
+        self.counter = 600
 
         # creamos el juego
         winSize = (800, 440)
@@ -29,14 +28,13 @@ class Bouncing():
         self.lge.addGObjectGUI(infobar)
 
         # agregamos el suelo
-        ground = Canvas((0, 340), (800, 100), "ground")
-        ground.fill((200, 200, 200))
-        ground.setTag("ground")
-        ground.enableCollider(True)
-        self.lge.addGObject(ground, 1)
+        self.ground = Canvas((0, 340), (800, 100), "ground")
+        self.ground.fill((200, 200, 200))
+        self.ground.enableCollider(True)
+        self.lge.addGObject(self.ground, 1)
 
         # los objetos a rebotar
-        for i in range(50):
+        for i in range(200):
             x = 50 + random.random() * 700
             y = 50 + random.random() * 150
             vx = -50 + random.random() * 100
@@ -46,7 +44,8 @@ class Bouncing():
 
     def onMainUpdate(self, dt):
         # limite de ejecucion
-        if(time.time() - self.tIni > 10):
+        self.counter = self.counter - 1
+        if(self.counter <= 0):
             self.lge.quit()
             return
 
@@ -86,7 +85,8 @@ class Ball(Canvas):
         self.fill((0, 128, 0, 200))
         self.enableCollider(True)
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
+        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
+        self.ground = self.lge.getGObject("ground")
 
     def onUpdate(self, dt):
         x, y = self.getPosition()
@@ -101,17 +101,14 @@ class Ball(Canvas):
         self.vy = self.vy + self.g * dt
         self.setPosition(x, y)
 
-    def onCollision(self, dt, gobjs):
-        for gobj in gobjs:
-            if(gobj.getTag() == "ground"):
-                self.setPosition(self.getX(), gobj.getY() - self.getHeight())
-
-                self.vy = -self.vy * self.e
-                if(abs(self.vy) < 50):
-                    self.vy = 0
-                    self.vx = 0
-                    self.g = 0
-                break
+    def onPostUpdate(self, dt):
+        if(self.collidesWith(self.ground)):
+            self.setPosition(self.getX(), self.ground.getY() - self.getHeight())
+            self.vy = -self.vy * self.e
+            if(abs(self.vy) < 50):
+                self.vy = 0
+                self.vx = 0
+                self.g = 0
 
 
 # -- show time

@@ -12,7 +12,7 @@ class Pong():
 
         self.lge = LittleGameEngine(winSize, "Pong", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
-        #self.lge.showColliders((255, 0, 0))
+        # self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"

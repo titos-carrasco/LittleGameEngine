@@ -7,8 +7,9 @@ class Ball(Canvas):
     def __init__(self, position, size, name):
         super().__init__(position, size, name)
 
+        self.lge = LittleGameEngine.getInstance()
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
+        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.enableCollider(True)
         self.fill((255, 255, 255))
         self.initX, self.initY = position
@@ -22,18 +23,20 @@ class Ball(Canvas):
 
         self.setPosition(x + dx, y + dy)
 
-    def onCollision(self, dt, gobjs):
-        x, y = self.getPosition()
-        dx = self.speedX * dt
-        dy = self.speedY * dt
+    def onPostUpdate(self, dt):
+        gobjs = self.lge.collidesWithGObjects(self)
+        if(gobjs):
+            x, y = self.getPosition()
+            dx = self.speedX * dt
+            dy = self.speedY * dt
 
-        for gobj in gobjs:
-            if(gobj.getTag() == "wall-horizontal"):
-                self.speedY = -self.speedY
-                dy = -dy
-            if(gobj.getTag() == "paddle"):
-                self.speedX = -self.speedX
-                dx = -dx
-            if(gobj.getTag() == "wall-vertical"):
-                x, y = self.initX, self.initY
-        self.setPosition(x + dx, y + dy)
+            for gobj in gobjs:
+                if(gobj.getTag() == "wall-horizontal"):
+                    self.speedY = -self.speedY
+                    dy = -dy
+                if(gobj.getTag() == "paddle"):
+                    self.speedX = -self.speedX
+                    dx = -dx
+                if(gobj.getTag() == "wall-vertical"):
+                    x, y = self.initX, self.initY
+            self.setPosition(x + dx, y + dy)

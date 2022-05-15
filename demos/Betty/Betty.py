@@ -10,7 +10,7 @@ class Betty(Sprite):
         self.lge = LittleGameEngine.getInstance()
 
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
+        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.setTag("Betty")
         self.enableCollider(True)
         self.alive = True
@@ -41,28 +41,28 @@ class Betty(Sprite):
 
         # cambiamos sus coordenadas e imagen segun la tecla presionada
         if (self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_RIGHT)):
-            if( self.state != "R" ):
-                self.state="R"
+            if(self.state != "R"):
+                self.state = "R"
                 self.setImage("betty_right")
             x = x + pixels
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_LEFT)):
-            if( self.state != "L" ):
-                self.state="L"
+            if(self.state != "L"):
+                self.state = "L"
                 self.setImage("betty_left")
             x = x - pixels
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_UP)):
-            if( self.state != "U" ):
-                self.state="U"
+            if(self.state != "U"):
+                self.state = "U"
                 self.setImage("betty_up")
             y = y - pixels
         elif(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_DOWN)):
-            if( self.state != "D" ):
-                self.state="D"
+            if(self.state != "D"):
+                self.state = "D"
                 self.setImage("betty_down")
             y = y + pixels
         else:
-            if( self.state != "I" ):
-                self.state="I"
+            if(self.state != "I"):
+                self.state = "I"
                 self.setImage("betty_idle")
             if (x % 32 < 4):
                 x = round(x / 32) * 32
@@ -83,15 +83,16 @@ class Betty(Sprite):
         self.setPosition(x, y)
         self.nextImage(dt, 0.1)
 
-    def onCollision(self, dt, gobjs):
+    def onPostUpdate(self, dt):
         if(not self.alive):
             return
 
+        gobjs = self.lge.collidesWithGObjects(self)
         for gobj in gobjs:
             if(gobj.getTag() == "zombie"):
                 self.alive = False
                 print("Un zombie me mato!!!")
                 return
-
-        x, y = self.lastPoint
-        self.setPosition(x, y)
+            elif(gobj.getTag() == "muro"):
+                x, y = self.lastPoint
+                self.setPosition(x, y)

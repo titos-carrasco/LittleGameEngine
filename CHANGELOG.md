@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 2022-05-15
+- Se modifican los demos para no uilizar onCollision() ya que ralentiza demasiado el mainloop
+
 ## v0.5.6 2022-05-10
 - GameObject.py
     - Agrega método getLayer()

@@ -51,8 +51,8 @@ class Colliders():
         # agregamos un ninja
         ninja = Sprite("ninja", (350, 720), "ninja")
         ninja.setCollider([
-            Rectangle( (36,8), (36, 36)),
-            Rectangle( (28,44), (44, 36))
+            Rectangle((36, 8), (36, 36)),
+            Rectangle((28, 44), (44, 36))
             ])
         ninja.enableCollider(True)
         self.lge.addGObject(ninja, 1)
@@ -116,10 +116,11 @@ class MiHeroe(Sprite):
 
         # sus atributos
         self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
+        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.enableCollider(True)
         self.state = -1
         self.setBounds(Rectangle((0, 0), (1920, 1056)))
+        self.ninja = self.lge.getGObject("ninja")
 
     def onUpdate(self, dt):
         # velocity = pixeles por segundo
@@ -163,10 +164,11 @@ class MiHeroe(Sprite):
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
         self.setPosition(x, y)
 
-    def onCollision(self, dt, gobjs):
-        x, y = self.last
-        self.lge.playSound("poing", False, 10)
-        self.setPosition(x, y)
+    def onPostUpdate(self, dt):
+        if(self.collidesWith(self.ninja)):
+            x, y = self.last
+            self.lge.playSound("poing", False, 10)
+            self.setPosition(x, y)
 
 
 # --- show time

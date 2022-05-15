@@ -17,7 +17,6 @@ class Ninja(Sprite):
 
         # los eventos que recibiremos
         self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_COLLISION)
         self.enableCollider(True)
 
         # el colisionador
@@ -86,8 +85,4 @@ class Ninja(Sprite):
 
         if(onfloor and self.vy > 0):
             self.vy = 1
-
-    # solo para detectar premios, energia, muerte, etc...
-    def onCollision(self, dt, gobjs):
-        pass
 

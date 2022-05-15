@@ -3,7 +3,6 @@ Objeto base del juego. En Little Game Engine casi todo es un GameObject
 
 @author Roberto carrasco (titos.carrasco@gmail.com)
 """
-
 import uuid
 
 from lge.Rectangle import Rectangle
@@ -197,7 +196,16 @@ class GameObject():
         """
         self.useCollider = enabled
 
-    def collidesWith(self, gobj):
+    def collidesWith(self, gobj) -> bool:
+        """
+        Determina si este objeto colisiona con uno dado
+
+        **Parametros**
+        : *gobj* : el GameObject contra el cual se determinara la colision
+
+        **Retorna**
+        : *bool* : True si ambos objetos colisionan
+        """
         if(self.layer == gobj.layer):
             for r1 in self.getCollider():
                 for r2 in gobj.getCollider():
