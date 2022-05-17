@@ -85,8 +85,8 @@ class Moveplayer():
                 mute.nextImage()
 
     # main loop
-    def run(self):
-        self.lge.run(60)
+    def run(self, fps):
+        self.lge.run(fps)
 
 
 class MiHeroe(Sprite):
@@ -106,8 +106,6 @@ class MiHeroe(Sprite):
         # velocity = pixeles por segundo
         velocity = 240
         pixels = velocity * dt
-        if(pixels < 1):
-            pixels = 1
 
         # la posiciona actual del heroe
         x, y = self.getPosition()
@@ -131,4 +129,4 @@ class MiHeroe(Sprite):
 
 # --- show time
 game = Moveplayer()
-game.run()
+game.run(60)

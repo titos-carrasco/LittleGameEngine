@@ -70,8 +70,6 @@ def onMainUpdate(dt):
     # velocity = pixeles por segundo
     velocity = 240
     pixels = velocity * dt
-    if(pixels < 1):
-        pixels = 1
 
     # la posiciona actual de la camara
     x, y = lge.getCameraPosition()

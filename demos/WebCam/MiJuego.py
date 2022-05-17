@@ -89,10 +89,10 @@ class MiJuego():
         infobar.drawText(info, (70, 0), "monospace.16", (0, 0, 0))
 
     # main loop
-    def run(self):
-        self.lge.run(60)
+    def run(self, fps):
+        self.lge.run(fps)
 
 
 # -- show time
 game = MiJuego()
-game.run()
+game.run(60)

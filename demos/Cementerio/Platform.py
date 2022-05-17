@@ -28,18 +28,19 @@ class Platform(Sprite):
     def onUpdate(self, dt):
         x, y = self.getPosition()
 
+        d = self.pixels * dt
         if(self.dir == "R"):
-            x = x + self.pixels
+            x = x + d
         elif(self.dir == "L"):
-            x = x - self.pixels
+            x = x - d
         elif(self.dir == "D"):
-            y = y + self.pixels
+            y = y + d
         elif(self.dir == "U"):
-            y = y - self.pixels
+            y = y - d
 
         self.setPosition(x, y)
 
-        self.travel = self.travel + self.pixels
+        self.travel = self.travel + d
         if(self.travel > self.distance):
             self.travel = 0
             if(self.dir == "R"):

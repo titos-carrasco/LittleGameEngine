@@ -19,8 +19,6 @@ class BlockHorizontal(Sprite):
         # velocity = pixeles por segundo
         velocity = 120
         pixels = velocity * dt
-        if(pixels < 1):
-            pixels = 1
 
         if(self.dir == "up"):
             self.y = self.y - pixels

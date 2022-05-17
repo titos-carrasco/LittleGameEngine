@@ -83,10 +83,10 @@ class TheWorld():
                 mute.nextImage()
 
     # main loop
-    def run(self):
-        self.lge.run(60)
+    def run(self, fps):
+        self.lge.run(fps)
 
 
 # -- show time
 game = TheWorld()
-game.run()
+game.run(60)

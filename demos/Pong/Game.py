@@ -121,10 +121,10 @@ class Pong():
         systemPaddle.setPosition(px, py)
 
     # main loop
-    def run(self):
-        self.lge.run(60)
+    def run(self, fps):
+        self.lge.run(fps)
 
 
 # ----
 game = Pong()
-game.run()
+game.run(60)

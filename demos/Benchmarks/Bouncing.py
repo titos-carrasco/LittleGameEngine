@@ -7,9 +7,11 @@ from lge.Canvas import Canvas
 
 class Bouncing():
 
-    def __init__(self):
+    def __init__(self, fps):
+        self.fps = fps
+
         # instante de inicio
-        self.counter = 600
+        self.counter = self.fps * 10
 
         # creamos el juego
         winSize = (800, 440)
@@ -67,7 +69,7 @@ class Bouncing():
         infobar.drawText(info, (140, 0), "monospace.16", (0, 0, 0))
 
     def run(self):
-        self.lge.run(60)
+        self.lge.run(self.fps)
 
 
 class Ball(Canvas):
@@ -112,5 +114,5 @@ class Ball(Canvas):
 
 
 # -- show time
-game = Bouncing()
+game = Bouncing(60)
 cProfile.run("game.run()")

@@ -82,8 +82,8 @@ class Particles():
             # panel.drawCircle( (x,y), r, (0,0,0) )
             panel.drawRectangle((x, y), (r, r), (0, 0, 0))
 
-    def run(self):
-        self.lge.run(60)
+    def run(self, fps):
+        self.lge.run(fps)
 
 
 class Particle():
@@ -110,4 +110,4 @@ class Particle():
 
 # -- show time
 game = Particles()
-cProfile.run("game.run()")
+cProfile.run("game.run(60)")

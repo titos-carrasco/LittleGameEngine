@@ -89,8 +89,6 @@ class MoveCamera():
         # velocity = pixeles por segundo
         velocity = 240
         pixels = velocity * dt
-        if(pixels < 1):
-            pixels = 1
 
         # la posiciona actual de la camara
         x, y = self.lge.getCameraPosition()
@@ -109,10 +107,10 @@ class MoveCamera():
         self.lge.setCameraPosition(x, y)
 
     # main loop
-    def run(self):
-        self.lge.run(60)
+    def run(self, fps):
+        self.lge.run(fps)
 
 
 # --- show time
 game = MoveCamera()
-game.run()
+game.run(60)

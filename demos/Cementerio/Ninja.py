@@ -23,13 +23,14 @@ class Ninja(Sprite):
         self.colisionador = Rectangle((20, 5), (15, self.getHeight() - 5))
         self.setCollider(self.colisionador)
 
-        # mis atributos
-        self.vx = 2
-        self.vy = 0
-        self.g = 0.8
-        self.vsalto = 8
+        # algo se fisicas
+        self.vx = 120  # velocidad constante en X
+        self.vy = 0  # velocidad variable en Y al saltar o caer
+        self.vym = 500  # maxima velocidad en Y
+        self.g = 480  # aceleración constante en Y
+        self.vsalto = 140  # velocidad inicial al saltar
 
-    def fixPosition(self, dx, dy):
+    def fixPosition(self, dx, dy, dt):
         gobjs = self.lge.collidesWithGObjects(self)
         for gobj in gobjs:
             tag = gobj.getTag()
@@ -38,11 +39,11 @@ class Ninja(Sprite):
                 return True
             elif(tag == "plataforma"):
                 if(gobj.dir == "L"):
-                    self.setPosition(self.getX() - gobj.pixels, gobj.getY() - self.getHeight())
-                if(gobj.dir == "R"):
-                    self.setPosition(self.getX() + gobj.pixels, gobj.getY() - self.getHeight())
+                    self.setPosition(self.getX() - gobj.pixels * dt, gobj.getY() - self.getHeight() + 1)
+                elif(gobj.dir == "R"):
+                    self.setPosition(self.getX() + gobj.pixels * dt, gobj.getY() - self.getHeight() + 1)
                 else:
-                    self.setPosition(self.getX(), gobj.getY() - self.getHeight())
+                    self.setPosition(self.getX(), gobj.getY() - self.getHeight() + 1)
                 return True
 
         return False
@@ -63,26 +64,29 @@ class Ninja(Sprite):
             self.setImage("ninja-run-right")
         else:
             self.setImage("ninja-idle-right")
-        x = x + move_x * self.vx
+        x = x + move_x * self.vx * dt
 
-        # ahora el movimiento en Y
-        y = y + self.vy
-
-        # nueva posicion
-        self.setPosition(x, y)
+        # siguiente imagen y su colisionador
         self.nextImage(dt, 0.04)
         self.setCollider(self.colisionador)
 
-        # la velocidad en Y es afectada por la gravedad
-        self.vy = self.vy + self.g
+        # ahora el movimiento en Y
+        y = y + self.vy * dt
+        self.vy = self.vy + self.g * dt
+
+        # nueva posicion
+        self.setPosition(x, y)
 
         # estamos en un suelo?
-        onfloor = self.fixPosition(x - x0, y - y0)
+        onfloor = self.fixPosition(x - x0, y - y0, dt)
 
         # nos piden saltar
-        if(onfloor and self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_SPACE)):
-            self.vy = -self.vsalto
+        if(onfloor):
+            if(self.lge.keyPressed(LittleGameEngine.CONSTANTS.K_SPACE)):
+                self.vy = -self.vsalto
+            else:
+                self.vy = 0
 
-        if(onfloor and self.vy > 0):
-            self.vy = 1
-
+        # limitamos la velocidad en Y
+        if(self.vy > self.vym):
+            self.vy = self.vym

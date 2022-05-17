@@ -56,8 +56,8 @@ class Game():
 
     def makePlatforms(self):
         platforms = [
-            Platform(200, 200, "U", 100, 1),
-            Platform(400, 100, "L", 100, 1)
+            Platform(200, 200, "U", 100, 60),
+            Platform(400, 100, "L", 100, 60)
         ]
         for p in platforms:
             self.lge.addGObject(p, 1)

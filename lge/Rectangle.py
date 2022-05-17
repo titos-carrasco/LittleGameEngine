@@ -19,8 +19,8 @@ class Rectangle():
         width, height = size
         assert width > 0 and height > 0, "'ancho/alto invalidos"
 
-        self.x, self.y = int(x), int(y)
-        self.width, self.height = int(width), int(height)
+        self.x, self.y = x, y
+        self.width, self.height = width, height
 
     def copy(self):
         """
@@ -57,7 +57,7 @@ class Rectangle():
         : *x* : origen en X
         : *y* : origen en Y
         """
-        self.x, self.y = int(x), int(y)
+        self.x, self.y = x, y
 
     def setSize(self, width:float, height:float):
         """
@@ -68,7 +68,7 @@ class Rectangle():
         : *height* : el alto
         """
         assert width > 0 and height > 0, "ancho/alto invalidos"
-        self.width, self.height = int(width), int(height)
+        self.width, self.height = width, height
 
     def intersects(self, rect) -> bool:
         """

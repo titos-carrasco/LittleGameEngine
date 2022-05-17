@@ -38,4 +38,4 @@ class Camera(GameObject):
             x = x + self.target.rect.width / 2
             y = y + self.target.rect.height / 2
 
-        self.setPosition(x - self.rect.width / 2, y - self.rect.height / 2)
+        self.setPosition(int(x - self.rect.width / 2), int(y - self.rect.height / 2))

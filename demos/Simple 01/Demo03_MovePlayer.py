@@ -79,8 +79,6 @@ def HeroeUpdate(dt):
     # velocity = pixeles por segundo
     velocity = 240
     pixels = velocity * dt
-    if(pixels < 1):
-        pixels = 1
 
     # la posiciona actual del heroe
     x, y = heroe.getPosition()
