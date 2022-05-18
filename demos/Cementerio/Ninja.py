@@ -42,8 +42,10 @@ class Ninja(Sprite):
                     self.setPosition(self.getX() - gobj.pixels * dt, gobj.getY() - self.getHeight() + 1)
                 elif(gobj.dir == "R"):
                     self.setPosition(self.getX() + gobj.pixels * dt, gobj.getY() - self.getHeight() + 1)
-                else:
-                    self.setPosition(self.getX(), gobj.getY() - self.getHeight() + 1)
+                elif(gobj.dir == "U"):
+                    self.setPosition(self.getX(), self.getY() - gobj.pixels * dt)
+                elif(gobj.dir == "D"):
+                    self.setPosition(self.getX(), self.getY() + gobj.pixels * dt)
                 return True
 
         return False

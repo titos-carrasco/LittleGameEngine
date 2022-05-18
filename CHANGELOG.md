@@ -1,8 +1,11 @@
 # ChangeLog
 
+## v0.5.6.1 2022-05-18
+- Ajustes a demos
+
 ## 2022-05-17
 - Se modifica Rectangle.py para trabajar coordenadas (x,y) como floats
-- Se modifics Camera.py para manejar su posición siempre con enteros
+- Se modifica Camera.py para manejar su posición siempre con enteros
 - Se modifican algunos demos según lo anterior
 
 ## 2022-05-15
