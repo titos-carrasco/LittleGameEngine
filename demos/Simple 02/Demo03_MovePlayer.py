@@ -98,10 +98,10 @@ class MiHeroe(Sprite):
         self.lge = LittleGameEngine.getInstance()
 
         # sus atributos
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setImage("heroe_right")
         self.setBounds(Rectangle((0, 0), (1920, 1056)))
 
+    # @Override
     def onUpdate(self, dt):
         # velocity = pixeles por segundo
         velocity = 240

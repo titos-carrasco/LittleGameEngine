@@ -1,5 +1,16 @@
 # ChangeLog
 
+## v0.5.7 2022-05-26
+- GameObject.py
+    - Se crean todas las rutinas de manejo de eventos, los objetos deberán sobreescribirlas
+
+- LittleGameEngine.py
+    - Se renombra collidesWithGObjects() a collidesWith()
+    - Se ajusta main loop acorde a los cambios de GameObject
+    - Se reemplazan vrias list comprehension por ciclos anidados
+     
+- Se ajustan demos acorde a los cambios
+
 ## v0.5.6.1 2022-05-18
 - Ajustes a demos
 

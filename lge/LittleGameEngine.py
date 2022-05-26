@@ -15,15 +15,6 @@ from lge.Rectangle import Rectangle
 class LittleGameEngine():
     CONSTANTS = pygame.constants
     GUI_LAYER = 0xFFFF
-    E_ON_DELETE = 0b00000001
-    E_ON_START = 0b00000010
-    E_ON_PRE_UPDATE = 0b00000100
-    E_ON_UPDATE = 0b00001000
-    E_ON_POST_UPDATE = 0b00010000
-    E_ON_COLLISION = 0b00100000
-    E_ON_PRE_RENDER = 0b01000000
-    E_ON_QUIT = 0b10000000
-
     lge = None
 
     # ------ game engine ------
@@ -142,22 +133,17 @@ class LittleGameEngine():
             self.fpsIdx %= len(self.fpsData)
 
            # --- Del gobj and gobj.onDelete
-            ondelete = []
             for gobj in self.gObjectsToDel:
                 del self.gObjects[gobj.name]
                 self.gLayers[gobj.layer].remove(gobj)
                 if(self.camera.target == gobj):
                     self.camera.target = None
-                if((gobj.onEventsEnabled & LittleGameEngine.E_ON_DELETE)):
-                    self.ondelete.append(gobj)
-            self.gObjectsToDel = []
-            for gobj in ondelete:
+            for gobj in self.gObjectsToDel:
                 gobj.onDelete()
-            del ondelete
+            self.gObjectsToDel = []
 
             # --- Add Gobj and gobj.onStart
             reorder = False
-            onstart = []
             for gobj in self.gObjectsToAdd:
                 layer = gobj.layer
                 if(not layer in self.gLayers):
@@ -166,12 +152,9 @@ class LittleGameEngine():
                 gobjs = self.gLayers[layer]
                 if(not gobj in gobjs):
                     self.gLayers[gobj.layer].append(gobj)
-                    if((gobj.onEventsEnabled & LittleGameEngine.E_ON_START)):
-                        onstart.append(gobj)
-            self.gObjectsToAdd = []
-            for gobj in onstart:
+            for gobj in self.gObjectsToAdd:
                 gobj.onStart()
-            del onstart
+            self.gObjectsToAdd = []
 
             # ---
             if(reorder):
@@ -180,25 +163,19 @@ class LittleGameEngine():
             # --
 
             # --- gobj.onPreUpdate
-            list(gobj.onPreUpdate(dt)
-                    for layer, gobjs in self.gLayers.items()
-                        for gobj in gobjs
-                            if gobj.onEventsEnabled & LittleGameEngine.E_ON_PRE_UPDATE
-                 )
+            for layer, gobjs in self.gLayers.items():
+                for gobj in gobjs:
+                    gobj.onPreUpdate(dt)
 
             # --- gobj.onUpdate
-            list(gobj.onUpdate(dt)
-                    for layer, gobjs in self.gLayers.items()
-                        for gobj in gobjs
-                            if gobj.onEventsEnabled & LittleGameEngine.E_ON_UPDATE
-                 )
+            for layer, gobjs in self.gLayers.items():
+                for gobj in gobjs:
+                    gobj.onUpdate(dt)
 
             # --- gobj.onPostUpdate
-            list(gobj.onPostUpdate(dt)
-                    for layer, gobjs in self.gLayers.items()
-                        for gobj in gobjs
-                            if gobj.onEventsEnabled & LittleGameEngine.E_ON_POST_UPDATE
-                 )
+            for layer, gobjs in self.gLayers.items():
+                for gobj in gobjs:
+                    gobj.onPostUpdate(dt)
 
             # --- game.onUpdate
             if(self.onMainUpdate):
@@ -210,7 +187,7 @@ class LittleGameEngine():
                 if(layer == LittleGameEngine.GUI_LAYER):
                     continue
                 withUseColliders = list([gobj for gobj in gobjs if gobj.useCollider])
-                withOnCollision = list([gobj for gobj in withUseColliders if gobj.onEventsEnabled & LittleGameEngine.E_ON_COLLISION])
+                withOnCollision = list([gobj for gobj in withUseColliders if gobj.callOnCollision])
 
                 for o1 in withOnCollision:
                     colliders = []
@@ -226,11 +203,9 @@ class LittleGameEngine():
             del oncollisions
 
             # --- gobj.onPreRender
-            list(gobj.onPreRender(dt)
-                    for layer, gobjs in self.gLayers.items()
-                        for gobj in gobjs
-                            if gobj.onEventsEnabled & LittleGameEngine.E_ON_PRE_RENDER
-                 )
+            for layer, gobjs in self.gLayers.items():
+                for gobj in gobjs:
+                    gobj.onPreRender(dt)
 
             # --- Camera Tracking
             self.camera.followTarget()
@@ -263,11 +238,9 @@ class LittleGameEngine():
             pygame.display.flip()
 
         # --- gobj.onQuit
-        list(gobj.onQuit()
-                for layer, gobjs in self.gLayers.items()
-                    for gobj in gobjs
-                        if gobj.onEventsEnabled & LittleGameEngine.E_ON_QUIT
-             )
+        for layer, gobjs in self.gLayers.items():
+            for gobj in gobjs:
+                gobj.onQuit()
 
         # eso es todo
         pygame.quit()
@@ -363,7 +336,7 @@ class LittleGameEngine():
         assert gobj.layer >= 0, "'gobj' no ha sido agregado"
         self.gObjectsToDel.append(gobj)
 
-    def collidesWithGObjects(self, gobj) -> list:
+    def collidesWith(self, gobj) -> list:
         """
         Obtiene todos los GameObject que colisionan con un GameObject dado en la
         misma capa

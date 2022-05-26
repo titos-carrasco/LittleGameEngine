@@ -26,8 +26,8 @@ class GameObject():
         self.bounds = None
         self.tag = ""
         self.useCollider = False
+        self.callOnCollision = False
         self.layer = -1
-        self.onEventsEnabled = 0x00
 
     def getPosition(self) -> tuple:
         """
@@ -187,14 +187,16 @@ class GameObject():
         if(collider):
             self.collider = collider
 
-    def enableCollider(self, enabled:bool):
+    def enableCollider(self, enabled:bool, oncollision:bool=False):
         """
         Establece si este objeto participara o no del procesamiento de colisiones
 
         **Parametros**
         : *enabled* : si es verdadero participara del procesamiento de colisiones
+        : *oncollision* : si es verdadero se generara el evento OnCillision para este objeto
         """
         self.useCollider = enabled
+        self.callOnCollision = oncollision
 
     def collidesWith(self, gobj) -> bool:
         """
@@ -214,32 +216,57 @@ class GameObject():
         return False
 
     # manejo de eventos
-    def setOnEvents(self, onEventsEnabled:int):
+    def onDelete(self):
         """
-        Establece los eventos que recibira este objeto
+        Invocado justo despues de ser eliminado de LGE
+        """
+
+    def onStart(self):
+        """
+        Invocado justo despues de ser agregado a LGE
+        """
+
+    def onPreUpdate(self, dt:float):
+        """
+        Primera invocacion para actualizar el estado interno
 
         **Parametros**
-        : *onEventsEnabled* : el evento que se sumara a los eventos que recibira
-
-        >>
-            LittleGameEngine.E_ON_DELETE
-            LittleGameEngine.E_ON_START
-            LittleGameEngine.E_ON_PRE_UPDATE
-            LittleGameEngine.E_ON_UPDATE
-            LittleGameEngine.E_ON_POST_UPDATE
-            LittleGameEngine.E_ON_COLLISION
-            LittleGameEngine.E_ON_PRE_RENDER
-            LittleGameEngine.E_ON_QUIT
-
-        Se deben agregar los siguientes metodos segun se habiliten los eventos:
-        >>
-            onDelete(self)
-            onStart(self)
-            onPreUpdate(self, dt:float)
-            onUpdate(self, dt:float)
-            onPostUpdate(self, dt:float)
-            onCollision(self, dt:float, gobjs:GameObject[])
-            onPreRender(self, dt:float)
-            onQuit(self)
+        : *dt* : timepo en ms desde la ultima invocacion
         """
-        self.onEventsEnabled |= onEventsEnabled
+
+    def onUpdate(self, dt:float):
+        """
+        Segunda invocacion para actualizar el estado interno
+
+        **Parametros**
+        : *dt* : timepo en ms desde la ultima invocacion
+        """
+
+    def onPostUpdate(self, dt:float):
+        """
+        Tercera invocacion para actualizar el estado interno
+
+        **Parametros**
+        : *dt* : timepo en ms desde la ultima invocacion
+        """
+
+    def onCollision(self, dt:float, gobjs:list):
+        """
+        Ejecutada despues de todos los updates al detectar colision con otros GameObjects del layer
+
+        **Parametros**
+        : *dt* : timepo en ms desde la ultima invocacion
+        """
+
+    def onPreRender(self, dt:float):
+        """
+        Ejecutada justo antes de realizar el rendering en pantalla
+
+        **Parametros**
+        : *dt* : timepo en ms desde la ultima invocacion
+        """
+
+    def onQuit(self):
+        """
+        Invocado justo despues de que ha finalizado el Game Loop
+        """

@@ -15,9 +15,6 @@ class WebCam(Canvas):
     def __init__(self):
         super().__init__((200, 656), (256, 144))
 
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_QUIT)
-
         self.cam = cv2.VideoCapture(0)
         # self.cam.set( cv2.CAP_PROP_POS_FRAMES, 1 )
         # self.cam.set( cv2.CAP_PROP_FRAME_WIDTH, 160 )
@@ -46,6 +43,7 @@ class WebCam(Canvas):
                 self.queue.put(surface)
             cv2.waitKey(10)
 
+    # @Override
     def onUpdate(self, dt):
         if(not self.running):
             return
@@ -55,6 +53,7 @@ class WebCam(Canvas):
         except Exception as e:
             pass
 
+    # @Override
     def onQuit(self):
         self.running = False
         self.task.join()

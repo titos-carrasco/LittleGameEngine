@@ -8,14 +8,13 @@ class Ball(Canvas):
         super().__init__(position, size, name)
 
         self.lge = LittleGameEngine.getInstance()
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.enableCollider(True)
         self.fill((255, 255, 255))
         self.initX, self.initY = position
         self.speedX = 180
         self.speedY = 180
 
+    # @Override
     def onUpdate(self, dt):
         x, y = self.getPosition()
         dx = self.speedX * dt
@@ -23,8 +22,9 @@ class Ball(Canvas):
 
         self.setPosition(x + dx, y + dy)
 
+    # @Override
     def onPostUpdate(self, dt):
-        gobjs = self.lge.collidesWithGObjects(self)
+        gobjs = self.lge.collidesWith(self)
         if(gobjs):
             x, y = self.getPosition()
             dx = self.speedX * dt

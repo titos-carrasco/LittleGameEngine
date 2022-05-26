@@ -32,7 +32,6 @@ def main():
 
     # agregamos al heroe
     heroe = Sprite("heroe_right", (550, 626), "Heroe")
-    heroe.setOnEvents(LittleGameEngine.E_ON_UPDATE)
     heroe.setBounds(Rectangle((0, 0), (1920, 1056)))
     heroe.onUpdate = HeroeUpdate
     lge.addGObject(heroe, 1)

@@ -11,7 +11,6 @@ class Zombie(Sprite):
 
         self.lge = LittleGameEngine.getInstance()
 
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setTag("zombie")
         self.enableCollider(True)
         self.active = True
@@ -23,6 +22,7 @@ class Zombie(Sprite):
     def setActive(self, state):
         self.active = state
 
+    # @Override
     def onUpdate(self, dt):
         if(not self.active):
             return
@@ -132,7 +132,7 @@ class Zombie(Sprite):
 
             # verificamos que no colisionemos con un muro u otro zombie
             self.setPosition(nx, ny)
-            gobjs = self.lge.collidesWithGObjects(self)
+            gobjs = self.lge.collidesWith(self)
             collision = False
             for gobj in gobjs:
                 tag = gobj.getTag()

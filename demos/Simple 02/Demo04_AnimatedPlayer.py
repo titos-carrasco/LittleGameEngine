@@ -100,11 +100,11 @@ class MiHeroe(Sprite):
         # acceso al motor de juegos
         self.lge = LittleGameEngine.getInstance()
 
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setImage("heroe_idle_right", 0)
         self.state = 1
         self.setBounds(Rectangle((0, 0), (1920, 1056)))
 
+    # @Override
     def onUpdate(self, dt):
         # velocity = pixeles por segundo
         velocity = 240

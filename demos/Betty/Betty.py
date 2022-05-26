@@ -9,8 +9,6 @@ class Betty(Sprite):
 
         self.lge = LittleGameEngine.getInstance()
 
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.setTag("Betty")
         self.enableCollider(True)
         self.alive = True
@@ -24,6 +22,7 @@ class Betty(Sprite):
         self.alive = alive
         self.setImage("betty_idle")
 
+    # @Override
     def onUpdate(self, dt):
         # solo si estoy viva
         if(not self.alive):
@@ -83,11 +82,12 @@ class Betty(Sprite):
         self.setPosition(x, y)
         self.nextImage(dt, 0.1)
 
+    # @Override
     def onPostUpdate(self, dt):
         if(not self.alive):
             return
 
-        gobjs = self.lge.collidesWithGObjects(self)
+        gobjs = self.lge.collidesWith(self)
         for gobj in gobjs:
             if(gobj.getTag() == "zombie"):
                 self.alive = False

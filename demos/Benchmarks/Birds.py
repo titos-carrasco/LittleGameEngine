@@ -18,7 +18,6 @@ class Birds():
 
         self.lge = LittleGameEngine(winSize, "Birds", (0, 0, 0))
         self.lge.setOnMainUpdate(self.onMainUpdate)
-        # self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
@@ -46,7 +45,6 @@ class Birds():
             x = random.random() * ww
             y = random.random() * wh
             bird = Bird("bird", (x, y))
-            # bird.enableCollider(True)
             self.lge.addGObject(bird, 1)
 
     def onMainUpdate(self, dt):
@@ -82,9 +80,7 @@ class Bird(Sprite):
     def __init__(self, inames, position):
         super().__init__(inames, position)
 
-        # sus atributos
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-
+    # @Override
     def onUpdate(self, dt):
         self.nextImage(dt, 0.1)
 

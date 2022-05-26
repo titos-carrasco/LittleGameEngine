@@ -115,13 +115,12 @@ class MiHeroe(Sprite):
         self.lge = LittleGameEngine.getInstance()
 
         # sus atributos
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.enableCollider(True)
         self.state = -1
         self.setBounds(Rectangle((0, 0), (1920, 1056)))
         self.ninja = self.lge.getGObject("ninja")
 
+    # @Override
     def onUpdate(self, dt):
         # velocity = pixeles por segundo
         velocity = 240
@@ -162,6 +161,7 @@ class MiHeroe(Sprite):
         # lo posicionamos asegurando que se encuentre dentro del mundo definido
         self.setPosition(x, y)
 
+    # @Override
     def onPostUpdate(self, dt):
         if(self.collidesWith(self.ninja)):
             x, y = self.last

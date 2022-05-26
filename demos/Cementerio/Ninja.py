@@ -16,7 +16,6 @@ class Ninja(Sprite):
         w, h = self.lge.getCameraSize()
 
         # los eventos que recibiremos
-        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.enableCollider(True)
 
         # el colisionador
@@ -31,7 +30,7 @@ class Ninja(Sprite):
         self.vsalto = 140  # velocidad inicial al saltar
 
     def fixPosition(self, dx, dy, dt):
-        gobjs = self.lge.collidesWithGObjects(self)
+        gobjs = self.lge.collidesWith(self)
         for gobj in gobjs:
             tag = gobj.getTag()
             if(tag == "suelo"):
@@ -51,6 +50,7 @@ class Ninja(Sprite):
         return False
 
     # despues de que todo fue actualizado
+    # @Override
     def onPostUpdate(self, dt):
         # nuestra posicion actual
         x, y = self.getPosition()

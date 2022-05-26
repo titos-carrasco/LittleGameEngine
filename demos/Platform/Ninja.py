@@ -7,7 +7,6 @@ class Ninja(Sprite):
     def __init__(self, position):
         super().__init__("ninja", position)
 
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-
+    # @Override
     def onUpdate(self, dt):
         self.nextImage(dt, 0.050)

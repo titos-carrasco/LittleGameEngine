@@ -14,7 +14,6 @@ class Platform(Sprite):
         self.lge = LittleGameEngine.getInstance()
 
         # los eventos que recibiremos
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setCollider(Rectangle((0, 0), (self.getWidth(), 1)))
         self.enableCollider(True)
         self.setTag("plataforma")
@@ -25,6 +24,7 @@ class Platform(Sprite):
         self.distance = distance
         self.travel = 0
 
+    # @Override
     def onUpdate(self, dt):
         x, y = self.getPosition()
 
@@ -51,4 +51,3 @@ class Platform(Sprite):
                 self.dir = "U"
             elif(self.dir == "U"):
                 self.dir = "D"
-

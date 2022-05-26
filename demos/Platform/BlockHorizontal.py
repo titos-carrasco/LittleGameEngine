@@ -7,7 +7,6 @@ class BlockHorizontal(Sprite):
     def __init__(self, x, y):
         super().__init__("roca", (128, 128), "roca")
 
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
         self.setPosition(x, y)
         self.setTag("ground")
         self.x, self.y = x, y
@@ -15,6 +14,7 @@ class BlockHorizontal(Sprite):
         self.limitTop = y - 64
         self.limitBottom = y + 64 * 4
 
+    # @Override
     def onUpdate(self, dt):
         # velocity = pixeles por segundo
         velocity = 120

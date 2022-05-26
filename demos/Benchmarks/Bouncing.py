@@ -86,10 +86,9 @@ class Ball(Canvas):
         self.e = 0.4
         self.fill((0, 128, 0, 200))
         self.enableCollider(True)
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.ground = self.lge.getGObject("ground")
 
+    # @Override
     def onUpdate(self, dt):
         x, y = self.getPosition()
 
@@ -103,6 +102,7 @@ class Ball(Canvas):
         self.vy = self.vy + self.g * dt
         self.setPosition(x, y)
 
+    # @Override
     def onPostUpdate(self, dt):
         if(self.collidesWith(self.ground)):
             self.setPosition(self.getX(), self.ground.getY() - self.getHeight())

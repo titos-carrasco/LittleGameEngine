@@ -10,8 +10,6 @@ class Betty(Sprite):
         # acceso al motor de juegos
         self.lge = LittleGameEngine.getInstance()
 
-        self.setOnEvents(LittleGameEngine.E_ON_UPDATE)
-        self.setOnEvents(LittleGameEngine.E_ON_POST_UPDATE)
         self.enableCollider(True)
 
         self.vx = 240  # velocidad en x
@@ -21,6 +19,7 @@ class Betty(Sprite):
 
         self.jumping = False
 
+    # @Override
     def onUpdate(self, dt):
         # los datos actuales
         x, y = self.getPosition()
@@ -51,8 +50,9 @@ class Betty(Sprite):
         # nueva posicion
         self.setPosition(x, y)
 
+    # @Override
     def onPostUpdate(self, dt):
-        gobjs = self.lge.collidesWithGObjects(self)
+        gobjs = self.lge.collidesWith(self)
         if(gobjs):
             for gobj in gobjs:
                 tag = gobj.getTag()
