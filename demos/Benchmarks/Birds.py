@@ -25,7 +25,7 @@ class Birds():
         self.lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
         self.lge.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_00*.png", 0.08)
         self.lge.loadImage("bird", resourceDir + "/images/BlueBird/frame-*.png", 0.04)
-        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))

@@ -23,7 +23,7 @@ class Animatedplayer():
         self.lge.loadImage("heroe_run_right", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16)
         self.lge.loadImage("heroe_run_left", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
         self.lge.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
-        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
         self.lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
         # activamos la musica de fondo

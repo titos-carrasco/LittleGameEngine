@@ -28,7 +28,7 @@ class MiJuego():
         self.lge.loadImage("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
         self.lge.loadImage("betty_left", resourceDir + "/images/Betty/left-0*.png")
         self.lge.loadImage("betty_right", resourceDir + "/images/Betty/right-0*.png")
-        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))

@@ -466,7 +466,7 @@ class LittleGameEngine():
             font = pygame.font.SysFont(name, size, bold, italic)
             self.fonts[name] = font
 
-    def loadTTFFont(self, name:str, path:str, size:int):
+    def loadTTFont(self, name:str, path:str, size:int):
         """
          Carga un tipo de letra True Type para ser utilizado en el juego
 

@@ -21,7 +21,7 @@ class Particles():
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
 
         # agregamos la barra de info
         infobar = Canvas((0, 0), (800, 20), "infobar")

@@ -22,8 +22,8 @@ class Platform():
         self.lge.loadImage("fondo", resourceDir + "/images/Platform/Platform.png")
         self.lge.loadImage("roca", resourceDir + "/images/Volcano_Pack_1.1/volcano_pack_alt_39.png")
         self.lge.loadImage("ninja", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
-        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
-        self.lge.loadTTFFont("cool.30", resourceDir + "/fonts/backlash.ttf", 30)
+        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFont("cool.30", resourceDir + "/fonts/backlash.ttf", 30)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))

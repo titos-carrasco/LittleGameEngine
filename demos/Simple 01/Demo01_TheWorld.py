@@ -11,7 +11,7 @@ resourceDir = "../resources"
 
 lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
 lge.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.08)
-lge.loadTTFFont("backlash.40", resourceDir + "/fonts/backlash.ttf", 40)
+lge.loadTTFont("backlash.40", resourceDir + "/fonts/backlash.ttf", 40)
 lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
 # activamos la musica de fondo

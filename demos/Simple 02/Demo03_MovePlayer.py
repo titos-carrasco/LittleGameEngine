@@ -21,7 +21,7 @@ class Moveplayer():
         self.lge.loadImage("heroe_right", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
         self.lge.loadImage("heroe_left", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16, (True, False))
         self.lge.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
-        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
         self.lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
         # activamos la musica de fondo

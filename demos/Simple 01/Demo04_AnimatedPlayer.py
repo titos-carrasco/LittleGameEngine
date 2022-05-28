@@ -18,7 +18,7 @@ def main():
     lge.loadImage("heroe_idle_left", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
     lge.loadImage("heroe_run_right", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16)
     lge.loadImage("heroe_run_left", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
-    lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+    lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
     lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
     # activamos la musica de fondo

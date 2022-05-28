@@ -1,5 +1,8 @@
 # ChangeLog
 
+# v0.5.7.2 2022-05-28
+- Renombra loadTTTFont a loadTTFont()
+
 ## v0.5.7 2022-05-26
 - GameObject.py
     - Se crean todas las rutinas de manejo de eventos, los objetos deberán sobreescribirlas

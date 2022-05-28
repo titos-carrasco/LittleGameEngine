@@ -26,7 +26,7 @@ class Colliders():
         self.lge.loadImage("heroe_run_left", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
         self.lge.loadImage("ninja", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
         self.lge.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
-        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
         self.lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
         self.lge.loadSound("aves", resourceDir + "/sounds/bird-thrush-nightingale.wav")
         self.lge.loadSound("poing", resourceDir + "/sounds/cartoon-poing.wav")

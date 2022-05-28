@@ -19,8 +19,8 @@ class TheWorld():
         self.lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
         self.lge.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.08)
         self.lge.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
-        self.lge.loadTTFFont("backlash.40", resourceDir + "/fonts/backlash.ttf", 40)
-        self.lge.loadTTFFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.loadTTFont("backlash.40", resourceDir + "/fonts/backlash.ttf", 40)
+        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
         self.lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
         # activamos la musica de fondo
