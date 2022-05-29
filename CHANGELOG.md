@@ -1,5 +1,8 @@
 # ChangeLog
 
+# v0.6.0 2022-05-28
+- Versión estable
+
 # v0.5.7.2 2022-05-28
 - Renombra loadTTTFont a loadTTFont()
 
