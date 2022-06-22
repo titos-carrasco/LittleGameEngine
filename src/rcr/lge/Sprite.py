@@ -3,9 +3,8 @@ Clase para manejar GameObjects animados
 
 @author Roberto carrasco (titos.carrasco@gmail.com)
 """
-
-from lge.LittleGameEngine import LittleGameEngine
 from lge.GameObject import GameObject
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Rectangle import Rectangle
 
 
@@ -89,9 +88,13 @@ class Sprite(GameObject):
         **Retorna**
         : *int* : el indice actual dentro de la secuencia de imagenes
         """
+        lge = LittleGameEngine.getInstance()
+        if(lge is None):
+            return 0
+
         if(not iname is None):
             if(self.iname != iname):
-                self.surfaces = LittleGameEngine.getInstance().getImages(iname)
+                self.surfaces = lge.imageManager.getImages(iname)
                 self.iname = iname
 
             if(idx == -1):

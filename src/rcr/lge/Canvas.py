@@ -3,11 +3,11 @@ GameObject para trazar formas en Little Game Engine
 
 @autor Roberto carrasco (titos.carrasco@gmail.com)
 """
-
 import pygame
 
-from lge.LittleGameEngine import LittleGameEngine
 from lge.GameObject import GameObject
+from lge.ImageManager import ImageManager
+from lge.LittleGameEngine import LittleGameEngine
 
 
 class Canvas(GameObject):
@@ -23,7 +23,7 @@ class Canvas(GameObject):
         """
         super().__init__(position, size, name)
         width, height = size
-        self.surface = LittleGameEngine.getInstance().createTranslucentImage(width, height)
+        self.surface = ImageManager.createTranslucentImage(width, height)
 
     def fill(self, color:tuple):
         """
@@ -44,9 +44,12 @@ class Canvas(GameObject):
         : *fname* : nombre del font (cargado con LoadFont) a utilizar para trazar el texto
         : *fcolor* : color a utilizar (r,g,b) para trazar el texto
         """
+        lge = LittleGameEngine.getInstance()
+
         x, y = position
 
-        s = LittleGameEngine.getInstance().fonts[fname].render(text, True, fcolor)
+        font = lge.fontManager.getFont(fname)
+        s = font.render(text, True, fcolor)
         self.surface.blit(s, (x, y))
 
     def drawPoint(self, position:tuple, color:tuple):
@@ -93,7 +96,7 @@ class Canvas(GameObject):
 
         pygame.draw.rect(self.surface, color, pygame.Rect((x, y), (w, h)), thickness)
 
-    def drawSurface(self, position, surface):
+    def drawSurface(self, position:tuple, surface):
         """
         Traza una superficie en este canvas en la posicion dada
 
@@ -104,4 +107,20 @@ class Canvas(GameObject):
         x, y = position
         w, h = surface.get_size()
 
+        self.surface.blit(surface, (x, y))
+
+    def drawImage(self, position:tuple, iname:str, idx:int=0):
+        """
+        Traza una imagen, previamente cargada, en este canvas en la posicion dada
+
+        **Parametros**
+        : *position* : coordenada (x, y) en donde se trazara la superfice dentro del canvas
+        : *iname* : nombre de la secuencia de imagenes a utilizar
+        : *idx* : indice dentro de la secuencia de imagenes para especificar que imagen utilizar
+        """
+        surfaces = LittleGameEngine.getInstance().getImages(iname)
+        surface = surfaces[idx]
+
+        x, y = position
+        w, h = surface.get_size()
         self.surface.blit(surface, (x, y))

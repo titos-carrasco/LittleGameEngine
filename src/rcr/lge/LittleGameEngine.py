@@ -3,13 +3,15 @@ La Pequena Maquina de Juegos (LGE)
 
 @author Roberto carrasco (titos.carrasco@gmail.com)
 """
-
-from glob import glob
 import pygame
+import sys
 
 from lge.Camera import Camera
+from lge.FontManager import FontManager
 from lge.GameObject import GameObject
+from lge.ImageManager import ImageManager
 from lge.Rectangle import Rectangle
+from lge.SoundManager import SoundManager
 
 
 class LittleGameEngine():
@@ -18,7 +20,7 @@ class LittleGameEngine():
     lge = None
 
     # ------ game engine ------
-    def __init__(self, camSize:tuple, title:str, bgColor:tuple):
+    def __init__(self, winSize:tuple, title:str, bgColor:tuple):
         """
         Crea el juego
 
@@ -26,40 +28,41 @@ class LittleGameEngine():
         : *title* : titulo de la ventana
         : *bgColor* : color de fondo de la ventana
          """
-        assert LittleGameEngine.lge is None, "LittleGameEngine ya se encuentra activa"
+        if(LittleGameEngine.lge is not None):
+            print("LittleGameEngine ya se encuentra activa")
+            sys.exit();
+
         LittleGameEngine.lge = self
+        self.running = False
+        self.winSize = winSize
 
         self.fpsData = [0] * 30
         self.fpsIdx = 0
 
-        self.running = False
         self.onMainUpdate = None
 
         self.bgColor = bgColor
         self.collidersColor = None
 
-        self.fonts = {}
-        self.sounds = {}
-        self.images = {}
+        self.imageManager = ImageManager()
+        self.fontManager = FontManager()
+        self.soundManager = SoundManager()
 
         self.gObjects = {}
         self.gLayers = {}
         self.gObjectsToAdd = []
         self.gObjectsToDel = []
 
-        self.camera = Camera((0, 0), camSize)
+        self.camera = Camera((0, 0), winSize)
 
         pygame.display.init()
-        self.screen = pygame.display.set_mode(camSize)
+        self.screen = pygame.display.set_mode(winSize)
         self.screen.fill(self.bgColor)
         pygame.display.flip()
         pygame.display.set_caption(title)
 
         pygame.key.set_repeat(0)
         self.keysPressed = pygame.key.get_pressed()
-
-        pygame.font.init()
-        pygame.mixer.init()
 
     def getInstance():
         """
@@ -69,6 +72,10 @@ class LittleGameEngine():
         **Retorna**
         : *LittleGameEngine* : una referencia a LGE en ejecucion
          """
+        if(LittleGameEngine.lge is None):
+            print("LittleGameEngine no se encuentra activa")
+            sys.exit();
+
         return LittleGameEngine.lge
 
     def getFPS(self) -> float:
@@ -82,7 +89,7 @@ class LittleGameEngine():
         for val in self.fpsData:
             dt += val
         dt = dt / len(self.fpsData)
-        return 0 if dt == 0 else 1 / dt
+        return 0 if dt == 0 else 1.0 / dt
 
     def showColliders(self, color:tuple):
         """
@@ -95,16 +102,6 @@ class LittleGameEngine():
         : *color* : el color para los bordes de los rectangulos
         """
         self.collidersColor = color
-
-    def setOnMainUpdate(self, func):
-        """
-        Establece la funcion/metodo que recibira el evento onMainUpdate que es invocado justo
-        despues de invocar a los metodos onUpdate() de los GameObjects.
-
-        **Parametros**
-        : *func* : la funcion o metodo que procesara los eventos onMainUpdate
-         """
-        self.onMainUpdate = func
 
     def quit(self):
         """
@@ -177,7 +174,7 @@ class LittleGameEngine():
                 for gobj in gobjs:
                     gobj.onPostUpdate(dt)
 
-            # --- game.onUpdate
+            # --- game.onMainUpdate
             if(self.onMainUpdate):
                 self.onMainUpdate(dt)
 
@@ -275,8 +272,6 @@ class LittleGameEngine():
         : *gobj* :  el gameObject a agregar
         : *layer* : la capa a la cual pertenece
         """
-        assert gobj.layer < 0, "'gobj' ya fue agregado"
-        assert layer >= 0 and layer <= LittleGameEngine.GUI_LAYER, "'layer' invalido"
         gobj.layer = layer
         self.gObjects[gobj.name] = gobj
         self.gObjectsToAdd.append(gobj)
@@ -333,7 +328,6 @@ class LittleGameEngine():
         **Parametros**
         : *gobj* : el gameObject a eliminar
         """
-        assert gobj.layer >= 0, "'gobj' no ha sido agregado"
         self.gObjectsToDel.append(gobj)
 
     def collidesWith(self, gobj) -> list:
@@ -385,9 +379,6 @@ class LittleGameEngine():
                      GameObject, en caso contrario lo hara en el extremo superior
                      izquierdo
         """
-        assert gobj.layer >= 0, "'gobj' no ha sido agregado"
-        assert gobj.layer != LittleGameEngine.GUI_LAYER, "'gobj' invalido"
-
         self.camera.target = gobj
         self.camera.targetInCenter = center
 
@@ -441,185 +432,3 @@ class LittleGameEngine():
         """
         x, y = pygame.mouse.get_pos()
         return x, y
-
-    # ------ fonts ------
-    def getSysFonts(self) -> list:
-        """
-        Obtiene los tipos de letra del sistema
-
-        **Retorna**
-        : *list* : los tipos de letra
-        """
-        return pygame.font.get_fonts()
-
-    def loadSysFont(self, name:str, size:int, bold:bool=False, italic:bool=False):
-        """
-         Carga un tipo de letra para ser utilizado en el juego
-
-        **Parametros**
-        : *name* : nombre interno a asignar
-        : *size* : tamano del tipo de letra
-        : *bold* : true para usar negrita
-        : *italic* : true para usar italica
-        """
-        if(not name in self.fonts):
-            font = pygame.font.SysFont(name, size, bold, italic)
-            self.fonts[name] = font
-
-    def loadTTFont(self, name:str, path:str, size:int):
-        """
-         Carga un tipo de letra True Type para ser utilizado en el juego
-
-        **Parametros**
-        : *name* : nombre interno a asignar
-        : *path* : nombre del archivo que contiene la fuente TTF
-        : *size* : tamano del tipo de letra
-        """
-        if(not name in self.fonts):
-            font = pygame.font.Font(path, size)
-            self.fonts[name] = font
-
-    def getFont(self, fname:str):
-        """
-        Recupera un tipo de letra previamente cargado
-
-        **Parametros**
-        : *fname* : el nombre del tipo de letra a recuperar
-
-        **Retorna**
-        : *pygame.Font* : el tipo de letra
-        """
-        return self.fonts[fname]
-
-    # ------ sounds ------
-    def loadSound(self, name:str, fname:str):
-        """
-        Carga un archivo de sonido para ser utilizado durante el juego
-
-        **Parametros**
-        : *name* :  nombre a asignar al sonido
-        : *fname* : nombre del archivo que contiene el sonido
-        """
-        self.sounds[name] = pygame.mixer.Sound(fname)
-
-    def playSound(self, name:str, loop:int, level:float):
-        """
-        Inicia la reproduccion de un sonido
-
-        **Parametros**
-        :  *name* : el sonido (previamente cargado) a reproducir
-        : *loop* : el numero de veces a repetirlo
-        : *level* : el nivel de volumen
-        """
-        if(loop):
-            loop = -1
-        else:
-            loop = 0
-        self.sounds[name].set_volume(level / 100)
-        self.sounds[name].play(loop)
-
-    def stopSound(self, name:str):
-        """
-        Detiene la reproduccion de un sonido
-
-        **Parametros**
-        : *name* : el nombre del sonido a detener
-        """
-        self.sounds[name].stop()
-
-    def setSoundVolume(self, name:str, level:float):
-        """
-        Establece el volumen de un sonido previamente cargado
-
-        **Paranmetros**
-        : *name* :  el nombre del sonido
-        : *level* : el nivel de volumen
-        """
-        self.sounds[name].set_volume(level / 100)
-
-    def getSoundVolume(self, name:str) -> float:
-        """
-        Obtiene el volumen de un sonido previamente cargado
-
-        **Paranmetros**
-        : *name* : el nombre del sonido
-
-
-        **Retorna**
-        : *float* : el nivel de volumen
-        """
-        return self.sounds[name].get_volume() * 100
-
-    #  ------ images ------
-    def createOpaqueImage(self, width:int, height:int) -> pygame.Surface:
-        """
-        Crea una imagen sin transparencia de dimensiones dadas
-
-        **Parametros**
-        : *width* : ancho deseado
-        : *height* : alto deseado
-
-        **Retorna**
-        : *pygame.Surface* : la imagen creada
-        """
-        return pygame.Surface((width, height))
-
-    def createTranslucentImage(self, width, height):
-        """
-        Crea una imagen con transparencia de dimensiones dadas
-
-        **Parametros**
-        : *width* : ancho deseado
-        : *height* : alto deseado
-
-        **Retorna**
-        : *pygame.Surface* : la imagen creada
-        """
-        return pygame.Surface((width, height), pygame.SRCALPHA)
-
-    def getImages(self, iname) -> list:
-        """
-        Recupera un grupo de imagenes previamente cargadas
-
-        **Parametros**
-        : *iname* : el nombre asignado al grupo de imagenes
-
-        **Retorna**
-        : *list* : las imagenes
-        """
-        return [image for image in self.images[iname]]
-
-    def loadImage(self, iname, pattern:str, scale=None, flip:list=None):
-        """
-        Cara una imagen o grupo de imagenes desde archivos para ser utilizadas en el
-        juego
-
-        **Parametros**
-        : *iname* : nombre a asignar a la imagen o grupo de imagenes cargados
-        : *pattern* : nombre del archivo de imagenes a cargar. Si contiene un '\*' se
-                      cargaran todas las imagenes con igual nombre utilizando dicho
-                      caracter como caracter comodin de busqueda (ej.imagen_0*.png)
-        : *scale* : si es un float corresponde al factor de escala a aplicar a la imagen cargada
-        : *scale* : si es una tupla (width, height) corresponde al nuevo tamano de la imagen cargada
-        : *flip* : (true, true) para invertir la imagen en el eje X e Y
-        """
-        if("*" in pattern):
-            fnames = sorted(glob(pattern))
-        else:
-            fnames = [pattern]
-
-        if(flip):
-            fx, fy = flip
-
-        surfaces = []
-        for fname in fnames:
-            surface = pygame.image.load(fname).convert_alpha()
-            if(scale):
-                if(not isinstance(scale, tuple)):
-                    w, h = surface.get_size()
-                    scale = (int(w * scale), int(h * scale))
-                surface = pygame.transform.smoothscale(surface, scale)
-            if(flip):
-                surface = pygame.transform.flip(surface, fx, fy)
-            surfaces.append(surface)
-        self.images[iname] = surfaces

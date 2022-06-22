@@ -3,7 +3,6 @@ La camara de Little Game Engine
 
 @author Roberto carrasco (titos.carrasco@gmail.com)
 """
-
 from lge.GameObject import GameObject
 
 
