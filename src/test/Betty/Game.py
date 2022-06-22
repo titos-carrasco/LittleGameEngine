@@ -1,7 +1,7 @@
-from lge.LittleGameEngine import LittleGameEngine
-from lge.GameObject import GameObject
-from lge.Sprite import Sprite
 from lge.Canvas import Canvas
+from lge.GameObject import GameObject
+from lge.LittleGameEngine import LittleGameEngine
+from lge.Sprite import Sprite
 
 from Betty import Betty
 from Zombie import Zombie
@@ -14,20 +14,20 @@ class MiJuego():
         winSize = (608, 736)
 
         self.lge = LittleGameEngine(winSize, "Betty", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
         # self.lge.showColliders((255, 0, 0))
 
         # cargamos algunos recursos
         resourceDir = "../resources"
 
-        self.lge.loadImage("fondo", resourceDir + "/images/Betty/Fondo.png")
-        self.lge.loadImage("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
-        self.lge.loadImage("betty_down", resourceDir + "/images/Betty/down-0*.png")
-        self.lge.loadImage("betty_up", resourceDir + "/images/Betty/up-0*.png")
-        self.lge.loadImage("betty_left", resourceDir + "/images/Betty/left-0*.png")
-        self.lge.loadImage("betty_right", resourceDir + "/images/Betty/right-0*.png")
-        self.lge.loadImage("zombie", resourceDir + "/images/Kenny/Zombie/zombie_walk*.png")
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Betty/Fondo.png")
+        self.lge.imageManager.loadImage("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
+        self.lge.imageManager.loadImage("betty_down", resourceDir + "/images/Betty/down-0*.png")
+        self.lge.imageManager.loadImage("betty_up", resourceDir + "/images/Betty/up-0*.png")
+        self.lge.imageManager.loadImage("betty_left", resourceDir + "/images/Betty/left-0*.png")
+        self.lge.imageManager.loadImage("betty_right", resourceDir + "/images/Betty/right-0*.png")
+        self.lge.imageManager.loadImage("zombie", resourceDir + "/images/Kenny/Zombie/zombie_walk*.png")
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
@@ -86,7 +86,7 @@ class MiJuego():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((80, 80, 80, 80))
-        infobar.drawText(info, (50, 0), "monospace.16", (255, 255, 255))
+        infobar.drawText(info, (50, 0), "monospace", (255, 255, 255))
 
     # main loop
     def run(self):
@@ -96,3 +96,4 @@ class MiJuego():
 # -- show time
 game = MiJuego()
 game.run()
+print("Eso es todo!!!")

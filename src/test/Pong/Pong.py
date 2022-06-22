@@ -11,13 +11,14 @@ class Pong():
         winSize = (640, 640)
 
         self.lge = LittleGameEngine(winSize, "Pong", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
         # self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.soundManager.loadSound("pong", resourceDir + "/sounds/4391__noisecollector__pongblipf-5.wav");
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
 
         # agregamos la barra de info
         infobar = Canvas((0, 0), (640, 20), "infobar")
@@ -89,7 +90,7 @@ class Pong():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((80, 80, 80, 200))
-        infobar.drawText(info, (50, 0), "monospace.16", (255, 255, 255))
+        infobar.drawText(info, (50, 0), "monospace", (255, 255, 255))
 
         # user paddle
         userPaddle = self.lge.getGObject("user-paddle")
@@ -128,3 +129,4 @@ class Pong():
 # ----
 game = Pong()
 game.run(60)
+print("Eso es todo!!!")

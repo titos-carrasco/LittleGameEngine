@@ -2,9 +2,9 @@ import cProfile
 import random
 import time
 
+from lge.Canvas import Canvas
 from lge.LittleGameEngine import LittleGameEngine
 from lge.Sprite import Sprite
-from lge.Canvas import Canvas
 
 
 class Birds():
@@ -17,15 +17,15 @@ class Birds():
         winSize = (800, 440)
 
         self.lge = LittleGameEngine(winSize, "Birds", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
-        self.lge.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_00*.png", 0.08)
-        self.lge.loadImage("bird", resourceDir + "/images/BlueBird/frame-*.png", 0.04)
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
+        self.lge.imageManager.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_00*.png", 0.08)
+        self.lge.imageManager.loadImage("bird", resourceDir + "/images/BlueBird/frame-*.png", 0.04)
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
@@ -43,7 +43,7 @@ class Birds():
         ww, wh = self.lge.getCameraSize()
         for i in range(500):
             x = random.random() * ww
-            y = random.random() * wh
+            y = 15 + random.random() * wh
             bird = Bird("bird", (x, y))
             self.lge.addGObject(bird, 1)
 
@@ -68,7 +68,7 @@ class Birds():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((20, 20, 20, 10))
-        infobar.drawText(info, (140, 0), "monospace.16", (0, 0, 0))
+        infobar.drawText(info, (140, 0), "monospace", (0, 0, 0))
 
     # main loop
     def run(self, fps):

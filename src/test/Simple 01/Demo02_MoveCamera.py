@@ -1,25 +1,25 @@
-from lge.LittleGameEngine import LittleGameEngine
-from lge.Sprite import Sprite
 from lge.Canvas import Canvas
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Rectangle import Rectangle
+from lge.Sprite import Sprite
 
 
 def main():
     # creamos el juego
     winSize = (640, 480)
     lge = LittleGameEngine(winSize, "Move Camera", (0, 0, 0))
-    lge.setOnMainUpdate(onMainUpdate)
+    lge.onMainUpdate = onMainUpdate
 
     # cargamos los recursos que usaremos
     resourceDir = "../resources"
 
-    lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
-    lge.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
-    lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
-    lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
+    lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+    lge.imageManager.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+    lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
+    lge.soundManager.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
     # activamos la musica de fondo
-    lge.playSound("fondo", True, 50)
+    lge.soundManager.playSound("fondo", True, 50)
 
     # agregamos el fondo
     fondo = Sprite("fondo", (0, 0))
@@ -65,7 +65,7 @@ def onMainUpdate(dt):
     )
     infobar = lge.getGObject("infobar")
     infobar.fill((20, 20, 20, 10))
-    infobar.drawText(info, (50, 0), "monospace.16", (0, 0, 0))
+    infobar.drawText(info, (50, 0), "monospace", (0, 0, 0))
 
     # velocity = pixeles por segundo
     velocity = 240
@@ -90,3 +90,4 @@ def onMainUpdate(dt):
 
 # --- show time
 main()
+print("Eso es todo!!!")

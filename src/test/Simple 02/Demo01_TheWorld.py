@@ -1,7 +1,7 @@
-from lge.LittleGameEngine import LittleGameEngine
-from lge.Sprite import Sprite
 from lge.Canvas import Canvas
+from lge.LittleGameEngine import LittleGameEngine
 from lge.MouseClick import MouseClick
+from lge.Sprite import Sprite
 
 
 class TheWorld():
@@ -11,24 +11,24 @@ class TheWorld():
         winSize = (800, 440)
 
         self.lge = LittleGameEngine(winSize, "The World", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.OnMainUpdate)
+        self.lge.onMainUpdate = self.OnMainUpdate
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
-        self.lge.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.08)
-        self.lge.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
-        self.lge.loadTTFont("backlash.40", resourceDir + "/fonts/backlash.ttf", 40)
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
-        self.lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
-
-        # activamos la musica de fondo
-        self.lge.playSound("fondo", True, 50)
+        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
+        self.lge.imageManager.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.08)
+        self.lge.imageManager.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
+        self.lge.fontManager.loadTTFont("banner", resourceDir + "/fonts/backlash.ttf", (False, False), 40)
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
+        self.lge.soundManager.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
         self.lge.addGObject(fondo, 0)
+
+        # activamos la musica de fondo
+        self.lge.soundManager.playSound("fondo", True, 50)
 
         # agregamos la barra de info
         infobar = Canvas((0, 0), (800, 20), "infobar")
@@ -46,7 +46,7 @@ class TheWorld():
 
         # agregamos un texto con transparencia
         canvas = Canvas((200, 110), (400, 200))
-        canvas.drawText("Little Game Engine", (30, 90), "backlash.40", (20, 20, 20))
+        canvas.drawText("Little Game Engine", (30, 90), "banner", (20, 20, 20))
         self.lge.addGObjectGUI(canvas)
 
         # para manejar el clic del mouse
@@ -68,7 +68,7 @@ class TheWorld():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((20, 20, 20, 10))
-        infobar.drawText(info, (140, 0), "monospace.16", (0, 0, 0))
+        infobar.drawText(info, (140, 0), "monospace", (0, 0, 0))
 
         # mute on/off
         if(self.leftMouseButton.isClicked(mb1, mx, my)):
@@ -76,11 +76,15 @@ class TheWorld():
             r = mute.getRectangle()
             if(r.contains(mx, my)):
                 if(self.isMute):
-                    self.lge.setSoundVolume("fondo", 50)
+                    self.lge.soundManager.setSoundVolume("fondo", 50)
                 else:
-                    self.lge.setSoundVolume("fondo", 0)
+                    self.lge.soundManager.setSoundVolume("fondo", 0)
                 self.isMute = not self.isMute
                 mute.nextImage()
+
+        # animamos al heroe
+        heroe = self.lge.getGObject("Heroe");
+        heroe.nextImage(dt, 0.060);
 
     # main loop
     def run(self, fps):
@@ -90,3 +94,4 @@ class TheWorld():
 # -- show time
 game = TheWorld()
 game.run(60)
+print("Eso es todo!!!");

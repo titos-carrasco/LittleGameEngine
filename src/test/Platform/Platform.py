@@ -1,7 +1,7 @@
-from lge.LittleGameEngine import LittleGameEngine
-from lge.Sprite import Sprite
 from lge.Canvas import Canvas
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Rectangle import Rectangle
+from lge.Sprite import Sprite
 
 from BlockHorizontal import BlockHorizontal
 from Ninja import Ninja
@@ -14,16 +14,16 @@ class Platform():
         win_size = (800, 600)
 
         self.lge = LittleGameEngine(win_size, "Vulcano", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
 
         # cargamos algunos recursos
         resourceDir = "../resources"
 
-        self.lge.loadImage("fondo", resourceDir + "/images/Platform/Platform.png")
-        self.lge.loadImage("roca", resourceDir + "/images/Volcano_Pack_1.1/volcano_pack_alt_39.png")
-        self.lge.loadImage("ninja", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
-        self.lge.loadTTFont("cool.30", resourceDir + "/fonts/backlash.ttf", 30)
+        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Platform/Platform.png")
+        self.lge.imageManager.loadImage("roca", resourceDir + "/images/Volcano_Pack_1.1/volcano_pack_alt_39.png")
+        self.lge.imageManager.loadImage("ninja", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
+        self.lge.fontManager.loadTTFont("cool", resourceDir + "/fonts/backlash.ttf", (False, False), 30)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
@@ -43,7 +43,7 @@ class Platform():
 
         # agregamos el mensaje
         pressbar = Canvas((200, 260), (400, 30), "pressbar")
-        pressbar.drawText("Presiona la Barra Espaciadora", (0, 0), "cool.30", (255, 255, 255))
+        pressbar.drawText("Presiona la Barra Espaciadora", (0, 0), "cool", (255, 255, 255))
         self.lge.addGObjectGUI(pressbar)
 
         # configuramos la camara
@@ -66,7 +66,7 @@ class Platform():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((80, 80, 80, 200))
-        infobar.drawText(info, (150, 2), "monospace.16", (255, 255, 255))
+        infobar.drawText(info, (150, 2), "monospace", (255, 255, 255))
 
         # velocity = pixeles por segundo
         velocity = 240
@@ -96,3 +96,4 @@ class Platform():
 # -- show time
 game = Platform()
 game.run(60)
+print("Eso es todo!!!")

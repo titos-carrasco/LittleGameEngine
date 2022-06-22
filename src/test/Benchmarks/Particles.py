@@ -2,8 +2,8 @@ import cProfile
 import random
 import time
 
-from lge.LittleGameEngine import LittleGameEngine
 from lge.Canvas import Canvas
+from lge.LittleGameEngine import LittleGameEngine
 
 
 class Particles():
@@ -16,12 +16,12 @@ class Particles():
         winSize = (800, 440)
 
         self.lge = LittleGameEngine(winSize, "Particles", (255, 255, 255))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
 
         # agregamos la barra de info
         infobar = Canvas((0, 0), (800, 20), "infobar")
@@ -64,7 +64,7 @@ class Particles():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((20, 20, 20, 10))
-        infobar.drawText(info, (140, 0), "monospace.16", (0, 0, 0))
+        infobar.drawText(info, (140, 0), "monospace", (0, 0, 0))
 
         # las particulas
         for i in range(self.numParticles):

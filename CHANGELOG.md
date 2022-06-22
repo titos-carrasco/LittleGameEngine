@@ -1,5 +1,14 @@
 # ChangeLog
 
+# 2022-06-22
+- Crea clase ImagesManager para el manejo de imagen
+- Crea clase SoundManager para el manejo de sonidos
+- Crea clase Fontmanager para el manejo de fonts
+- Manejo de imágenes, sonido y fonts se llevan a las clases señaladas
+- Canvas agrega método para mostrar imágenes precargadas
+- Se corrigen los demos acorde a lo anterior
+- Se reestructuran directorios. Todo quedaen en src/ y demos/ cambia de nombre a test/
+
 # v0.6.0 2022-05-28
 - Versión estable
 

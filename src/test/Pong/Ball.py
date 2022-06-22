@@ -34,9 +34,11 @@ class Ball(Canvas):
                 if(gobj.getTag() == "wall-horizontal"):
                     self.speedY = -self.speedY
                     dy = -dy
+                    self.lge.soundManager.playSound("pong", False);
                 if(gobj.getTag() == "paddle"):
                     self.speedX = -self.speedX
                     dx = -dx
+                    self.lge.soundManager.playSound("pong", False);
                 if(gobj.getTag() == "wall-vertical"):
                     x, y = self.initX, self.initY
             self.setPosition(x + dx, y + dy)

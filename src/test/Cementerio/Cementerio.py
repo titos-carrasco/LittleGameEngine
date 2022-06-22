@@ -1,9 +1,9 @@
 import pygame
 
-from lge.LittleGameEngine import LittleGameEngine
-from lge.Sprite import Sprite
 from lge.Canvas import Canvas
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Rectangle import Rectangle
+from lge.Sprite import Sprite
 
 from Ninja import Ninja
 from Platform import Platform
@@ -15,17 +15,17 @@ class Game():
         self.winSize = (640, 342)
 
         self.lge = LittleGameEngine(self.winSize, "El Cementerio", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
         self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "./resources"
-        self.lge.loadImage("fondo", resourceDir + "/fondo.png")
-        self.lge.loadImage("ninja-idle-right", resourceDir + "/NinjaGirl/Idle_*.png", 0.1)
-        self.lge.loadImage("ninja-idle-left", resourceDir + "/NinjaGirl/Idle_*.png", 0.1, (True, False))
-        self.lge.loadImage("ninja-run-right", resourceDir + "/NinjaGirl/Run_*.png", 0.1)
-        self.lge.loadImage("ninja-run-left", resourceDir + "/NinjaGirl/Run_*.png", 0.1, (True, False))
-        self.lge.loadImage("platform", resourceDir + "/platform.png", 0.3)
+        self.lge.imageManager.loadImage("fondo", resourceDir + "/fondo.png")
+        self.lge.imageManager.loadImage("ninja-idle-right", resourceDir + "/NinjaGirl/Idle_*.png", 0.1)
+        self.lge.imageManager.loadImage("ninja-idle-left", resourceDir + "/NinjaGirl/Idle_*.png", 0.1, (True, False))
+        self.lge.imageManager.loadImage("ninja-run-right", resourceDir + "/NinjaGirl/Run_*.png", 0.1)
+        self.lge.imageManager.loadImage("ninja-run-left", resourceDir + "/NinjaGirl/Run_*.png", 0.1, (True, False))
+        self.lge.imageManager.loadImage("platform", resourceDir + "/platform.png", 0.3)
 
         # el fondo
         fondo = Sprite("fondo", (0, 0))
@@ -76,4 +76,3 @@ class Game():
 game = Game()
 game.run(60)
 print("Eso es todo!!!")
-

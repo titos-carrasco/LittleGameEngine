@@ -1,9 +1,9 @@
-import pygame
 import math
+import pygame
 
 from lge.LittleGameEngine import LittleGameEngine
-from lge.Sprite import Sprite
 from lge.Rectangle import Rectangle
+from lge.Sprite import Sprite
 
 
 class Ninja(Sprite):

@@ -1,10 +1,10 @@
 import cv2
 
-from lge.LittleGameEngine import LittleGameEngine
-from lge.Sprite import Sprite
 from lge.Canvas import Canvas
 from lge.GameObject import GameObject
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Rectangle import Rectangle
+from lge.Sprite import Sprite
 
 from Betty import Betty
 from WebCam import WebCam
@@ -18,17 +18,17 @@ class MiJuego():
         win_size = (640, 480)
 
         self.lge = LittleGameEngine(win_size, "MiJuego", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
         self.lge.showColliders((255, 0, 0))
 
         # cargamos recursos globales
         resourceDir = "../resources"
 
-        self.lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
-        self.lge.loadImage("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
-        self.lge.loadImage("betty_left", resourceDir + "/images/Betty/left-0*.png")
-        self.lge.loadImage("betty_right", resourceDir + "/images/Betty/right-0*.png")
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
+        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+        self.lge.imageManager.loadImage("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
+        self.lge.imageManager.loadImage("betty_left", resourceDir + "/images/Betty/left-0*.png")
+        self.lge.imageManager.loadImage("betty_right", resourceDir + "/images/Betty/right-0*.png")
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
@@ -86,7 +86,7 @@ class MiJuego():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((20, 20, 20, 10))
-        infobar.drawText(info, (70, 0), "monospace.16", (0, 0, 0))
+        infobar.drawText(info, (70, 0), "monospace", (0, 0, 0))
 
     # main loop
     def run(self, fps):
@@ -96,3 +96,4 @@ class MiJuego():
 # -- show time
 game = MiJuego()
 game.run(60)
+print("Eso es todo!!!")

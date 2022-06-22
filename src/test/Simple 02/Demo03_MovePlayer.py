@@ -1,8 +1,8 @@
-from lge.LittleGameEngine import LittleGameEngine
-from lge.Sprite import Sprite
 from lge.Canvas import Canvas
-from lge.Rectangle import Rectangle
+from lge.LittleGameEngine import LittleGameEngine
 from lge.MouseClick import MouseClick
+from lge.Rectangle import Rectangle
+from lge.Sprite import Sprite
 
 
 class Moveplayer():
@@ -12,20 +12,20 @@ class Moveplayer():
         winSize = (640, 480)
 
         self.lge = LittleGameEngine(winSize, "Move player", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
-        self.lge.loadImage("heroe_right", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
-        self.lge.loadImage("heroe_left", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16, (True, False))
-        self.lge.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
-        self.lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
+        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+        self.lge.imageManager.loadImage("heroe_right", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
+        self.lge.imageManager.loadImage("heroe_left", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16, (True, False))
+        self.lge.imageManager.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
+        self.lge.soundManager.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 
         # activamos la musica de fondo
-        self.lge.playSound("fondo", True, 50)
+        self.lge.soundManager.playSound("fondo", True, 50)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
@@ -70,7 +70,7 @@ class Moveplayer():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((20, 20, 20, 10))
-        infobar.drawText(info, (50, 0), "monospace.16", (0, 0, 0))
+        infobar.drawText(info, (50, 0), "monospace", (0, 0, 0))
 
         # mute on/off
         if(self.leftMouseButton.isClicked(mb1, mx, my)):
@@ -78,9 +78,9 @@ class Moveplayer():
             r = mute.getRectangle()
             if(r.contains(mx, my)):
                 if(self.isMute):
-                    self.lge.setSoundVolume("fondo", 50)
+                    self.lge.soundManager.setSoundVolume("fondo", 50)
                 else:
-                    self.lge.setSoundVolume("fondo", 0)
+                    self.lge.soundManager.setSoundVolume("fondo", 0)
                 self.isMute = not self.isMute
                 mute.nextImage()
 
@@ -98,7 +98,6 @@ class MiHeroe(Sprite):
         self.lge = LittleGameEngine.getInstance()
 
         # sus atributos
-        self.setImage("heroe_right")
         self.setBounds(Rectangle((0, 0), (1920, 1056)))
 
     # @Override
@@ -130,3 +129,4 @@ class MiHeroe(Sprite):
 # --- show time
 game = Moveplayer()
 game.run(60)
+print("Eso es todo!!!")

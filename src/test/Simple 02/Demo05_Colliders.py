@@ -1,9 +1,10 @@
 import random
-from lge.LittleGameEngine import LittleGameEngine
-from lge.Sprite import Sprite
+
 from lge.Canvas import Canvas
-from lge.Rectangle import Rectangle
+from lge.LittleGameEngine import LittleGameEngine
 from lge.MouseClick import MouseClick
+from lge.Rectangle import Rectangle
+from lge.Sprite import Sprite
 
 
 class Colliders():
@@ -13,26 +14,26 @@ class Colliders():
         winSize = (640, 480)
 
         self.lge = LittleGameEngine(winSize, "Colliders", (0, 0, 0))
-        self.lge.setOnMainUpdate(self.onMainUpdate)
+        self.lge.onMainUpdate = self.onMainUpdate
         self.lge.showColliders((255, 0, 0))
 
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
-        self.lge.loadImage("heroe_idle_right", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
-        self.lge.loadImage("heroe_idle_left", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
-        self.lge.loadImage("heroe_run_right", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16)
-        self.lge.loadImage("heroe_run_left", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
-        self.lge.loadImage("ninja", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
-        self.lge.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
-        self.lge.loadTTFont("monospace.16", resourceDir + "/fonts/FreeMono.ttf", 16)
-        self.lge.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
-        self.lge.loadSound("aves", resourceDir + "/sounds/bird-thrush-nightingale.wav")
-        self.lge.loadSound("poing", resourceDir + "/sounds/cartoon-poing.wav")
+        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+        self.lge.imageManager.loadImage("heroe_idle_right", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+        self.lge.imageManager.loadImage("heroe_idle_left", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
+        self.lge.imageManager.loadImage("heroe_run_right", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16)
+        self.lge.imageManager.loadImage("heroe_run_left", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
+        self.lge.imageManager.loadImage("ninja", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
+        self.lge.imageManager.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
+        self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
+        self.lge.soundManager.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
+        self.lge.soundManager.loadSound("aves", resourceDir + "/sounds/bird-thrush-nightingale.wav")
+        self.lge.soundManager.loadSound("poing", resourceDir + "/sounds/cartoon-poing.wav")
 
         # activamos la musica de fondo
-        self.lge.playSound("fondo", True, 50)
+        self.lge.soundManager.playSound("fondo", True, 50)
 
         # agregamos el fondo
         fondo = Sprite("fondo", (0, 0))
@@ -86,7 +87,7 @@ class Colliders():
         )
         infobar = self.lge.getGObject("infobar")
         infobar.fill((20, 20, 20, 10))
-        infobar.drawText(info, (50, 0), "monospace.16", (0, 0, 0))
+        infobar.drawText(info, (50, 0), "monospace", (0, 0, 0))
 
         # mute on/off
         if(self.leftMouseButton.isClicked(mb1, mx, my)):
@@ -94,11 +95,16 @@ class Colliders():
             r = mute.getRectangle()
             if(r.contains(mx, my)):
                 if(self.isMute):
-                    self.lge.setSoundVolume("fondo", 50)
+                    self.lge.soundManager.setSoundVolume("fondo", 50)
                 else:
-                    self.lge.setSoundVolume("fondo", 0)
+                    self.lge.soundManager.setSoundVolume("fondo", 0)
                 self.isMute = not self.isMute
                 mute.nextImage()
+
+        # de manera aleatorio activamos sonido de aves
+        n = random.randint(0, 1000)
+        if (n < 3):
+            self.lge.soundManager.playSound("aves", False, 100)
 
     # main loop
     def run(self, fps):
@@ -165,10 +171,11 @@ class MiHeroe(Sprite):
     def onPostUpdate(self, dt):
         if(self.collidesWith(self.ninja)):
             x, y = self.last
-            self.lge.playSound("poing", False, 10)
+            self.lge.soundManager.playSound("poing", False, 10)
             self.setPosition(x, y)
 
 
 # --- show time
 game = Colliders()
 game.run(60)
+print("Eso es todo!!!")

@@ -1,12 +1,12 @@
-import time
-import threading
-import queue
 import cv2
 import numpy
 import pygame
+import queue
+import threading
+import time
 
-from lge.LittleGameEngine import LittleGameEngine
 from lge.Canvas import Canvas
+from lge.LittleGameEngine import LittleGameEngine
 from lge.Rectangle import Rectangle
 
 

@@ -17,7 +17,7 @@ SETUP = {
     "maintainer": "Roberto Carrasco",
     "maintainer_email": "titos.carrasco@gmail.com",
     "name": "lge",
-    "package_dir": {"lge": "lge"},
+    "package_dir": {"": "src/rcr"},
     "packages": ["lge"],
     "version": "0.6.0",
 }
