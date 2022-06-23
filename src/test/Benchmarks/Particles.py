@@ -36,10 +36,10 @@ class Particles():
         self.numParticles = 500
         self.particles = [0] * self.numParticles
         for i in range(self.numParticles):
-            x = 300 + random.random() * 200
-            y = 100 + random.random() * 100
-            vx = -120 + random.random() * 240
-            vy = -120 + random.random() * 240
+            x = random.randint(300, 500)
+            y = random.randint(100, 200)
+            vx = random.randint(-120, 120)
+            vy = random.randint(-120, 120)
             m = 0.1 + random.random()
             self.particles[i] = Particle(x, y, vx, vy, m)
 

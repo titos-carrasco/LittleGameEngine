@@ -42,8 +42,8 @@ class Birds():
         # agregamos pajaros
         ww, wh = self.lge.getCameraSize()
         for i in range(500):
-            x = random.random() * ww
-            y = 15 + random.random() * wh
+            x = random.randint(0, ww)
+            y = random.randint(15, wh)
             bird = Bird("bird", (x, y))
             self.lge.addGObject(bird, 1)
 

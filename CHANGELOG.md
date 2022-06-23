@@ -1,7 +1,10 @@
 # ChangeLog
 
+# v0.7.0 2022-06-22
+- Agrega método LittleGameEngine.contains() para obtener todos los GameObjects que contienen a un punto dado
+
 # 2022-06-22
-- Crea clase ImagesManager para el manejo de imagen
+- Crea clase ImageManager para el manejo de imagen
 - Crea clase SoundManager para el manejo de sonidos
 - Crea clase Fontmanager para el manejo de fonts
 - Manejo de imágenes, sonido y fonts se llevan a las clases señaladas

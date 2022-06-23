@@ -349,6 +349,22 @@ class LittleGameEngine():
 
         return []
 
+    def contains(self, layer:int, position:tuple):
+        """
+        Obtiene todos los GameObjects de una capa dada que contienen un punto especificado
+
+        **Parametros**
+        : *layer* : la capa a revisar
+        : *position: : el punto a revisar
+
+        **Retorna**
+        : *list* : los GameObjects que contienen al punto
+        """
+        x, y = position
+        return [o
+                for o in self.gLayers[layer]
+                    if o.rect.contains(x, y)]
+
     # ------ camera ------
     def getCameraPosition(self) -> tuple:
         """

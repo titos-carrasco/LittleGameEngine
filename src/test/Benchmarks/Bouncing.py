@@ -37,9 +37,9 @@ class Bouncing():
 
         # los objetos a rebotar
         for i in range(200):
-            x = 50 + random.random() * 700
-            y = 50 + random.random() * 150
-            vx = -50 + random.random() * 100
+            x = random.randint(50, 750)
+            y = random.randint(50, 200)
+            vx = random.randint(-50, 50)
             vy = 0
             gobj = Ball(x, y, vx, vy)
             self.lge.addGObject(gobj, 1)
