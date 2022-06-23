@@ -20,13 +20,13 @@ class MiJuego():
         # cargamos algunos recursos
         resourceDir = "../resources"
 
-        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Betty/Fondo.png")
-        self.lge.imageManager.loadImage("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
-        self.lge.imageManager.loadImage("betty_down", resourceDir + "/images/Betty/down-0*.png")
-        self.lge.imageManager.loadImage("betty_up", resourceDir + "/images/Betty/up-0*.png")
-        self.lge.imageManager.loadImage("betty_left", resourceDir + "/images/Betty/left-0*.png")
-        self.lge.imageManager.loadImage("betty_right", resourceDir + "/images/Betty/right-0*.png")
-        self.lge.imageManager.loadImage("zombie", resourceDir + "/images/Kenny/Zombie/zombie_walk*.png")
+        self.lge.imageManager.loadImages("fondo", resourceDir + "/images/Betty/Fondo.png")
+        self.lge.imageManager.loadImages("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
+        self.lge.imageManager.loadImages("betty_down", resourceDir + "/images/Betty/down-0*.png")
+        self.lge.imageManager.loadImages("betty_up", resourceDir + "/images/Betty/up-0*.png")
+        self.lge.imageManager.loadImages("betty_left", resourceDir + "/images/Betty/left-0*.png")
+        self.lge.imageManager.loadImages("betty_right", resourceDir + "/images/Betty/right-0*.png")
+        self.lge.imageManager.loadImages("zombie", resourceDir + "/images/Kenny/Zombie/zombie_walk*.png")
         self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
 
         # agregamos el fondo

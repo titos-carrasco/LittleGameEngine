@@ -22,9 +22,9 @@ class Birds():
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
-        self.lge.imageManager.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_00*.png", 0.08)
-        self.lge.imageManager.loadImage("bird", resourceDir + "/images/BlueBird/frame-*.png", 0.04)
+        self.lge.imageManager.loadImages("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
+        self.lge.imageManager.loadImages("heroe", resourceDir + "/images/Swordsman/Idle/Idle_00*.png", 0.08)
+        self.lge.imageManager.loadImages("bird", resourceDir + "/images/BlueBird/frame-*.png", 0.04)
         self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
 
         # agregamos el fondo

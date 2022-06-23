@@ -9,8 +9,8 @@ lge = LittleGameEngine(winSize, "The World", (0, 0, 0))
 # cargamos los recursos que usaremos
 resourceDir = "../resources"
 
-lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
-lge.imageManager.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.08)
+lge.imageManager.loadImages("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png", winSize)
+lge.imageManager.loadImages("heroe", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.08)
 lge.fontManager.loadTTFont("banner", resourceDir + "/fonts/backlash.ttf", (False, False), 40)
 lge.soundManager.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 

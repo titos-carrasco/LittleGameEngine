@@ -1,5 +1,8 @@
 # ChangeLog
 
+# v0.7.1 2022-06-23
+- Renombre método para carga de imágenes
+
 # v0.7.0 2022-06-22
 - Agrega método LittleGameEngine.contains() para obtener todos los GameObjects que contienen a un punto dado
 

@@ -19,9 +19,9 @@ class Platform():
         # cargamos algunos recursos
         resourceDir = "../resources"
 
-        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Platform/Platform.png")
-        self.lge.imageManager.loadImage("roca", resourceDir + "/images/Volcano_Pack_1.1/volcano_pack_alt_39.png")
-        self.lge.imageManager.loadImage("ninja", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+        self.lge.imageManager.loadImages("fondo", resourceDir + "/images/Platform/Platform.png")
+        self.lge.imageManager.loadImages("roca", resourceDir + "/images/Volcano_Pack_1.1/volcano_pack_alt_39.png")
+        self.lge.imageManager.loadImages("ninja", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
         self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
         self.lge.fontManager.loadTTFont("cool", resourceDir + "/fonts/backlash.ttf", (False, False), 30)
 

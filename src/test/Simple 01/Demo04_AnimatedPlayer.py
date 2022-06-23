@@ -13,11 +13,11 @@ def main():
     # cargamos los recursos que usaremos
     resourceDir = "../resources"
 
-    lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
-    lge.imageManager.loadImage("heroe_idle_right", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
-    lge.imageManager.loadImage("heroe_idle_left", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
-    lge.imageManager.loadImage("heroe_run_right", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16)
-    lge.imageManager.loadImage("heroe_run_left", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
+    lge.imageManager.loadImages("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+    lge.imageManager.loadImages("heroe_idle_right", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+    lge.imageManager.loadImages("heroe_idle_left", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16, (True, False))
+    lge.imageManager.loadImages("heroe_run_right", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16)
+    lge.imageManager.loadImages("heroe_run_left", resourceDir + "/images/Swordsman/Run/Run_0*.png", 0.16, (True, False))
     lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
     lge.soundManager.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 

@@ -17,10 +17,10 @@ class Moveplayer():
         # cargamos los recursos que usaremos
         resourceDir = "../resources"
 
-        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
-        self.lge.imageManager.loadImage("heroe_right", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
-        self.lge.imageManager.loadImage("heroe_left", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16, (True, False))
-        self.lge.imageManager.loadImage("mute", resourceDir + "/images/icons/sound-*.png")
+        self.lge.imageManager.loadImages("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+        self.lge.imageManager.loadImages("heroe_right", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16)
+        self.lge.imageManager.loadImages("heroe_left", resourceDir + "/images/Swordsman/Idle/Idle_000.png", 0.16, (True, False))
+        self.lge.imageManager.loadImages("mute", resourceDir + "/images/icons/sound-*.png")
         self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
         self.lge.soundManager.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 

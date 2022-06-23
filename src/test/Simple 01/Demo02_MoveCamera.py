@@ -13,8 +13,8 @@ def main():
     # cargamos los recursos que usaremos
     resourceDir = "../resources"
 
-    lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
-    lge.imageManager.loadImage("heroe", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
+    lge.imageManager.loadImages("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+    lge.imageManager.loadImages("heroe", resourceDir + "/images/Swordsman/Idle/Idle_0*.png", 0.16)
     lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
     lge.soundManager.loadSound("fondo", resourceDir + "/sounds/happy-and-sad.wav")
 

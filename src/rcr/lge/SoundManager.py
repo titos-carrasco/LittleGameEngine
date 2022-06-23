@@ -66,7 +66,7 @@ class SoundManager():
         """
         Obtiene el volumen de un sonido previamente cargado
 
-        **Paranmetros**
+        **Parametros**
         : *name* : el nombre del sonido
 
 

@@ -20,12 +20,12 @@ class Game():
 
         # cargamos los recursos que usaremos
         resourceDir = "./resources"
-        self.lge.imageManager.loadImage("fondo", resourceDir + "/fondo.png")
-        self.lge.imageManager.loadImage("ninja-idle-right", resourceDir + "/NinjaGirl/Idle_*.png", 0.1)
-        self.lge.imageManager.loadImage("ninja-idle-left", resourceDir + "/NinjaGirl/Idle_*.png", 0.1, (True, False))
-        self.lge.imageManager.loadImage("ninja-run-right", resourceDir + "/NinjaGirl/Run_*.png", 0.1)
-        self.lge.imageManager.loadImage("ninja-run-left", resourceDir + "/NinjaGirl/Run_*.png", 0.1, (True, False))
-        self.lge.imageManager.loadImage("platform", resourceDir + "/platform.png", 0.3)
+        self.lge.imageManager.loadImages("fondo", resourceDir + "/fondo.png")
+        self.lge.imageManager.loadImages("ninja-idle-right", resourceDir + "/NinjaGirl/Idle_*.png", 0.1)
+        self.lge.imageManager.loadImages("ninja-idle-left", resourceDir + "/NinjaGirl/Idle_*.png", 0.1, (True, False))
+        self.lge.imageManager.loadImages("ninja-run-right", resourceDir + "/NinjaGirl/Run_*.png", 0.1)
+        self.lge.imageManager.loadImages("ninja-run-left", resourceDir + "/NinjaGirl/Run_*.png", 0.1, (True, False))
+        self.lge.imageManager.loadImages("platform", resourceDir + "/platform.png", 0.3)
 
         # el fondo
         fondo = Sprite("fondo", (0, 0))

@@ -24,7 +24,7 @@ class ImageManager():
         """
         return [image for image in self.images[iname]]
 
-    def loadImage(self, iname:str, pattern:str, scale=None, flip:list=None):
+    def loadImages(self, iname:str, pattern:str, scale=None, flip:list=None):
         """
         Cara una imagen o grupo de imagenes desde archivos para ser utilizadas en el
         juego

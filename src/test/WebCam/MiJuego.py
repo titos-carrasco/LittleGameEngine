@@ -24,10 +24,10 @@ class MiJuego():
         # cargamos recursos globales
         resourceDir = "../resources"
 
-        self.lge.imageManager.loadImage("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
-        self.lge.imageManager.loadImage("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
-        self.lge.imageManager.loadImage("betty_left", resourceDir + "/images/Betty/left-0*.png")
-        self.lge.imageManager.loadImage("betty_right", resourceDir + "/images/Betty/right-0*.png")
+        self.lge.imageManager.loadImages("fondo", resourceDir + "/images/Backgrounds/FreeTileset/Fondo.png")
+        self.lge.imageManager.loadImages("betty_idle", resourceDir + "/images/Betty/idle-0*.png")
+        self.lge.imageManager.loadImages("betty_left", resourceDir + "/images/Betty/left-0*.png")
+        self.lge.imageManager.loadImages("betty_right", resourceDir + "/images/Betty/right-0*.png")
         self.lge.fontManager.loadTTFont("monospace", resourceDir + "/fonts/FreeMono.ttf", (False, False), 16)
 
         # agregamos el fondo
